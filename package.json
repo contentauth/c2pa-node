@@ -1,0 +1,29 @@
+{
+  "name": "c2pa-node",
+  "version": "0.1.0",
+  "description": "Node.js bindings for C2PA",
+  "main": "index.node",
+  "scripts": {
+    "build": "cargo-cp-artifact -nc index.node -- cargo build --message-format=json-render-diagnostics",
+    "build-debug": "pnpm run build --",
+    "build-release": "pnpm run build -- --release",
+    "install": "pnpm run build-release",
+    "test": "cargo test"
+  },
+  "author": "Dave Kozma <dkozma@adobe.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "cargo-cp-artifact": "^0.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/contentauth/c2pa-node.git"
+  },
+  "keywords": [
+    "c2pa"
+  ],
+  "bugs": {
+    "url": "https://github.com/contentauth/c2pa-node/issues"
+  },
+  "homepage": "https://github.com/contentauth/c2pa-node#readme"
+}
