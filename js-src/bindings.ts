@@ -1,3 +1,5 @@
 const bindings = require('../index.node');
 
-export default bindings;
+export function readAsset(mimeType: string, buffer: Buffer) {
+  return bindings.read_asset(mimeType, buffer);
+}

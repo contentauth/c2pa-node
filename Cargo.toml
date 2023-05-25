@@ -13,8 +13,15 @@ crate-type = ["cdylib"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+c2pa = { git = "https://github.com/contentauth/c2pa-rs", branch = "dkozma/add-type-exports", features = [
+	"fetch_remote_manifests",
+	"file_io",
+	"xmp_write",
+] }
+serde = "1.0.163"
+serde_json = "1.0.96"
 
 [dependencies.neon]
-version = "0.10"
+version = "1.0.0-alpha.4"
 default-features = false
 features = ["napi-6"]

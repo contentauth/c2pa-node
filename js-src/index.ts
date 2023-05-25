@@ -1,9 +1,11 @@
-import bindings from './bindings';
+import buffer from 'node:buffer';
+import { readFile } from 'node:fs/promises';
+import { readAsset } from './bindings';
 
-function main() {
-  console.log('Running main()');
-  const output = bindings.hello();
-  console.log('output', output);
+async function main() {
+  const fixture = await readFile('./tests/fixtures/CAICAI.jpg');
+  const result = readAsset('image/jpeg', fixture);
+  console.log('result', result);
 }
 
 main();
