@@ -9,9 +9,8 @@ fn add_to_resource_object(
     key: &str,
     value: &[u8],
 ) -> NeonResult<()> {
-    // FIXME - no unwraps
-    let data = JsUint8Array::from_slice(cx, value).unwrap();
-    obj.set(cx, key.as_ref(), data).unwrap();
+    let data = JsUint8Array::from_slice(cx, value)?;
+    obj.set(cx, key.as_ref(), data)?;
     Ok(())
 }
 
