@@ -77,10 +77,10 @@ fn read_asset(mut cx: FunctionContext) -> JsResult<JsPromise> {
                 .or_else(|err| cx.throw_error(err.to_string()))?;
 
             response_obj
-                .set(&mut cx, "serializedStore", serialized_store)
+                .set(&mut cx, "manifest_store", serialized_store)
                 .or_else(|err| cx.throw_error(err.to_string()))?;
             response_obj
-                .set(&mut cx, "resourceStore", resource_store)
+                .set(&mut cx, "resource_store", resource_store)
                 .or_else(|err| cx.throw_error(err.to_string()))?;
 
             Ok(response_obj)
