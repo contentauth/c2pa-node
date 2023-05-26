@@ -4,7 +4,7 @@ import { readAsset } from './bindings';
 
 async function main() {
   const fixture = await readFile('./tests/fixtures/CAICAI.jpg');
-  const result = readAsset('image/jpeg', fixture);
+  const result = await readAsset('image/jpeg', fixture);
   console.log('result', result);
 }
 
