@@ -18,7 +18,7 @@ function rebuildTypeScript() {
 
 function rebuildRust() {
   exec(
-    'npx cargo-cp-artifact -nc index.node -- cargo build --message-format=json-render-diagnostics',
+    'npx cargo-cp-artifact -nc generated/c2pa.node -- cargo build --message-format=json-render-diagnostics',
     execCallback,
   );
 }

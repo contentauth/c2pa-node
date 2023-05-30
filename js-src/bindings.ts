@@ -3,9 +3,9 @@ import type {
   ResourceStore as ManifestResourceStore,
   ManifestStore,
   ResourceRef,
-} from './types.d.ts';
+} from './types';
 
-const bindings = require('../index.node');
+const bindings = require('../generated/c2pa.node');
 
 type ResourceStore = Record<string, ManifestResourceStore>;
 

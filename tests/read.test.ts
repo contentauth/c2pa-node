@@ -1,9 +1,9 @@
-import test from 'ava';
 import { readFile } from 'node:fs/promises';
 import { readAsset } from '../js-src';
 
-test('read works', async (t) => {
-  const fixture = await readFile('./fixtures/CAICAI.jpg');
+test('read works', async () => {
+  const fixture = await readFile('tests/fixtures/CAICAI.jpg');
   const result = await readAsset('image/jpeg', fixture);
   console.log(result);
+  expect(true).toBe(true);
 });
