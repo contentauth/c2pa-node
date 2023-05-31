@@ -3,6 +3,7 @@ import type {
   ResourceStore as ManifestResourceStore,
   ManifestStore,
   ResourceRef,
+  SignatureInfo,
 } from './types';
 
 const bindings = require('../generated/c2pa.node');
@@ -11,18 +12,44 @@ type ResourceStore = Record<string, ManifestResourceStore>;
 
 interface ResolvedResource {
   format: string;
-  data: Buffer;
+  data: Buffer | null;
+}
+
+interface ResolvedSignatureInfo extends SignatureInfo {
+  timeObject?: Date | null;
 }
 
 interface ResolvedManifest extends Manifest {
   resolveResource(resource: ResourceRef): ResolvedResource;
+  signature_info?: ResolvedSignatureInfo | null;
 }
 
-interface ResolvedManifestStore {
-  activeManifest: ResolvedManifest | null;
+interface ResolvedManifestStore extends Omit<ManifestStore, 'active_manifest'> {
+  active_manifest: ResolvedManifest | null;
   manifests: Record<string, ResolvedManifest>;
 }
 
+function parseSignatureInfo(manifest: Manifest) {
+  const info = manifest.signature_info;
+  if (!info) {
+    return {};
+  }
+
+  return {
+    signature_info: {
+      ...info,
+      timeObject:
+        typeof info.time === 'string' ? new Date(info.time) : info.time,
+    },
+  };
+}
+
+/**
+ * Reads C2PA data from an asset
+ * @param mimeType The MIME type of the asset, for instance `image/jpeg`
+ * @param buffer A buffer containing the asset data
+ * @returns A promise containing C2PA data, if present
+ */
 export async function readAsset(
   mimeType: string,
   buffer: Buffer,
@@ -37,11 +64,12 @@ export async function readAsset(
     const manifest = manifestStore.manifests[label] as Manifest;
     const resolvedManifest = {
       ...manifest,
+      ...parseSignatureInfo(manifest),
       resolveResource(resource: ResourceRef) {
-        const resolved = resourceStore[label][resource.id];
+        const resolved = resourceStore[label][resource.identifier];
         return {
-          format: resolved.format,
-          data: Buffer.from(resolved.data),
+          format: resource.format,
+          data: resolved?.buffer ? Buffer.from(resolved.buffer) : null,
         };
       },
     } as ResolvedManifest;
@@ -53,7 +81,10 @@ export async function readAsset(
   }, {});
 
   return {
-    activeManifest: activeManifestLabel ? manifests[activeManifestLabel] : null,
+    active_manifest: activeManifestLabel
+      ? manifests[activeManifestLabel]
+      : null,
     manifests,
+    validation_status: manifestStore.validation_status ?? [],
   };
 }

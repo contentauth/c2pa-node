@@ -36,13 +36,19 @@ fn read_asset(mut cx: FunctionContext) -> JsResult<JsPromise> {
     let data = buffer.as_slice(&cx).to_vec();
 
     rt.spawn(async move {
-        let store = ManifestStore::from_bytes(&format, &data, true).unwrap();
+        let store = ManifestStore::from_bytes(&format, &data, true);
 
         deferred.settle_with(&channel, move |mut cx| {
+            let response_obj = cx.empty_object();
+
+            let store = match store {
+                Ok(store) => store,
+                Err(err) => return cx.throw_error(err.to_string()),
+            };
             let serialized_store = serde_json::to_string(&store)
                 .map(|s| cx.string(s))
                 .or_else(|err| cx.throw_error(err.to_string()))?;
-            let response_obj = cx.empty_object();
+
             let resource_store = cx.empty_object();
 
             store
