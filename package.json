@@ -3,13 +3,16 @@
   "version": "0.1.0",
   "description": "Node.js bindings for C2PA",
   "main": "dist/js-src/index.js",
+  "types": "dist/js-src/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "dev": "node ./scripts/dev-reload.js",
     "build:rust": "cargo-cp-artifact -nc generated/c2pa.node -- cargo build --message-format=json-render-diagnostics --release",
     "build:ts": "tsc -b",
     "build:assets": "cpy generated dist",
     "build": "run-s build:rust build:ts build:assets",
-    "install": "npm run build",
     "test": "cargo test && jest",
     "test:watch": "cargo test && jest --watch",
     "clean": "rimraf dist generated target"

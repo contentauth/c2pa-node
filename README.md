@@ -11,8 +11,18 @@ Rust by [visiting this link](https://www.rust-lang.org/tools/install).
 You can install the project with npm. In the project directory, run:
 
 ```sh
+# Switch to the supported version of Node.js for building
 $ nvm use
+# Install dependencies
 $ npm install
+# Build the SDK
+$ npm run build
 ```
 
-This fully installs the project, including installing any dependencies and running the build.
+## Testing
+
+After installation, you can run the test suite by running:
+
+```sh
+$ npm test
+```
