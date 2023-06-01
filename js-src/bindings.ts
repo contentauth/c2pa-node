@@ -2,7 +2,6 @@ import type {
   Manifest,
   ResourceStore as ManifestResourceStore,
   ManifestStore,
-  ResourceRef,
   SignatureInfo,
 } from './types';
 
@@ -19,8 +18,8 @@ interface ResolvedSignatureInfo extends SignatureInfo {
   timeObject?: Date | null;
 }
 
-interface ResolvedManifest extends Manifest {
-  resolveResource(resource: ResourceRef): ResolvedResource;
+interface ResolvedManifest extends Omit<Manifest, 'thumbnail'> {
+  thumbnail: ResolvedResource | null;
   signature_info?: ResolvedSignatureInfo | null;
 }
 
@@ -44,6 +43,27 @@ function parseSignatureInfo(manifest: Manifest) {
   };
 }
 
+function resolveManifest(
+  manifest: Manifest,
+  resourceStore: ManifestResourceStore,
+): ResolvedManifest {
+  const thumbnailIdentifier = manifest.thumbnail?.identifier;
+  const thumbnailResource = thumbnailIdentifier
+    ? resourceStore[thumbnailIdentifier]
+    : null;
+
+  return {
+    ...manifest,
+    ...parseSignatureInfo(manifest),
+    thumbnail: thumbnailResource
+      ? {
+          format: manifest.thumbnail?.format ?? '',
+          data: Buffer.from(thumbnailResource.buffer),
+        }
+      : null,
+  } as ResolvedManifest;
+}
+
 /**
  * Reads C2PA data from an asset
  * @param mimeType The MIME type of the asset, for instance `image/jpeg`
@@ -62,21 +82,10 @@ export async function readAsset(
     manifestStore.manifests,
   ).reduce((acc, label) => {
     const manifest = manifestStore.manifests[label] as Manifest;
-    const resolvedManifest = {
-      ...manifest,
-      ...parseSignatureInfo(manifest),
-      resolveResource(resource: ResourceRef) {
-        const resolved = resourceStore[label][resource.identifier];
-        return {
-          format: resource.format,
-          data: resolved?.buffer ? Buffer.from(resolved.buffer) : null,
-        };
-      },
-    } as ResolvedManifest;
 
     return {
       ...acc,
-      [label]: resolvedManifest,
+      [label]: resolveManifest(manifest, resourceStore[label]),
     };
   }, {});
 

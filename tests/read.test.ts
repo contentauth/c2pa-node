@@ -1,10 +1,11 @@
 import { readFile } from 'node:fs/promises';
 import { readAsset } from '../js-src';
+import type { Ingredient, ManifestAssertion } from '../js-src/types';
 
 describe('readAsset()', () => {
   test('should read a JPEG image with an embedded manifest', async () => {
     const fixture = await readFile('tests/fixtures/CAICAI.jpg');
-    const { active_manifest, manifests } = await readAsset(
+    const { active_manifest, manifests, validation_status } = await readAsset(
       'image/jpeg',
       fixture,
     );
@@ -66,7 +67,7 @@ describe('readAsset()', () => {
     // CreativeWork assertion
     expect(
       active_manifest?.assertions?.find(
-        (x) => x.label === 'stds.schema-org.CreativeWork',
+        (x: ManifestAssertion) => x.label === 'stds.schema-org.CreativeWork',
       ),
     ).toMatchObject({
       label: 'stds.schema-org.CreativeWork',
@@ -83,7 +84,9 @@ describe('readAsset()', () => {
     });
     // Actions assertion
     expect(
-      active_manifest?.assertions?.find((x) => x.label === 'c2pa.actions'),
+      active_manifest?.assertions?.find(
+        (x: ManifestAssertion) => x.label === 'c2pa.actions',
+      ),
     ).toMatchObject({
       label: 'c2pa.actions',
       data: {
@@ -131,22 +134,47 @@ describe('readAsset()', () => {
     );
 
     // Thumbnail
-    const thumbnail = active_manifest?.resolveResource(
-      active_manifest.thumbnail!,
-    );
-    expect(thumbnail?.format).toEqual('image/jpeg');
-    expect(thumbnail?.data).toBeInstanceOf(Buffer);
-    expect(thumbnail?.data?.length).toEqual(72217);
+    expect(active_manifest?.thumbnail?.format).toEqual('image/jpeg');
+    expect(active_manifest?.thumbnail?.data).toBeInstanceOf(Buffer);
+    expect(active_manifest?.thumbnail?.data?.length).toEqual(72217);
+
+    // Validation status
+    expect(validation_status.length).toEqual(0);
   });
 
-  test.skip('should read a JPEG image with a cloud manifest', async () => {
+  test('should read a JPEG image with a cloud manifest', async () => {
     const fixture = await readFile('tests/fixtures/cloud-only-firefly.jpg');
-    try {
-      const result = await readAsset('image/jpeg', fixture);
-      console.log('result', result);
-    } catch (err) {
-      console.log('err', err);
-    }
+    const { active_manifest, manifests, validation_status } = await readAsset(
+      'image/jpeg',
+      fixture,
+    );
+
+    // Manifests
+    expect(Object.keys(manifests).length).toEqual(4);
+    expect(Object.keys(manifests)).toEqual(
+      expect.arrayContaining([
+        'adobe:fc42dcfb-12c4-47a1-af42-3be443142b39',
+        'adobe:urn:uuid:381760d4-a96a-4d41-8afb-4a82ecf1845e',
+        'adobe:82a2860a-fcda-4971-bfc1-8bc3decc2cd1',
+        'adobe:5dd3c698-5e75-4344-ae57-4b4bc812c672',
+      ]),
+    );
+
+    // Active manifest
+    expect(active_manifest?.label).toEqual(
+      'adobe:urn:uuid:381760d4-a96a-4d41-8afb-4a82ecf1845e',
+    );
+    expect(active_manifest?.claim_generator).toEqual(
+      'Adobe_Photoshop/24.5.0 (build 20230410.m.2133 3783a7d; mac) cai-helper/0.4.8 c2pa-rs/0.13.0',
+    );
+    expect(active_manifest?.title).toEqual('cloud only firefly.jpg');
+    expect(active_manifest?.format).toEqual('image/jpeg');
+    expect(active_manifest?.instance_id).toEqual(
+      'xmp:iid:50ccb33b-5ea1-4ec2-96c2-2f04a2e0fb76',
+    );
+
+    // Validation status
+    expect(validation_status.length).toEqual(0);
   });
 
   test('should read a JPEG image that is OTGP', async () => {
