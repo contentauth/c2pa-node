@@ -13,6 +13,7 @@
     "build:ts": "tsc -b",
     "build:assets": "cpy generated dist",
     "build": "run-s build:rust build:ts build:assets",
+    "ci": "cargo test --release && jest",
     "test": "cargo test && jest",
     "test:watch": "cargo test && jest --watch",
     "clean": "rimraf dist generated target"
