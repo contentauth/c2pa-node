@@ -10,7 +10,7 @@
   "scripts": {
     "dev": "node ./scripts/dev-reload.js",
     "build:rust": "cargo-cp-artifact -nc generated/c2pa.node -- cargo build --message-format=json-render-diagnostics --release",
-    "build:ts": "tsc -b",
+    "build:ts": "tsc -b && cpy js-src/types.d.ts dist",
     "build:assets": "cpy generated dist",
     "build": "run-s build:rust build:ts build:assets",
     "ci": "cargo test --release && jest",
