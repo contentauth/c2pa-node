@@ -1,14 +1,12 @@
 import { readFile } from 'node:fs/promises';
 import { readAsset } from '../js-src';
-import type { Ingredient, ManifestAssertion } from '../js-src/types';
+import type { ManifestAssertion } from '../js-src/types';
 
 describe('readAsset()', () => {
   test('should read a JPEG image with an embedded manifest', async () => {
     const fixture = await readFile('tests/fixtures/CAICAI.jpg');
-    const { active_manifest, manifests, validation_status } = await readAsset(
-      'image/jpeg',
-      fixture,
-    );
+    const result = await readAsset('image/jpeg', fixture);
+    const { active_manifest, manifests, validation_status } = result!;
 
     // Manifests
     expect(Object.keys(manifests).length).toEqual(2);
@@ -144,10 +142,8 @@ describe('readAsset()', () => {
 
   test('should read a JPEG image with a cloud manifest', async () => {
     const fixture = await readFile('tests/fixtures/cloud-only-firefly.jpg');
-    const { active_manifest, manifests, validation_status } = await readAsset(
-      'image/jpeg',
-      fixture,
-    );
+    const result = await readAsset('image/jpeg', fixture);
+    const { active_manifest, manifests, validation_status } = result!;
 
     // Manifests
     expect(Object.keys(manifests).length).toEqual(4);
@@ -177,12 +173,19 @@ describe('readAsset()', () => {
     expect(validation_status.length).toEqual(0);
   });
 
+  test('should return null for an image with no manifest', async () => {
+    const fixture = await readFile('tests/fixtures/A.jpg');
+    const result = await readAsset('image/jpeg', fixture);
+
+    expect(result).toBeNull();
+  });
+
   test('should read a JPEG image that is OTGP', async () => {
     const fixture = await readFile('tests/fixtures/XCA.jpg');
     const result = await readAsset('image/jpeg', fixture);
 
-    expect(result.validation_status.length).toEqual(1);
-    expect(result.validation_status[0]).toMatchObject({
+    expect(result?.validation_status.length).toEqual(1);
+    expect(result?.validation_status[0]).toMatchObject({
       code: 'assertion.dataHash.mismatch',
       url: 'self#jumbf=/c2pa/contentauth:urn:uuid:ee7fc739-e619-44d3-a110-c9ff5dd2588d/c2pa.assertions/c2pa.hash.data',
       explanation:

@@ -7,6 +7,13 @@ import type {
 
 const bindings = require('../generated/c2pa.node');
 
+const missingErrors = [
+  // No embedded or remote provenance found in the asset
+  'ProvenanceMissing',
+  // JUMBF not found
+  'JumbfNotFound',
+];
+
 type ResourceStore = Record<string, ManifestResourceStore>;
 
 interface ResolvedResource {
@@ -73,27 +80,34 @@ function resolveManifest(
 export async function readAsset(
   mimeType: string,
   buffer: Buffer,
-): Promise<ResolvedManifestStore> {
-  const result = await bindings.read_asset(mimeType, buffer);
-  const manifestStore = JSON.parse(result.manifest_store) as ManifestStore;
-  const resourceStore = result.resource_store as ResourceStore;
-  const activeManifestLabel = manifestStore.active_manifest;
-  const manifests: ResolvedManifestStore['manifests'] = Object.keys(
-    manifestStore.manifests,
-  ).reduce((acc, label) => {
-    const manifest = manifestStore.manifests[label] as Manifest;
+): Promise<ResolvedManifestStore | null> {
+  try {
+    const result = await bindings.read_asset(mimeType, buffer);
+    const manifestStore = JSON.parse(result.manifest_store) as ManifestStore;
+    const resourceStore = result.resource_store as ResourceStore;
+    const activeManifestLabel = manifestStore.active_manifest;
+    const manifests: ResolvedManifestStore['manifests'] = Object.keys(
+      manifestStore.manifests,
+    ).reduce((acc, label) => {
+      const manifest = manifestStore.manifests[label] as Manifest;
+
+      return {
+        ...acc,
+        [label]: resolveManifest(manifest, resourceStore[label]),
+      };
+    }, {});
 
     return {
-      ...acc,
-      [label]: resolveManifest(manifest, resourceStore[label]),
+      active_manifest: activeManifestLabel
+        ? manifests[activeManifestLabel]
+        : null,
+      manifests,
+      validation_status: manifestStore.validation_status ?? [],
     };
-  }, {});
-
-  return {
-    active_manifest: activeManifestLabel
-      ? manifests[activeManifestLabel]
-      : null,
-    manifests,
-    validation_status: manifestStore.validation_status ?? [],
-  };
+  } catch (err: unknown) {
+    if (missingErrors.some((test) => test === (err as Error)?.name)) {
+      return null;
+    }
+    throw err;
+  }
 }

@@ -43,7 +43,12 @@ fn read_asset(mut cx: FunctionContext) -> JsResult<JsPromise> {
 
             let store = match store {
                 Ok(store) => store,
-                Err(err) => return cx.throw_error(err.to_string()),
+                Err(err) => {
+                    let js_err = cx.error(err.to_string())?;
+                    let js_err_name = cx.string(format!("{:?}", err));
+                    js_err.set(&mut cx, "name", js_err_name)?;
+                    return cx.throw(js_err);
+                }
             };
             let serialized_store = serde_json::to_string(&store)
                 .map(|s| cx.string(s))
