@@ -4,3 +4,4 @@ target
 npm-debug.log*
 generated
 dist
+*.tgz
