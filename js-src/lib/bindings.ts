@@ -3,7 +3,7 @@ import type {
   ResourceStore as ManifestResourceStore,
   ManifestStore,
   SignatureInfo,
-} from './types';
+} from '../types';
 
 const bindings = require('../generated/c2pa.node');
 

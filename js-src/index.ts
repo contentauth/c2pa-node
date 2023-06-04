@@ -1,1 +1,1 @@
-export { readAsset } from './bindings';
+export { readAsset } from './lib/bindings';

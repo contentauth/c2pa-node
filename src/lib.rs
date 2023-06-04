@@ -1,9 +1,10 @@
-use c2pa::ManifestStore;
+use c2pa::{Manifest, ManifestStore};
 use neon::prelude::*;
 use neon::result::Throw;
 use neon::types::buffer::TypedArray;
 use neon::types::{JsBuffer, JsUint8Array};
 use once_cell::sync::OnceCell;
+use std::collections::HashMap;
 use tokio::runtime::Runtime;
 
 // Store tokio runtime in a singleton
@@ -24,7 +25,7 @@ fn add_to_resource_object(
     Ok(())
 }
 
-// Allows us to fetch an embedded manifest
+// Allows us to fetch an embedded or remote manifest
 fn read_asset(mut cx: FunctionContext) -> JsResult<JsPromise> {
     let rt = runtime(&mut cx)?;
     let channel = cx.channel();
@@ -93,6 +94,55 @@ fn read_asset(mut cx: FunctionContext) -> JsResult<JsPromise> {
             response_obj
                 .set(&mut cx, "resource_store", resource_store)
                 .or_else(|err| cx.throw_error(err.to_string()))?;
+
+            Ok(response_obj)
+        });
+    });
+
+    Ok(promise)
+}
+
+fn parse_js_resource_store(
+    cx: &mut FunctionContext,
+    js_resource_store: Handle<JsObject>,
+) -> NeonResult<HashMap<String, Vec<u8>>> {
+    js_resource_store
+        .get_own_property_names(cx)?
+        .to_vec(cx)?
+        .iter()
+        .try_fold(HashMap::<String, Vec<u8>>::new(), |mut store, key| {
+            let key = key.downcast_or_throw::<JsString, _>(cx)?;
+            let data = js_resource_store
+                .get::<JsBuffer, _, _>(cx, key)?
+                .as_slice(cx)
+                .to_vec();
+            store.insert(key.value(cx), data);
+            Ok(store)
+        })
+}
+
+fn process_manifest(serialized_manifest: &str, resource_store: &HashMap<String, Vec<u8>>) -> Result<String, serde_json::Error> {
+    let mut manifest: Result<Manifest, serde_json::Error> =
+        serde_json::from_str(&serialized_manifest);
+
+}
+
+fn sign_asset(mut cx: FunctionContext) -> JsResult<JsPromise> {
+    let rt = runtime(&mut cx)?;
+    let channel = cx.channel();
+    let (deferred, promise) = cx.promise();
+
+    let serialized_manifest = cx.argument::<JsString>(0)?.value(&mut cx);
+    let js_resource_store = cx.argument::<JsObject>(1)?;
+    let resource_store = parse_js_resource_store(&mut cx, js_resource_store)?;
+
+    rt.spawn(async move {
+        let signed = process_manifest(&serialized_manifest, &resource_store)
+        let mut manifest: Result<Manifest, serde_json::Error> =
+            serde_json::from_str(&serialized_manifest);
+
+        deferred.settle_with(&channel, move |mut cx| {
+            let response_obj = cx.empty_object();
 
             Ok(response_obj)
         });
