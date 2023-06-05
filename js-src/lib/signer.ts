@@ -19,7 +19,8 @@ interface LocalSigner {
   type: 'local';
   certificate: Buffer;
   privateKey: Buffer;
-  algorithm: SigningAlgorithm;
+  algorithm?: SigningAlgorithm;
+  tsaUrl?: string;
 }
 
 interface RemoteSigner {
