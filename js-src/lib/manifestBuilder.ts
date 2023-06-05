@@ -3,23 +3,28 @@ import type { Manifest } from '../types';
 export type ManifestDefinition = Partial<Omit<Manifest, 'signature_info'>> &
   Required<Pick<Manifest, 'claim_generator' | 'format'>>;
 
+export type BaseManifestDefinition = Omit<
+  Manifest,
+  'thumbnail' | 'ingredients'
+>;
+
 export class ManifestBuilder {
   static requiredFields = ['claim_generator', 'format'];
 
-  constructor(baseDefinition: ManifestDefinition) {
+  constructor(baseDefinition: BaseManifestDefinition) {
     // FIXME: figure out why this causes an unknown error in jasmine
 
-    // const missingFields = difference(
-    //   ManifestBuilder.requiredFields,
-    //   Object.keys(baseDefinition),
-    // );
+    const missingFields = difference(
+      ManifestBuilder.requiredFields,
+      Object.keys(baseDefinition),
+    );
 
-    // if (missingFields.length) {
-    //   const cause = new Error(
-    //     `Missing required fields: ${missingFields.join(', ')}`,
-    //   );
-    //   throw new ManifestBuilderError({ cause });
-    // }
+    if (missingFields.length) {
+      const cause = new Error(
+        `Missing required fields: ${missingFields.join(', ')}`,
+      );
+      throw new ManifestBuilderError({ cause });
+    }
 
     this.#config = config;
     this.#definition = baseDefinition;
