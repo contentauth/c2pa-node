@@ -45,5 +45,8 @@
   "bugs": {
     "url": "https://github.com/contentauth/c2pa-node/issues"
   },
-  "homepage": "https://github.com/contentauth/c2pa-node#readme"
+  "homepage": "https://github.com/contentauth/c2pa-node#readme",
+  "dependencies": {
+    "@changesets/cli": "^2.26.1"
+  }
 }
