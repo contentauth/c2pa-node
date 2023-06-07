@@ -13,7 +13,11 @@ const execCallback = (err, stdout, stderr) => {
 };
 
 function rebuildTypeScript() {
-  exec('npx ts-node ./js-src/index.ts', execCallback);
+  exec(
+    'npx ts-node --emit ./js-src/index.ts',
+    { env: { ...process.env, NODE_ENV: 'development' } },
+    execCallback,
+  );
 }
 
 function rebuildRust() {

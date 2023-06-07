@@ -47,6 +47,7 @@
   },
   "homepage": "https://github.com/contentauth/c2pa-node#readme",
   "dependencies": {
+    "piscina": "^3.2.0",
     "sharp": "^0.32.1"
   }
 }
