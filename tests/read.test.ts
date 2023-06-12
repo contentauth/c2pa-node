@@ -1,11 +1,21 @@
 import { readFile } from 'node:fs/promises';
-import { readAsset } from '../js-src';
-import type { ManifestAssertion } from '../js-src/types';
+import { C2pa, createC2pa } from '../dist/js-src/index';
+import type { ManifestAssertion } from '../dist/js-src/types';
 
 describe('readAsset()', () => {
+  let c2pa: C2pa;
+
+  beforeEach(() => {
+    c2pa = createC2pa();
+  });
+
+  afterEach(async () => {
+    await c2pa?.destroy();
+  });
+
   test('should read a JPEG image with an embedded manifest', async () => {
     const fixture = await readFile('tests/fixtures/CAICAI.jpg');
-    const result = await readAsset('image/jpeg', fixture);
+    const result = await c2pa.read({ mimeType: 'image/jpeg', buffer: fixture });
     const { active_manifest, manifests, validation_status } = result!;
 
     // Manifests
@@ -133,8 +143,8 @@ describe('readAsset()', () => {
 
     // Thumbnail
     expect(active_manifest?.thumbnail?.format).toEqual('image/jpeg');
-    expect(active_manifest?.thumbnail?.data).toBeInstanceOf(Buffer);
-    expect(active_manifest?.thumbnail?.data?.length).toEqual(72217);
+    expect(active_manifest?.thumbnail?.data).toBeInstanceOf(ArrayBuffer);
+    expect(active_manifest?.thumbnail?.data?.byteLength).toEqual(72217);
 
     // Validation status
     expect(validation_status.length).toEqual(0);
@@ -142,7 +152,7 @@ describe('readAsset()', () => {
 
   test('should read a JPEG image with a cloud manifest', async () => {
     const fixture = await readFile('tests/fixtures/cloud-only-firefly.jpg');
-    const result = await readAsset('image/jpeg', fixture);
+    const result = await c2pa.read({ mimeType: 'image/jpeg', buffer: fixture });
     const { active_manifest, manifests, validation_status } = result!;
 
     // Manifests
@@ -175,14 +185,14 @@ describe('readAsset()', () => {
 
   test('should return null for an image with no manifest', async () => {
     const fixture = await readFile('tests/fixtures/A.jpg');
-    const result = await readAsset('image/jpeg', fixture);
+    const result = await c2pa.read({ mimeType: 'image/jpeg', buffer: fixture });
 
     expect(result).toBeNull();
   });
 
   test('should read a JPEG image that is OTGP', async () => {
     const fixture = await readFile('tests/fixtures/XCA.jpg');
-    const result = await readAsset('image/jpeg', fixture);
+    const result = await c2pa.read({ mimeType: 'image/jpeg', buffer: fixture });
 
     expect(result?.validation_status.length).toEqual(1);
     expect(result?.validation_status[0]).toMatchObject({

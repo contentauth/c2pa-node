@@ -13,10 +13,12 @@ You can install the project with npm. In the project directory, run:
 ```sh
 # Switch to the supported version of Node.js for building
 $ nvm use
+# Install pnpm
+$ npm install -g pnpm
 # Install dependencies
-$ npm install
+$ pnpm install
 # Build the SDK
-$ npm run build
+$ pnpm run build
 ```
 
 ## Testing
@@ -24,5 +26,5 @@ $ npm run build
 After installation, you can run the test suite by running:
 
 ```sh
-$ npm test
+$ pnpm test
 ```

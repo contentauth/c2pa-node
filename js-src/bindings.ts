@@ -1,11 +1,13 @@
+import piscina from 'piscina';
 import type {
   Manifest,
   ResourceStore as ManifestResourceStore,
   ManifestStore,
   SignatureInfo,
-} from '../types';
+} from './types';
 
-const bindings = require('../generated/c2pa.node');
+const bindings = require(process.env.C2PA_LIBRARY_PATH ??
+  '../generated/c2pa.node');
 
 const missingErrors = [
   // No embedded or remote provenance found in the asset
@@ -50,7 +52,7 @@ function parseSignatureInfo(manifest: Manifest) {
   };
 }
 
-function resolveManifest(
+export function resolveManifest(
   manifest: Manifest,
   resourceStore: ManifestResourceStore,
 ): ResolvedManifest {
@@ -65,10 +67,15 @@ function resolveManifest(
     thumbnail: thumbnailResource
       ? {
           format: manifest.thumbnail?.format ?? '',
-          data: Buffer.from(thumbnailResource.buffer),
+          data: thumbnailResource.buffer,
         }
       : null,
   } as ResolvedManifest;
+}
+
+export interface Asset {
+  mimeType: string;
+  buffer: Buffer;
 }
 
 /**
@@ -77,11 +84,11 @@ function resolveManifest(
  * @param buffer A buffer containing the asset data
  * @returns A promise containing C2PA data, if present
  */
-export async function readAsset(
-  mimeType: string,
-  buffer: Buffer,
+export async function read(
+  asset: Asset,
 ): Promise<ResolvedManifestStore | null> {
   try {
+    const { mimeType, buffer } = asset;
     const result = await bindings.read_asset(mimeType, buffer);
     const manifestStore = JSON.parse(result.manifest_store) as ManifestStore;
     const resourceStore = result.resource_store as ResourceStore;
@@ -97,6 +104,7 @@ export async function readAsset(
       };
     }, {});
 
+    // TODO: Add transferable support
     return {
       active_manifest: activeManifestLabel
         ? manifests[activeManifestLabel]
