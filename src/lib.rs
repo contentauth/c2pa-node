@@ -23,7 +23,7 @@ fn add_to_resource_object(
 }
 
 // Allows us to fetch an embedded or remote manifest
-fn read_asset(mut cx: FunctionContext) -> JsResult<JsPromise> {
+fn read(mut cx: FunctionContext) -> JsResult<JsPromise> {
     let rt = runtime(&mut cx)?;
     let channel = cx.channel();
     let (deferred, promise) = cx.promise();
@@ -99,7 +99,7 @@ fn read_asset(mut cx: FunctionContext) -> JsResult<JsPromise> {
 
 #[neon::main]
 fn main(mut cx: ModuleContext) -> NeonResult<()> {
-    cx.export_function("read_asset", read_asset)?;
-    cx.export_function("sign_asset_local", sign::sign_asset_local)?;
+    cx.export_function("read", read)?;
+    cx.export_function("sign", sign::sign)?;
     Ok(())
 }
