@@ -89,7 +89,7 @@ export async function read(
 ): Promise<ResolvedManifestStore | null> {
   try {
     const { mimeType, buffer } = asset;
-    const result = await bindings.read_asset(mimeType, buffer);
+    const result = await bindings.read(mimeType, buffer);
     const manifestStore = JSON.parse(result.manifest_store) as ManifestStore;
     const resourceStore = result.resource_store as ResourceStore;
     const activeManifestLabel = manifestStore.active_manifest;

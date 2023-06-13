@@ -6,13 +6,10 @@ use neon::types::{JsBuffer, JsUint8Array};
 use std::result::Result as StdResult;
 
 mod error;
-mod runtime;
 mod sign;
 
-use crate::runtime::runtime;
-
 fn add_to_resource_object(
-    cx: &mut TaskContext,
+    cx: &mut FunctionContext,
     obj: &Handle<JsObject>,
     key: &str,
     value: &[u8],
@@ -23,78 +20,69 @@ fn add_to_resource_object(
 }
 
 // Allows us to fetch an embedded or remote manifest
-fn read(mut cx: FunctionContext) -> JsResult<JsPromise> {
-    let rt = runtime(&mut cx)?;
-    let channel = cx.channel();
-    let (deferred, promise) = cx.promise();
-
+fn read(mut cx: FunctionContext) -> JsResult<JsObject> {
     let format = cx.argument::<JsString>(0)?.value(&mut cx);
     let buffer = cx.argument::<JsBuffer>(1)?;
     // TODO: See if we can do this without copying
     let data = buffer.as_slice(&cx).to_vec();
 
-    rt.spawn(async move {
-        let store = ManifestStore::from_bytes(&format, &data, true);
+    let store = ManifestStore::from_bytes(&format, &data, true);
 
-        deferred.settle_with(&channel, move |mut cx| {
-            let response_obj = cx.empty_object();
-            let store = match store {
-                Ok(store) => store,
-                Err(err) => {
-                    let js_err = cx.error(err.to_string())?;
-                    let js_err_name = cx.string(format!("{:?}", err));
-                    js_err.set(&mut cx, "name", js_err_name)?;
-                    return cx.throw(js_err);
-                }
-            };
-            let serialized_store = serde_json::to_string(&store)
-                .map(|s| cx.string(s))
-                .or_else(|err| cx.throw_error(err.to_string()))?;
-            let resource_store = cx.empty_object();
+    let response_obj = cx.empty_object();
+    let store = match store {
+        Ok(store) => store,
+        Err(err) => {
+            let js_err = cx.error(err.to_string())?;
+            let js_err_name = cx.string(format!("{:?}", err));
+            js_err.set(&mut cx, "name", js_err_name)?;
+            return cx.throw(js_err);
+        }
+    };
+    let serialized_store = serde_json::to_string(&store)
+        .map(|s| cx.string(s))
+        .or_else(|err| cx.throw_error(err.to_string()))?;
+    let resource_store = cx.empty_object();
 
-            store
-                .manifests()
+    store
+        .manifests()
+        .iter()
+        // Accumulate resources for every manifest into a map
+        .try_for_each(|(label, manifest)| -> StdResult<(), Throw> {
+            let manifest_resources = manifest.resources().resources();
+            let manifest_resource_obj = cx.empty_object();
+            // Process the manifest's ResourceStore
+            manifest_resources
                 .iter()
-                // Accumulate resources for every manifest into a map
-                .try_for_each(|(label, manifest)| -> StdResult<(), Throw> {
-                    let manifest_resources = manifest.resources().resources();
-                    let manifest_resource_obj = cx.empty_object();
-                    // Process the manifest's ResourceStore
-                    manifest_resources
+                .try_for_each(|(k, v)| -> StdResult<(), Throw> {
+                    add_to_resource_object(&mut cx, &manifest_resource_obj, k, v)
+                })?;
+            // Resources for the manifest are stored in a separate store from the ingredients, so we need to
+            // separately process the ingredients' ResourceStores
+            manifest
+                .ingredients()
+                .iter()
+                .try_for_each(|ingredient| -> StdResult<(), Throw> {
+                    ingredient
+                        .resources()
+                        .resources()
                         .iter()
-                        .try_for_each(|(k, v)| -> StdResult<(), Throw> {
+                        .try_for_each(|(k, v)| {
                             add_to_resource_object(&mut cx, &manifest_resource_obj, k, v)
-                        })?;
-                    // Resources for the manifest are stored in a separate store from the ingredients, so we need to
-                    // separately process the ingredients' ResourceStores
-                    manifest.ingredients().iter().try_for_each(
-                        |ingredient| -> StdResult<(), Throw> {
-                            ingredient
-                                .resources()
-                                .resources()
-                                .iter()
-                                .try_for_each(|(k, v)| {
-                                    add_to_resource_object(&mut cx, &manifest_resource_obj, k, v)
-                                })
-                        },
-                    )?;
-                    resource_store.set(&mut cx, label.as_ref(), manifest_resource_obj)?;
-                    Ok(())
-                })
-                .or_else(|err| cx.throw_error(err.to_string()))?;
+                        })
+                })?;
+            resource_store.set(&mut cx, label.as_ref(), manifest_resource_obj)?;
+            Ok(())
+        })
+        .or_else(|err| cx.throw_error(err.to_string()))?;
 
-            response_obj
-                .set(&mut cx, "manifest_store", serialized_store)
-                .or_else(|err| cx.throw_error(err.to_string()))?;
-            response_obj
-                .set(&mut cx, "resource_store", resource_store)
-                .or_else(|err| cx.throw_error(err.to_string()))?;
+    response_obj
+        .set(&mut cx, "manifest_store", serialized_store)
+        .or_else(|err| cx.throw_error(err.to_string()))?;
+    response_obj
+        .set(&mut cx, "resource_store", resource_store)
+        .or_else(|err| cx.throw_error(err.to_string()))?;
 
-            Ok(response_obj)
-        });
-    });
-
-    Ok(promise)
+    Ok(response_obj)
 }
 
 #[neon::main]

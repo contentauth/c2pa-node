@@ -4,4 +4,3 @@ target
 npm-debug.log*
 generated
 dist
-.ts-node
