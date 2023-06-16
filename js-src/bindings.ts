@@ -1,5 +1,6 @@
 import piscina from 'piscina';
 import type { C2paOptions } from './';
+import { SigningError } from './lib/error';
 import { ManifestBuilder } from './lib/manifestBuilder';
 import type {
   Manifest,
@@ -122,41 +123,30 @@ export async function read(
   }
 }
 
-export async function sign(
-  asset: Asset,
-  manifest: ManifestBuilder,
-  options: C2paOptions,
-): Promise<ResolvedManifestStore | null> {
+export interface SignProps {
+  asset: Asset;
+  manifest: ManifestBuilder;
+  options: C2paOptions;
+}
+
+export async function sign({
+  asset,
+  manifest,
+  options,
+}: SignProps): Promise<Asset> {
   try {
     const { mimeType, buffer } = asset;
-    const serializedManifest = JSON.stringify(manifest.definition);
-    const result = await bindings.sign(serializedManifest, mimeType, buffer);
-    const manifestStore = JSON.parse(result.manifest_store) as ManifestStore;
-    const resourceStore = result.resource_store as ResourceStore;
-    const activeManifestLabel = manifestStore.active_manifest;
-    const manifests: ResolvedManifestStore['manifests'] = Object.keys(
-      manifestStore.manifests,
-    ).reduce((acc, label) => {
-      const manifest = manifestStore.manifests[label] as Manifest;
-
-      return {
-        ...acc,
-        [label]: resolveManifest(manifest, resourceStore[label]),
-      };
-    }, {});
-
-    // TODO: Add transferable support
+    const serializedManifest = JSON.stringify(manifest);
+    const result = await bindings.sign(serializedManifest, {}, buffer, {
+      format: mimeType,
+      signer: options.signer,
+    });
+    console.log('result', result);
     return {
-      active_manifest: activeManifestLabel
-        ? manifests[activeManifestLabel]
-        : null,
-      manifests,
-      validation_status: manifestStore.validation_status ?? [],
+      mimeType,
+      buffer: Buffer.from(result),
     };
   } catch (err: unknown) {
-    if (missingErrors.some((test) => test === (err as Error)?.name)) {
-      return null;
-    }
-    throw err;
+    throw new SigningError({ cause: err });
   }
 }

@@ -2,7 +2,7 @@ import { readFile } from 'node:fs/promises';
 import { C2pa, createC2pa } from '../dist/js-src/index';
 import type { ManifestAssertion } from '../dist/js-src/types';
 
-describe('readAsset()', () => {
+describe('read()', () => {
   let c2pa: C2pa;
 
   beforeEach(() => {

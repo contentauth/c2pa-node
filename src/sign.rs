@@ -121,9 +121,9 @@ fn sign_manifest(manifest: &mut Manifest, asset: &[u8], options: &SignOptions) -
 pub fn sign(mut cx: FunctionContext) -> JsResult<JsArrayBuffer> {
     let serialized_manifest = cx.argument::<JsString>(0)?.value(&mut cx);
     let js_resource_store = cx.argument::<JsObject>(1)?;
-    let asset = cx.argument::<JsBuffer>(2)?.as_slice(&mut cx).to_vec();
+    let asset = cx.argument::<JsBuffer>(2)?.as_slice(&cx).to_vec();
     let options = cx
-        .argument::<JsObject>(2)
+        .argument::<JsObject>(3)
         .and_then(|opts| parse_options(&mut cx, opts))?;
     let resource_store = parse_js_resource_store(&mut cx, js_resource_store)?;
     let mut manifest = process_manifest(&serialized_manifest, &resource_store).unwrap();

@@ -1,3 +1,5 @@
+import { readFile } from 'node:fs/promises';
+
 export enum SigningAlgorithm {
   // ECDSA with SHA-256
   ES256 = 'es256',
@@ -30,3 +32,18 @@ export interface RemoteSigner {
 }
 
 export type Signer = LocalSigner | RemoteSigner;
+
+export async function createTestSigner(): Promise<Signer> {
+  const [certificate, privateKey] = await Promise.all([
+    readFile('tests/fixtures/es256_certs.pem'),
+    readFile('tests/fixtures/es256_private.key'),
+  ]);
+
+  return {
+    type: 'local',
+    certificate,
+    privateKey,
+    algorithm: SigningAlgorithm.ES256,
+    tsaUrl: 'http://timestamp.digicert.com',
+  };
+}
