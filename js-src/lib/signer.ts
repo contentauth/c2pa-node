@@ -1,4 +1,4 @@
-enum SigningAlgorithm {
+export enum SigningAlgorithm {
   // ECDSA with SHA-256
   ES256 = 'es256',
   // ECDSA with SHA-384
@@ -15,7 +15,7 @@ enum SigningAlgorithm {
   Ed25519 = 'ed25519',
 }
 
-interface LocalSigner {
+export interface LocalSigner {
   type: 'local';
   certificate: Buffer;
   privateKey: Buffer;
@@ -23,8 +23,10 @@ interface LocalSigner {
   tsaUrl?: string;
 }
 
-interface RemoteSigner {
+export interface RemoteSigner {
   type: 'remote';
   reserveSize: () => Promise<number>;
   sign: (data: Buffer) => Promise<Buffer>;
 }
+
+export type Signer = LocalSigner | RemoteSigner;

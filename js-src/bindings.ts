@@ -1,4 +1,6 @@
 import piscina from 'piscina';
+import type { C2paOptions } from './';
+import { ManifestBuilder } from './lib/manifestBuilder';
 import type {
   Manifest,
   ResourceStore as ManifestResourceStore,
@@ -90,6 +92,45 @@ export async function read(
   try {
     const { mimeType, buffer } = asset;
     const result = await bindings.read(mimeType, buffer);
+    const manifestStore = JSON.parse(result.manifest_store) as ManifestStore;
+    const resourceStore = result.resource_store as ResourceStore;
+    const activeManifestLabel = manifestStore.active_manifest;
+    const manifests: ResolvedManifestStore['manifests'] = Object.keys(
+      manifestStore.manifests,
+    ).reduce((acc, label) => {
+      const manifest = manifestStore.manifests[label] as Manifest;
+
+      return {
+        ...acc,
+        [label]: resolveManifest(manifest, resourceStore[label]),
+      };
+    }, {});
+
+    // TODO: Add transferable support
+    return {
+      active_manifest: activeManifestLabel
+        ? manifests[activeManifestLabel]
+        : null,
+      manifests,
+      validation_status: manifestStore.validation_status ?? [],
+    };
+  } catch (err: unknown) {
+    if (missingErrors.some((test) => test === (err as Error)?.name)) {
+      return null;
+    }
+    throw err;
+  }
+}
+
+export async function sign(
+  asset: Asset,
+  manifest: ManifestBuilder,
+  options: C2paOptions,
+): Promise<ResolvedManifestStore | null> {
+  try {
+    const { mimeType, buffer } = asset;
+    const serializedManifest = JSON.stringify(manifest.definition);
+    const result = await bindings.sign(serializedManifest, mimeType, buffer);
     const manifestStore = JSON.parse(result.manifest_store) as ManifestStore;
     const resourceStore = result.resource_store as ResourceStore;
     const activeManifestLabel = manifestStore.active_manifest;

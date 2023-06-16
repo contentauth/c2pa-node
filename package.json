@@ -7,6 +7,9 @@
   "files": [
     "dist"
   ],
+  "engines": {
+    "node": ">=16.20.0"
+  },
   "scripts": {
     "dev": "node ./scripts/dev-reload.js",
     "build:rust": "cargo-cp-artifact -nc generated/c2pa.node -- cargo build --message-format=json-render-diagnostics --release",
