@@ -13,7 +13,7 @@ crate-type = ["cdylib"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-c2pa = { git = "https://github.com/contentauth/c2pa-rs", branch = "main", features = [
+c2pa = { path = "../c2pa-rs/sdk", features = [
 	"fetch_remote_manifests",
 	"file_io",
 	"xmp_write",

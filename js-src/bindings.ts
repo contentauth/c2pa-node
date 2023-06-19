@@ -141,7 +141,7 @@ export async function sign({
       format: mimeType,
       signer: options.signer,
     });
-    console.log('result', result);
+
     return {
       mimeType,
       buffer: Buffer.from(result),

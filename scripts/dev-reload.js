@@ -47,7 +47,7 @@ async function main() {
   console.log(chalk.yellow('👀 Watching for changes...'));
 
   chokidar
-    .watch(['generated/c2pa.node', '{src,js-src}/**.{js,ts,rs}'])
+    .watch(['generated/c2pa.node', '{src,js-src}/**/*.{js,ts,rs}'])
     .on('change', (path) => {
       if (/\.rs$/i.test(path)) {
         rebuildRust();

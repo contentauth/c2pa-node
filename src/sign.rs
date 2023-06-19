@@ -1,4 +1,5 @@
 use c2pa::{create_signer, Manifest, RemoteSigner, SigningAlg};
+use core::panic;
 use neon::prelude::*;
 use neon::types::buffer::TypedArray;
 use neon::types::JsBuffer;
@@ -97,9 +98,10 @@ fn process_manifest(
     let mut manifest: Manifest = serde_json::from_str(serialized_manifest)
         .map_err(|err| Error::ManifestParseError(err.to_string()))?;
     let resources = manifest.resources_mut();
-    resource_store.iter().for_each(|(k, v)| {
-        resources.add(k, v.to_owned());
-    });
+    resource_store.iter().try_for_each(|(k, v)| -> Result<()> {
+        resources.add(k, v.to_owned())?;
+        Ok(())
+    })?;
 
     Ok(manifest)
 }
@@ -114,7 +116,7 @@ fn sign_manifest(manifest: &mut Manifest, asset: &[u8], options: &SignOptions) -
         )
         .map(|signer| manifest.embed_from_memory(&options.format, asset, &*signer))?
         .map_err(Error::from),
-        SignerType::Remote(signer) => Ok(vec![]),
+        SignerType::Remote(signer) => panic!("Remote signer not implemented yet"),
     }
 }
 

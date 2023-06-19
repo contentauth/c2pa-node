@@ -23,8 +23,9 @@ export class ManifestBuilder {
   }
 
   constructor(baseDefinition: BaseManifestDefinition) {
-    const missingFields = Object.keys(baseDefinition).filter(
-      (x) => !ManifestBuilder.requiredFields.includes(x),
+    const providedFields = Object.keys(baseDefinition);
+    const missingFields = ManifestBuilder.requiredFields.filter(
+      (x) => !providedFields.includes(x),
     );
 
     if (missingFields.length) {
