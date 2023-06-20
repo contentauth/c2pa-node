@@ -7,6 +7,7 @@ use std::collections::HashMap;
 use std::str::FromStr;
 
 use crate::error::{Error, Result};
+use crate::ingredient::add_source_ingredient;
 
 /// Parses a ResourceStore sent in from Node.js into a HashMap<String, Vec<u8>>
 fn parse_js_resource_store(
@@ -86,7 +87,7 @@ fn parse_options(cx: &mut FunctionContext, obj: Handle<JsObject>) -> NeonResult<
     let format = obj
         .get::<JsString, _, _>(cx, "format")
         .map(|val| val.value(cx))
-        .or_else(|err| cx.throw_error("No format provided"))?;
+        .or_else(|_| cx.throw_error("No format provided"))?;
 
     Ok(SignOptions { signer, format })
 }
@@ -128,9 +129,14 @@ pub fn sign(mut cx: FunctionContext) -> JsResult<JsArrayBuffer> {
         .argument::<JsObject>(3)
         .and_then(|opts| parse_options(&mut cx, opts))?;
     let resource_store = parse_js_resource_store(&mut cx, js_resource_store)?;
-    let mut manifest = process_manifest(&serialized_manifest, &resource_store).unwrap();
 
-    let signed = match sign_manifest(&mut manifest, &asset, &options) {
+    let signed = process_manifest(&serialized_manifest, &resource_store)
+        .and_then(|mut manifest| {
+            add_source_ingredient(&mut manifest, &options.format, &asset).map(|_| manifest)
+        })
+        .and_then(|mut manifest| sign_manifest(&mut manifest, &asset, &options));
+
+    let signed_data = match signed {
         Ok(signed) => JsArrayBuffer::from_slice(&mut cx, &signed),
         Err(err) => {
             // TODO: See if we can factor this out into its own function without mutable borrow issues with `cx`
@@ -141,5 +147,5 @@ pub fn sign(mut cx: FunctionContext) -> JsResult<JsArrayBuffer> {
         }
     }?;
 
-    Ok(signed)
+    Ok(signed_data)
 }

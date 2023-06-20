@@ -6,6 +6,7 @@ use neon::types::{JsBuffer, JsUint8Array};
 use std::result::Result as StdResult;
 
 mod error;
+mod ingredient;
 mod sign;
 
 fn add_to_resource_object(
