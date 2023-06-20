@@ -361,6 +361,7 @@ dependencies = [
 name = "c2pa-node"
 version = "0.1.0"
 dependencies = [
+ "async-trait",
  "c2pa",
  "futures",
  "neon",
@@ -1442,6 +1443,7 @@ dependencies = [
  "semver",
  "send_wrapper",
  "smallvec",
+ "tokio",
 ]
 
 [[package]]

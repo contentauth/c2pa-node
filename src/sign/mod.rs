@@ -1,13 +1,17 @@
-use c2pa::{create_signer, Manifest, RemoteSigner, SigningAlg};
-use core::panic;
+use c2pa::{create_signer, Manifest, SigningAlg};
+use futures::executor;
 use neon::prelude::*;
 use neon::types::buffer::TypedArray;
 use neon::types::JsBuffer;
 use std::collections::HashMap;
 use std::str::FromStr;
 
+mod local;
+mod remote;
+
 use crate::error::{Error, Result};
 use crate::ingredient::add_source_ingredient;
+use crate::sign::remote::RemoteSigner;
 
 /// Parses a ResourceStore sent in from Node.js into a HashMap<String, Vec<u8>>
 fn parse_js_resource_store(
@@ -39,9 +43,8 @@ struct LocalSignerConfiguration {
 }
 
 enum SignerType {
-    // We need to just store the configuration here since the local signer can't be sent across threads
     Local(LocalSignerConfiguration),
-    Remote(Box<dyn RemoteSigner>),
+    Remote(RemoteSigner),
 }
 
 struct SignOptions {
@@ -51,34 +54,40 @@ struct SignOptions {
 
 fn signer_from_opts(cx: &mut FunctionContext, opts: &Handle<JsObject>) -> NeonResult<SignerType> {
     let signer_type = opts.get::<JsString, _, _>(cx, "type")?.value(cx);
-    if signer_type == "local" {
-        let cert = opts
-            .get::<JsBuffer, _, _>(cx, "certificate")?
-            .as_slice(cx)
-            .to_vec();
-        let pkey = opts
-            .get::<JsBuffer, _, _>(cx, "privateKey")?
-            .as_slice(cx)
-            .to_vec();
-        let alg_str = opts
-            .get::<JsString, _, _>(cx, "algorithm")
-            .map(|val| val.value(cx))
-            .or(Ok(String::from("es256")))?;
-        let alg = SigningAlg::from_str(&alg_str).or_else(|err| cx.throw_error(err.to_string()))?;
-        let tsa_url = opts
-            .get::<JsString, _, _>(cx, "tsaUrl")
-            .map(|val| val.value(cx))
-            .ok();
 
-        return Ok(SignerType::Local(LocalSignerConfiguration {
-            cert,
-            pkey,
-            alg,
-            tsa_url,
-        }));
+    match signer_type.as_str() {
+        "local" => {
+            let cert = opts
+                .get::<JsBuffer, _, _>(cx, "certificate")?
+                .as_slice(cx)
+                .to_vec();
+            let pkey = opts
+                .get::<JsBuffer, _, _>(cx, "privateKey")?
+                .as_slice(cx)
+                .to_vec();
+            let alg_str = opts
+                .get::<JsString, _, _>(cx, "algorithm")
+                .map(|val| val.value(cx))
+                .or(Ok(String::from("es256")))?;
+            let alg =
+                SigningAlg::from_str(&alg_str).or_else(|err| cx.throw_error(err.to_string()))?;
+            let tsa_url = opts
+                .get::<JsString, _, _>(cx, "tsaUrl")
+                .map(|val| val.value(cx))
+                .ok();
+
+            Ok(SignerType::Local(LocalSignerConfiguration {
+                cert,
+                pkey,
+                alg,
+                tsa_url,
+            }))
+        }
+        "remote" => executor::block_on(async {
+            Ok(SignerType::Remote(RemoteSigner::from_options(cx, opts)?))
+        }),
+        _ => cx.throw_error("Invalid signer type"),
     }
-
-    cx.throw_error("Invalid signer type")
 }
 
 fn parse_options(cx: &mut FunctionContext, obj: Handle<JsObject>) -> NeonResult<SignOptions> {
@@ -117,7 +126,15 @@ fn sign_manifest(manifest: &mut Manifest, asset: &[u8], options: &SignOptions) -
         )
         .map(|signer| manifest.embed_from_memory(&options.format, asset, &*signer))?
         .map_err(Error::from),
-        SignerType::Remote(signer) => panic!("Remote signer not implemented yet"),
+        SignerType::Remote(signer) => {
+            let (signed_asset, _manifest) = executor::block_on(async move {
+                manifest
+                    .embed_from_memory_remote_signed(&options.format, asset, signer)
+                    .await
+            })?;
+
+            Ok(signed_asset)
+        }
     }
 }
 

@@ -25,10 +25,15 @@ export interface LocalSigner {
   tsaUrl?: string;
 }
 
+export interface SignInput {
+  reserveSize: number;
+  toBeSigned: Buffer;
+}
+
 export interface RemoteSigner {
   type: 'remote';
   reserveSize: () => Promise<number>;
-  sign: (data: Buffer) => Promise<Buffer>;
+  sign: (input: SignInput) => Promise<Buffer>;
 }
 
 export type Signer = LocalSigner | RemoteSigner;

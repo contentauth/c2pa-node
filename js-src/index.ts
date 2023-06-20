@@ -48,6 +48,7 @@ export function createC2pa(options?: C2paOptions) {
         manifest: manifest.definition,
         options: opts,
       };
+      console.log('argsWithOptions', argsWithOptions);
 
       return piscina.run(argsWithOptions, {
         name: 'sign',
