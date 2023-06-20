@@ -87,7 +87,7 @@ describe('sign()', () => {
     });
   });
 
-  describe.skip('remote signing', () => {
+  describe.only('remote signing', () => {
     let c2pa: C2pa;
     // let httpMocks: Record<string, Interceptor> = {};
 
@@ -112,6 +112,8 @@ describe('sign()', () => {
         },
         async sign({ reserveSize, toBeSigned }) {
           const url = `${host}/manifest/sign/v2?box_size=${reserveSize}`;
+          console.log('url', url);
+          console.log('toBeSigned', toBeSigned);
           const res = await fetch(url, {
             method: 'POST',
             headers: new Headers({
@@ -120,7 +122,11 @@ describe('sign()', () => {
             }),
             body: toBeSigned,
           });
-          return Buffer.from(await res.arrayBuffer());
+          console.log('res', res);
+          console.log('body', await res.text());
+          const buffer = await res.buffer();
+          console.log('buffer', buffer.length);
+          return buffer;
         },
       };
       c2pa = createC2pa({
@@ -141,6 +147,7 @@ describe('sign()', () => {
         title: 'node_test_local_signer.jpg',
       });
       const signed = await c2pa.sign({ asset, manifest });
+      console.log('signed', signed);
 
       const result = await c2pa.read({
         mimeType: 'image/jpeg',

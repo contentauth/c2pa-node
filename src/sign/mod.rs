@@ -1,9 +1,8 @@
-use c2pa::{create_signer, Manifest, SigningAlg};
+use c2pa::{create_signer, Manifest};
 use neon::prelude::*;
 use neon::types::buffer::TypedArray;
 use neon::types::JsBuffer;
 use std::collections::HashMap;
-use std::str::FromStr;
 
 mod local;
 mod remote;
@@ -12,6 +11,9 @@ use crate::error::{Error, Result};
 use crate::ingredient::add_source_ingredient;
 use crate::runtime::runtime;
 use crate::sign::remote::RemoteSigner;
+
+use self::local::LocalSignerConfiguration;
+use self::remote::RemoteSignerConfiguration;
 
 /// Parses a ResourceStore sent in from Node.js into a HashMap<String, Vec<u8>>
 fn parse_js_resource_store(
@@ -34,17 +36,9 @@ fn parse_js_resource_store(
         })
 }
 
-#[derive(Debug)]
-struct LocalSignerConfiguration {
-    pub cert: Vec<u8>,
-    pub pkey: Vec<u8>,
-    pub alg: SigningAlg,
-    pub tsa_url: Option<String>,
-}
-
 enum SignerType {
     Local(LocalSignerConfiguration),
-    Remote(RemoteSigner),
+    Remote(RemoteSignerConfiguration),
 }
 
 struct SignOptions {
@@ -57,33 +51,13 @@ fn signer_from_opts(cx: &mut FunctionContext, opts: &Handle<JsObject>) -> NeonRe
 
     match signer_type.as_str() {
         "local" => {
-            let cert = opts
-                .get::<JsBuffer, _, _>(cx, "certificate")?
-                .as_slice(cx)
-                .to_vec();
-            let pkey = opts
-                .get::<JsBuffer, _, _>(cx, "privateKey")?
-                .as_slice(cx)
-                .to_vec();
-            let alg_str = opts
-                .get::<JsString, _, _>(cx, "algorithm")
-                .map(|val| val.value(cx))
-                .or(Ok(String::from("es256")))?;
-            let alg =
-                SigningAlg::from_str(&alg_str).or_else(|err| cx.throw_error(err.to_string()))?;
-            let tsa_url = opts
-                .get::<JsString, _, _>(cx, "tsaUrl")
-                .map(|val| val.value(cx))
-                .ok();
-
-            Ok(SignerType::Local(LocalSignerConfiguration {
-                cert,
-                pkey,
-                alg,
-                tsa_url,
-            }))
+            let config = LocalSignerConfiguration::from_options(cx, opts)?;
+            Ok(SignerType::Local(config))
         }
-        "remote" => Ok(SignerType::Remote(RemoteSigner::from_options(cx, opts)?)),
+        "remote" => {
+            let config = RemoteSignerConfiguration::from_options(cx, opts)?;
+            Ok(SignerType::Remote(config))
+        }
         _ => cx.throw_error("Invalid signer type"),
     }
 }
@@ -106,6 +80,7 @@ fn process_manifest(
     let mut manifest: Manifest = serde_json::from_str(serialized_manifest)
         .map_err(|err| Error::ManifestParseError(err.to_string()))?;
     let resources = manifest.resources_mut();
+
     resource_store.iter().try_for_each(|(k, v)| -> Result<()> {
         resources.add(k, v.to_owned())?;
         Ok(())
@@ -117,9 +92,9 @@ fn process_manifest(
 async fn sign_manifest(
     manifest: &mut Manifest,
     asset: &[u8],
-    options: &SignOptions,
+    options: SignOptions,
 ) -> Result<Vec<u8>> {
-    match &options.signer {
+    match options.signer {
         SignerType::Local(config) => create_signer::from_keys(
             &config.cert,
             &config.pkey,
@@ -128,10 +103,14 @@ async fn sign_manifest(
         )
         .map(|signer| manifest.embed_from_memory(&options.format, asset, &*signer))?
         .map_err(Error::from),
-        SignerType::Remote(signer) => {
+
+        SignerType::Remote(config) => {
+            let signer = RemoteSigner::from_config(config).await?;
             let (signed_asset, _manifest) = manifest
-                .embed_from_memory_remote_signed(&options.format, asset, signer)
+                .embed_from_memory_remote_signed(&options.format, asset, &signer)
                 .await?;
+
+            println!("Signed asset: {:?}", signed_asset);
 
             Ok(signed_asset)
         }
@@ -152,12 +131,12 @@ pub fn sign(mut cx: FunctionContext) -> JsResult<JsPromise> {
     let resource_store = parse_js_resource_store(&mut cx, js_resource_store)?;
 
     rt.spawn(async move {
-        let mut manifest = process_manifest(&serialized_manifest, &resource_store)
-            .and_then(|mut manifest| {
-                add_source_ingredient(&mut manifest, &options.format, &asset).map(|_| manifest)
-            })
-            .unwrap();
-        let signed = sign_manifest(&mut manifest, &asset, &options).await;
+        let mut manifest = process_manifest(&serialized_manifest, &resource_store).unwrap();
+        // FIXME: Put this back in
+        // add_source_ingredient(&mut manifest, &options.format, &asset)
+        //     .await
+        //     .unwrap();
+        let signed = sign_manifest(&mut manifest, &asset, options).await;
 
         deferred.settle_with(&channel, move |mut cx| {
             let signed_data = match signed {

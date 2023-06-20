@@ -18,7 +18,7 @@
     "build": "run-s build:rust build:ts build:assets",
     "ci": "cargo test --release && jest",
     "test": "cargo test && jest",
-    "test:watch": "cargo test && jest --watch",
+    "test:watch": "cargo test && jest --watch --runInBand --detectOpenHandles --forceExit",
     "clean": "rimraf dist generated target"
   },
   "author": "Dave Kozma <dkozma@adobe.com>",

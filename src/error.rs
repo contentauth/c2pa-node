@@ -11,6 +11,9 @@ pub enum Error {
     #[error(transparent)]
     RemoteManifestFetch(#[from] reqwest::Error),
 
+    #[error("Fetching reserve size failed: {0}")]
+    RemoteReserveSize(String),
+
     #[error(transparent)]
     C2pa(#[from] c2pa::Error),
 }
