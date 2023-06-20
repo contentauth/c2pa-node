@@ -1,5 +1,4 @@
 use c2pa::{create_signer, Manifest, SigningAlg};
-use futures::executor;
 use neon::prelude::*;
 use neon::types::buffer::TypedArray;
 use neon::types::JsBuffer;
@@ -11,6 +10,7 @@ mod remote;
 
 use crate::error::{Error, Result};
 use crate::ingredient::add_source_ingredient;
+use crate::runtime::runtime;
 use crate::sign::remote::RemoteSigner;
 
 /// Parses a ResourceStore sent in from Node.js into a HashMap<String, Vec<u8>>
@@ -83,9 +83,7 @@ fn signer_from_opts(cx: &mut FunctionContext, opts: &Handle<JsObject>) -> NeonRe
                 tsa_url,
             }))
         }
-        "remote" => executor::block_on(async {
-            Ok(SignerType::Remote(RemoteSigner::from_options(cx, opts)?))
-        }),
+        "remote" => Ok(SignerType::Remote(RemoteSigner::from_options(cx, opts)?)),
         _ => cx.throw_error("Invalid signer type"),
     }
 }
@@ -116,7 +114,11 @@ fn process_manifest(
     Ok(manifest)
 }
 
-fn sign_manifest(manifest: &mut Manifest, asset: &[u8], options: &SignOptions) -> Result<Vec<u8>> {
+async fn sign_manifest(
+    manifest: &mut Manifest,
+    asset: &[u8],
+    options: &SignOptions,
+) -> Result<Vec<u8>> {
     match &options.signer {
         SignerType::Local(config) => create_signer::from_keys(
             &config.cert,
@@ -127,18 +129,20 @@ fn sign_manifest(manifest: &mut Manifest, asset: &[u8], options: &SignOptions) -
         .map(|signer| manifest.embed_from_memory(&options.format, asset, &*signer))?
         .map_err(Error::from),
         SignerType::Remote(signer) => {
-            let (signed_asset, _manifest) = executor::block_on(async move {
-                manifest
-                    .embed_from_memory_remote_signed(&options.format, asset, signer)
-                    .await
-            })?;
+            let (signed_asset, _manifest) = manifest
+                .embed_from_memory_remote_signed(&options.format, asset, signer)
+                .await?;
 
             Ok(signed_asset)
         }
     }
 }
 
-pub fn sign(mut cx: FunctionContext) -> JsResult<JsArrayBuffer> {
+pub fn sign(mut cx: FunctionContext) -> JsResult<JsPromise> {
+    let rt = runtime(&mut cx)?;
+    let channel = cx.channel();
+    let (deferred, promise) = cx.promise();
+
     let serialized_manifest = cx.argument::<JsString>(0)?.value(&mut cx);
     let js_resource_store = cx.argument::<JsObject>(1)?;
     let asset = cx.argument::<JsBuffer>(2)?.as_slice(&cx).to_vec();
@@ -147,22 +151,29 @@ pub fn sign(mut cx: FunctionContext) -> JsResult<JsArrayBuffer> {
         .and_then(|opts| parse_options(&mut cx, opts))?;
     let resource_store = parse_js_resource_store(&mut cx, js_resource_store)?;
 
-    let signed = process_manifest(&serialized_manifest, &resource_store)
-        .and_then(|mut manifest| {
-            add_source_ingredient(&mut manifest, &options.format, &asset).map(|_| manifest)
-        })
-        .and_then(|mut manifest| sign_manifest(&mut manifest, &asset, &options));
+    rt.spawn(async move {
+        let mut manifest = process_manifest(&serialized_manifest, &resource_store)
+            .and_then(|mut manifest| {
+                add_source_ingredient(&mut manifest, &options.format, &asset).map(|_| manifest)
+            })
+            .unwrap();
+        let signed = sign_manifest(&mut manifest, &asset, &options).await;
 
-    let signed_data = match signed {
-        Ok(signed) => JsArrayBuffer::from_slice(&mut cx, &signed),
-        Err(err) => {
-            // TODO: See if we can factor this out into its own function without mutable borrow issues with `cx`
-            let js_err = cx.error(err.to_string())?;
-            let js_err_name = cx.string(format!("{:?}", err));
-            js_err.set(&mut cx, "name", js_err_name)?;
-            return cx.throw(js_err);
-        }
-    }?;
+        deferred.settle_with(&channel, move |mut cx| {
+            let signed_data = match signed {
+                Ok(signed) => JsArrayBuffer::from_slice(&mut cx, &signed)?,
+                Err(err) => {
+                    // TODO: See if we can factor this out into its own function without mutable borrow issues with `cx`
+                    let js_err = cx.error(err.to_string())?;
+                    let js_err_name = cx.string(format!("{:?}", err));
+                    js_err.set(&mut cx, "name", js_err_name)?;
+                    return cx.throw(js_err);
+                }
+            };
 
-    Ok(signed_data)
+            Ok(signed_data)
+        });
+    });
+
+    Ok(promise)
 }

@@ -107,7 +107,6 @@ export async function read(
       };
     }, {});
 
-    // TODO: Add transferable support
     return {
       active_manifest: activeManifestLabel
         ? manifests[activeManifestLabel]
@@ -136,7 +135,7 @@ export async function sign({
 }: SignProps): Promise<Asset> {
   try {
     const { mimeType, buffer } = asset;
-    const serializedManifest = JSON.stringify(manifest);
+    const serializedManifest = JSON.stringify(manifest.definition);
     const result = await bindings.sign(serializedManifest, {}, buffer, {
       format: mimeType,
       signer: options.signer,

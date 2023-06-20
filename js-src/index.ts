@@ -1,4 +1,3 @@
-import { Sign } from 'node:crypto';
 import path from 'node:path';
 import Piscina from 'piscina';
 import { read, sign } from './bindings';
@@ -20,7 +19,6 @@ const defaultOptions: C2paOptions = {
 
 export type C2pa = ReturnType<typeof createC2pa>;
 
-export type ReadProps = Parameters<typeof read>[0];
 export type SignProps = Omit<Parameters<typeof sign>[0], 'options'>;
 
 export function createC2pa(options?: C2paOptions) {
@@ -31,29 +29,19 @@ export function createC2pa(options?: C2paOptions) {
   });
 
   return {
-    async read(args: ReadProps) {
-      return piscina.run(args, {
-        name: 'read',
-        transferList: [args.buffer.buffer],
-      });
-    },
+    read,
 
     async sign(args: SignProps) {
       if (!opts.signer) {
         throw new MissingSignerError();
       }
-      const { manifest, ...otherArgs } = args;
       const argsWithOptions = {
-        ...otherArgs,
-        manifest: manifest.definition,
+        ...args,
         options: opts,
       };
       console.log('argsWithOptions', argsWithOptions);
 
-      return piscina.run(argsWithOptions, {
-        name: 'sign',
-        transferList: [args.asset.buffer.buffer],
-      });
+      return sign(argsWithOptions);
     },
 
     async destroy() {

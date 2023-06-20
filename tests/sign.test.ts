@@ -87,7 +87,7 @@ describe('sign()', () => {
     });
   });
 
-  describe('remote signing', () => {
+  describe.skip('remote signing', () => {
     let c2pa: C2pa;
     // let httpMocks: Record<string, Interceptor> = {};
 

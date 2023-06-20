@@ -365,10 +365,12 @@ dependencies = [
  "c2pa",
  "futures",
  "neon",
+ "once_cell",
  "reqwest",
  "serde",
  "serde_json",
  "thiserror",
+ "tokio",
 ]
 
 [[package]]
