@@ -1,29 +1,13 @@
 use c2pa::{Ingredient, Manifest, ManifestStore};
 use futures::executor;
-use std::io::Read;
 
 use crate::error::{Error, Result};
 
 fn fetch_remote_manifest(url: &str) -> Result<Vec<u8>> {
-    let response = ureq::get(url)
-        .set("User-Agent", "c2pa-node")
-        .call()
-        .map_err(Error::from)?;
-    // Initially allocate 100KB for the response body if no Content-Length header exists
-    let response_len = response
-        .header("Content-Length")
-        .unwrap_or("100000")
-        .parse::<usize>()
-        .map_err(|_| Error::ContentTypeParseError)?;
-    let mut bytes = Vec::with_capacity(response_len);
-
-    response
-        .into_reader()
-        .take(10_000_000)
-        .read_to_end(&mut bytes)
-        .map_err(|_| Error::RemoteManifestReadError)?;
-
-    Ok(bytes)
+    reqwest::blocking::get(url)
+        .and_then(|response| response.bytes())
+        .map(|bytes| bytes.to_vec())
+        .map_err(Error::from)
 }
 
 pub fn create_ingredient(format: &str, buffer: &[u8]) -> Result<Ingredient> {

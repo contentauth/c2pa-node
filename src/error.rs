@@ -9,16 +9,10 @@ pub enum Error {
     ManifestParseError(String),
 
     #[error(transparent)]
-    RemoteManifestFetch(#[from] ureq::Error),
+    RemoteManifestFetch(#[from] reqwest::Error),
 
     #[error(transparent)]
     C2pa(#[from] c2pa::Error),
-
-    #[error("Could not parse Content-Type header")]
-    ContentTypeParseError,
-
-    #[error("Could not read remote manifest data")]
-    RemoteManifestReadError,
 }
 
 pub type Result<T> = std::result::Result<T, Error>;

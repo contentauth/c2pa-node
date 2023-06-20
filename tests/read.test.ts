@@ -202,4 +202,7 @@ describe('read()', () => {
         'asset hash error, name: jumbf manifest, error: hash verification( Hashes do not match )',
     });
   });
+
+  // TODO: Add test for reading a remote manifest
+  test.skip('should read a remote manifest properly', async () => {});
 });

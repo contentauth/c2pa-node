@@ -55,6 +55,7 @@ describe('sign()', () => {
       );
     });
 
+    // TODO: Add proper assertions
     test.skip('should append a claim to a JPEG image with an existing manifest', async () => {
       const fixture = await readFile('tests/fixtures/CAICAI.jpg');
       const asset: Asset = { mimeType: 'image/jpeg', buffer: fixture };
@@ -69,7 +70,7 @@ describe('sign()', () => {
         mimeType: 'image/jpeg',
         buffer: signed.buffer,
       });
-      // console.log('result', result);
+      console.log('result', result);
       const { active_manifest, manifests, validation_status } = result!;
 
       // Manifests
@@ -83,4 +84,6 @@ describe('sign()', () => {
       expect(active_manifest?.format).toEqual('image/jpeg');
     });
   });
+
+  describe('remote signing', () => {});
 });
