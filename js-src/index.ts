@@ -39,7 +39,6 @@ export function createC2pa(options?: C2paOptions) {
         ...args,
         options: opts,
       };
-      console.log('argsWithOptions', argsWithOptions);
 
       return sign(argsWithOptions);
     },

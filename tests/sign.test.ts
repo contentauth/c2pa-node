@@ -107,7 +107,6 @@ describe('sign()', () => {
             }),
           });
           const data = (await res.json()) as { box_size: number };
-          console.log('reserveSize data', data);
           return data.box_size;
         },
         async sign({ reserveSize, toBeSigned }) {
@@ -118,15 +117,12 @@ describe('sign()', () => {
             method: 'POST',
             headers: new Headers({
               'x-api-key': 'cai-desktop-helper',
+              'Content-Type': 'application/octet-stream',
               Authorization: `Bearer ${process.env.STAGE_ACCESS_TOKEN}`,
             }),
             body: toBeSigned,
           });
-          console.log('res', res);
-          console.log('body', await res.text());
-          const buffer = await res.buffer();
-          console.log('buffer', buffer.length);
-          return buffer;
+          return res.buffer();
         },
       };
       c2pa = createC2pa({
@@ -147,12 +143,12 @@ describe('sign()', () => {
         title: 'node_test_local_signer.jpg',
       });
       const signed = await c2pa.sign({ asset, manifest });
-      console.log('signed', signed);
 
       const result = await c2pa.read({
         mimeType: 'image/jpeg',
         buffer: signed.buffer,
       });
+      console.log('result', result);
       const { active_manifest, manifests, validation_status } = result!;
 
       // Manifests

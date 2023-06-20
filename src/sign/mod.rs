@@ -110,8 +110,6 @@ async fn sign_manifest(
                 .embed_from_memory_remote_signed(&options.format, asset, &signer)
                 .await?;
 
-            println!("Signed asset: {:?}", signed_asset);
-
             Ok(signed_asset)
         }
     }
