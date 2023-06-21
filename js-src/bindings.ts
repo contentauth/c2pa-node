@@ -1,5 +1,4 @@
-import piscina from 'piscina';
-import type { C2paOptions } from './';
+import type { C2paOptions, Signer } from './';
 import { SigningError } from './lib/error';
 import { ManifestBuilder } from './lib/manifestBuilder';
 import type {
@@ -145,6 +144,26 @@ export async function sign({
       mimeType,
       buffer: Buffer.from(result),
     };
+  } catch (err: unknown) {
+    throw new SigningError({ cause: err });
+  }
+}
+
+export interface SignClaimBytesProps {
+  claim: Buffer;
+  reserveSize: number;
+  signer: Signer;
+}
+
+export async function signClaimBytes({
+  claim,
+  reserveSize,
+  signer,
+}: SignClaimBytesProps): Promise<Buffer> {
+  try {
+    const result = await bindings.sign_claim_bytes(claim, reserveSize, signer);
+
+    return Buffer.from(result);
   } catch (err: unknown) {
     throw new SigningError({ cause: err });
   }

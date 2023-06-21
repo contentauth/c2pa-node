@@ -1,13 +1,16 @@
-import fetch, { Headers } from 'node-fetch';
+import nock, { type Scope } from 'nock';
 import { readFile } from 'node:fs/promises';
 import {
   Asset,
   C2pa,
   ManifestBuilder,
-  Signer,
   createC2pa,
   createTestSigner,
 } from '../dist/js-src/index';
+import {
+  createRemoteSigner,
+  createSuccessRemoteServiceMock,
+} from './mocks/remote-signer';
 
 describe('sign()', () => {
   describe('local signing', () => {
@@ -18,10 +21,6 @@ describe('sign()', () => {
       c2pa = createC2pa({
         signer,
       });
-    });
-
-    afterEach(async () => {
-      await c2pa?.destroy();
     });
 
     test('should sign an unsigned JPEG image with an embedded manifest', async () => {
@@ -88,53 +87,19 @@ describe('sign()', () => {
   });
 
   describe.only('remote signing', () => {
-    let c2pa: C2pa;
-    // let httpMocks: Record<string, Interceptor> = {};
-
-    beforeEach(async () => {
-      // httpMocks = {
-      //   reserveSize: nock('https://signing.service.test/v1/reserve-size'),
-      // };
-      const host = `https://cai-stage.adobe.io`;
-      const signer: Signer = {
-        type: 'remote',
-        async reserveSize() {
-          const url = `${host}/signature/box_size/v1`;
-          const res = await fetch(url, {
-            headers: new Headers({
-              'x-api-key': 'cai-desktop-helper',
-              Authorization: `Bearer ${process.env.STAGE_ACCESS_TOKEN}`,
-            }),
-          });
-          const data = (await res.json()) as { box_size: number };
-          return data.box_size;
-        },
-        async sign({ reserveSize, toBeSigned }) {
-          const url = `${host}/manifest/sign/v2?box_size=${reserveSize}`;
-          console.log('url', url);
-          console.log('toBeSigned', toBeSigned);
-          const res = await fetch(url, {
-            method: 'POST',
-            headers: new Headers({
-              'x-api-key': 'cai-desktop-helper',
-              'Content-Type': 'application/octet-stream',
-              Authorization: `Bearer ${process.env.STAGE_ACCESS_TOKEN}`,
-            }),
-            body: toBeSigned,
-          });
-          return res.buffer();
-        },
-      };
-      c2pa = createC2pa({
-        signer,
-      });
-    });
+    let mockRemoteService: Scope;
 
     afterEach(async () => {
-      await c2pa?.destroy();
+      mockRemoteService?.done();
+      nock.restore();
     });
 
     test('should sign an unsigned JPEG image with an embedded manifest', async () => {
+      mockRemoteService = createSuccessRemoteServiceMock();
+      const signer = createRemoteSigner();
+      const c2pa = createC2pa({
+        signer,
+      });
       const fixture = await readFile('tests/fixtures/A.jpg');
       const asset: Asset = { mimeType: 'image/jpeg', buffer: fixture };
       const manifest = new ManifestBuilder({
@@ -148,7 +113,7 @@ describe('sign()', () => {
         mimeType: 'image/jpeg',
         buffer: signed.buffer,
       });
-      console.log('result', result);
+
       const { active_manifest, manifests, validation_status } = result!;
 
       // Manifests
@@ -166,6 +131,8 @@ describe('sign()', () => {
       expect(active_manifest?.signature_info?.cert_serial_number).toEqual(
         '640229841392226413189608867977836244731148734950',
       );
+
+      expect(validation_status.length).toEqual(0);
     });
   });
 });

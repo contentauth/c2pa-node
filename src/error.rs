@@ -14,6 +14,9 @@ pub enum Error {
     #[error("Fetching reserve size failed: {0}")]
     RemoteReserveSize(String),
 
+    #[error("Invalid signer passed: {0}")]
+    InvalidSigner(String),
+
     #[error(transparent)]
     C2pa(#[from] c2pa::Error),
 }

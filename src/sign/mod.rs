@@ -1,4 +1,4 @@
-use c2pa::{create_signer, Manifest};
+use c2pa::{cose_sign, create_signer, Manifest};
 use neon::prelude::*;
 use neon::types::buffer::TypedArray;
 use neon::types::JsBuffer;
@@ -46,7 +46,10 @@ struct SignOptions {
     pub format: String,
 }
 
-fn signer_from_opts(cx: &mut FunctionContext, opts: &Handle<JsObject>) -> NeonResult<SignerType> {
+fn signer_config_from_opts(
+    cx: &mut FunctionContext,
+    opts: &Handle<JsObject>,
+) -> NeonResult<SignerType> {
     let signer_type = opts.get::<JsString, _, _>(cx, "type")?.value(cx);
 
     match signer_type.as_str() {
@@ -64,7 +67,7 @@ fn signer_from_opts(cx: &mut FunctionContext, opts: &Handle<JsObject>) -> NeonRe
 
 fn parse_options(cx: &mut FunctionContext, obj: Handle<JsObject>) -> NeonResult<SignOptions> {
     let signer_opts = obj.get::<JsObject, _, _>(cx, "signer")?;
-    let signer = signer_from_opts(cx, &signer_opts)?;
+    let signer = signer_config_from_opts(cx, &signer_opts)?;
     let format = obj
         .get::<JsString, _, _>(cx, "format")
         .map(|val| val.value(cx))
@@ -135,6 +138,55 @@ pub fn sign(mut cx: FunctionContext) -> JsResult<JsPromise> {
         //     .await
         //     .unwrap();
         let signed = sign_manifest(&mut manifest, &asset, options).await;
+
+        deferred.settle_with(&channel, move |mut cx| {
+            let signed_data = match signed {
+                Ok(signed) => JsArrayBuffer::from_slice(&mut cx, &signed)?,
+                Err(err) => {
+                    // TODO: See if we can factor this out into its own function without mutable borrow issues with `cx`
+                    let js_err = cx.error(err.to_string())?;
+                    let js_err_name = cx.string(format!("{:?}", err));
+                    js_err.set(&mut cx, "name", js_err_name)?;
+                    return cx.throw(js_err);
+                }
+            };
+
+            Ok(signed_data)
+        });
+    });
+
+    Ok(promise)
+}
+
+pub fn sign_claim_bytes(mut cx: FunctionContext) -> JsResult<JsPromise> {
+    let rt = runtime(&mut cx)?;
+    let channel = cx.channel();
+    let (deferred, promise) = cx.promise();
+
+    let claim = cx.argument::<JsBuffer>(0)?.as_slice(&cx).to_vec();
+    let reserve_size = cx.argument::<JsNumber>(1)?.value(&mut cx) as usize;
+    let signer_config = cx
+        .argument::<JsObject>(2)
+        .and_then(|opts| signer_config_from_opts(&mut cx, &opts))?;
+
+    rt.spawn(async move {
+        let signer = match signer_config {
+            SignerType::Local(config) => create_signer::from_keys(
+                &config.cert,
+                &config.pkey,
+                config.alg,
+                config.tsa_url.to_owned(),
+            )
+            .map_err(Error::from),
+
+            _ => Err(Error::InvalidSigner(
+                "Can only sign bytes with local signer".to_string(),
+            )),
+        };
+
+        let signed = signer.and_then(|signer| {
+            cose_sign::sign_claim(&claim, &*signer, reserve_size).map_err(Error::from)
+        });
 
         deferred.settle_with(&channel, move |mut cx| {
             let signed_data = match signed {

@@ -102,5 +102,6 @@ fn read(mut cx: FunctionContext) -> JsResult<JsPromise> {
 fn main(mut cx: ModuleContext) -> NeonResult<()> {
     cx.export_function("read", read)?;
     cx.export_function("sign", sign::sign)?;
+    cx.export_function("sign_claim_bytes", sign::sign_claim_bytes)?;
     Ok(())
 }
