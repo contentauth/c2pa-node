@@ -12,6 +12,7 @@ export type BaseManifestDefinition = Omit<
   'thumbnail' | 'ingredients'
 >;
 
+// TODO: Add support for embedded / remote manifests
 export type ManifestBuilderOptions = {
   vendor?: string;
 };
@@ -20,6 +21,8 @@ export class ManifestBuilder {
   static requiredFields = ['claim_generator', 'format'];
 
   #definition: ManifestDefinition;
+
+  #resourceStore: Record<string, Buffer> = {};
 
   #ingredients: Record<string, StorableIngredient> = {};
 
@@ -70,6 +73,10 @@ export class ManifestBuilder {
     return this;
   }
 
+  public async addThumbnail() {
+    // TODO: Implement
+  }
+
   public static createLabel(vendor?: string) {
     const urn = randomUUID();
 
@@ -84,7 +91,20 @@ export class ManifestBuilder {
     return this.#definition;
   }
 
-  public get ingredients() {
-    return Object.values(this.#ingredients);
+  get sendableIngredients() {
+    return Object.values(this.#ingredients).map(({ ingredient, resources }) => {
+      return {
+        ingredient: JSON.stringify(ingredient),
+        resources,
+      };
+    }, {});
+  }
+
+  public asSendable() {
+    return {
+      manifest: JSON.stringify(this.definition),
+      resourceStore: this.#resourceStore,
+      ingredients: this.sendableIngredients,
+    };
   }
 }

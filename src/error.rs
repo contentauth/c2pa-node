@@ -9,6 +9,9 @@ pub enum Error {
     #[error("Manifest parse error: {0}")]
     ManifestParseError(String),
 
+    #[error("Storable ingredient parse error: {0}")]
+    StorableIngredientParseError(String),
+
     #[error(transparent)]
     RemoteManifestFetch(#[from] reqwest::Error),
 

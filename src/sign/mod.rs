@@ -1,4 +1,4 @@
-use c2pa::{cose_sign, create_signer, Manifest};
+use c2pa::{cose_sign, create_signer, Ingredient, Manifest};
 use futures::{future, TryFutureExt};
 use neon::prelude::*;
 use neon::types::buffer::TypedArray;
@@ -9,7 +9,7 @@ mod local;
 mod remote;
 
 use crate::error::{as_js_error, Error, Result};
-use crate::ingredient::add_source_ingredient;
+use crate::ingredient::{add_source_ingredient, StorableIngredient};
 use crate::runtime::runtime;
 use crate::sign::remote::RemoteSigner;
 
@@ -35,6 +35,84 @@ fn parse_js_resource_store(
 
             Ok(store)
         })
+}
+
+fn parse_js_storable_ingredient(
+    cx: &mut FunctionContext,
+    js_ingredient: Handle<JsObject>,
+) -> NeonResult<StorableIngredient> {
+    let serialized_ingredient = js_ingredient
+        .get::<JsString, _, _>(cx, "serializedIngredient")?
+        .value(cx)
+        .as_str()
+        .to_owned();
+    let js_resources = js_ingredient.get::<JsObject, _, _>(cx, "resources")?;
+    let resources = js_resources
+        .get_own_property_names(cx)?
+        .to_vec(cx)?
+        .iter()
+        .try_fold(HashMap::<String, Vec<u8>>::new(), |mut acc, key| {
+            let key = key.downcast_or_throw::<JsString, _>(cx)?;
+            let data = js_resources
+                .get::<JsBuffer, _, _>(cx, key)?
+                .as_slice(cx)
+                .to_vec();
+            acc.insert(key.value(cx), data);
+
+            Ok(acc)
+        })?;
+
+    Ok(StorableIngredient {
+        serialized_ingredient,
+        resources,
+    })
+}
+
+fn parse_js_storable_ingredients(
+    cx: &mut FunctionContext,
+    js_ingredients: Handle<JsArray>,
+) -> NeonResult<Vec<StorableIngredient>> {
+    js_ingredients
+        .to_vec(cx)?
+        .iter()
+        .try_fold(Vec::<StorableIngredient>::new(), |mut acc, curr| {
+            let ingredient = curr.downcast_or_throw::<JsObject, _>(cx)?;
+            let parsed = parse_js_storable_ingredient(cx, ingredient)?;
+            acc.push(parsed);
+
+            Ok(acc)
+        })
+}
+
+// Stores the manifest data in a way that can be passed to and processed on the worker thread as much as possible
+struct ManifestRepresentation {
+    pub serialized_manifest: String,
+    pub resource_store: HashMap<String, Vec<u8>>,
+    pub storable_ingredients: Vec<StorableIngredient>,
+}
+
+/// Parses a manifest data object sent from Node.js into Rust data structures for processing
+fn parse_js_manifest_object(
+    cx: &mut FunctionContext,
+    obj: &Handle<JsObject>,
+) -> NeonResult<ManifestRepresentation> {
+    let serialized_manifest = obj
+        .get::<JsString, _, _>(cx, "manifest")?
+        .value(cx)
+        .as_str()
+        .to_owned();
+
+    let js_resource_store = obj.get::<JsObject, _, _>(cx, "resourceStore")?;
+    let resource_store = parse_js_resource_store(cx, js_resource_store)?;
+    let js_ingredients = obj.get::<JsArray, _, _>(cx, "ingredients")?;
+    let storable_ingredients: Vec<StorableIngredient> =
+        parse_js_storable_ingredients(cx, js_ingredients)?;
+
+    Ok(ManifestRepresentation {
+        serialized_manifest,
+        resource_store,
+        storable_ingredients,
+    })
 }
 
 enum SignerType {
@@ -77,11 +155,30 @@ fn parse_options(cx: &mut FunctionContext, obj: Handle<JsObject>) -> NeonResult<
     Ok(SignOptions { signer, format })
 }
 
-fn process_manifest(
-    serialized_manifest: &str,
-    resource_store: &HashMap<String, Vec<u8>>,
-) -> Result<Manifest> {
-    let mut manifest: Manifest = serde_json::from_str(serialized_manifest)
+fn ingredient_from_storable(storable_ingredient: &StorableIngredient) -> Result<Ingredient> {
+    let StorableIngredient {
+        serialized_ingredient,
+        resources,
+    } = storable_ingredient;
+    let mut ingredient: Ingredient = serde_json::from_str(serialized_ingredient)
+        .map_err(|err| Error::StorableIngredientParseError(err.to_string()))?;
+    let ingredient_resources = ingredient.resources_mut();
+
+    resources.iter().try_for_each(|(k, v)| -> Result<()> {
+        ingredient_resources.add(k, v.to_owned())?;
+        Ok(())
+    })?;
+
+    Ok(ingredient)
+}
+
+fn process_manifest(manifest_repr: ManifestRepresentation) -> Result<Manifest> {
+    let ManifestRepresentation {
+        serialized_manifest,
+        storable_ingredients,
+        resource_store,
+    } = manifest_repr;
+    let mut manifest: Manifest = serde_json::from_str(&serialized_manifest)
         .map_err(|err| Error::ManifestParseError(err.to_string()))?;
     let resources = manifest.resources_mut();
 
@@ -89,6 +186,14 @@ fn process_manifest(
         resources.add(k, v.to_owned())?;
         Ok(())
     })?;
+
+    storable_ingredients
+        .iter()
+        .try_for_each(|storable_ingredient| -> Result<()> {
+            let ingredient = ingredient_from_storable(storable_ingredient)?;
+            manifest.add_ingredient(ingredient);
+            Ok(())
+        })?;
 
     Ok(manifest)
 }
@@ -154,18 +259,19 @@ pub fn sign(mut cx: FunctionContext) -> JsResult<JsPromise> {
     let channel = cx.channel();
     let (deferred, promise) = cx.promise();
 
-    let serialized_manifest = cx.argument::<JsString>(0)?.value(&mut cx);
-    let js_resource_store = cx.argument::<JsObject>(1)?;
-    let asset = cx.argument::<JsBuffer>(2)?.as_slice(&cx).to_vec();
+    println!("signing...");
+    let manifest_repr = cx
+        .argument::<JsObject>(0)
+        .and_then(|data| parse_js_manifest_object(&mut cx, &data))?;
+    let asset = cx.argument::<JsBuffer>(1)?.as_slice(&cx).to_vec();
     let options = cx
-        .argument::<JsObject>(3)
+        .argument::<JsObject>(2)
         .and_then(|opts| parse_options(&mut cx, opts))?;
-    let resource_store = parse_js_resource_store(&mut cx, js_resource_store)?;
 
     rt.spawn(async move {
         let format = options.format.to_owned();
         let asset = asset.as_slice();
-        let signed = future::ready(process_manifest(&serialized_manifest, &resource_store))
+        let signed = future::ready(process_manifest(manifest_repr))
             .and_then(|mut manifest| async move {
                 add_source_ingredient(&mut manifest, &format, asset)
                     .await

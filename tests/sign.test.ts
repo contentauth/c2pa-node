@@ -35,6 +35,7 @@ describe('sign()', () => {
 
       const result = await c2pa.read(signedAsset);
       const { active_manifest, manifests, validation_status } = result!;
+      console.log('active_manifest', active_manifest);
 
       // Manifests
       expect(Object.keys(manifests).length).toEqual(1);
@@ -116,7 +117,7 @@ describe('sign()', () => {
 
       const result = await c2pa.read(signedAsset);
       const { active_manifest, manifests, validation_status } = result!;
-      console.log('active_manifest', active_manifest);
+      console.log('active_manifest.ingredients', active_manifest?.ingredients);
 
       // Manifests
       expect(Object.keys(manifests).length).toEqual(3);

@@ -187,12 +187,18 @@ export function createSign(options: C2paOptions) {
 
     try {
       const { mimeType, buffer } = asset;
-      const serializedManifest = JSON.stringify(manifest.definition);
+      const signOpts = {
+        format: mimeType,
+        signer: options.signer,
+      };
+      console.log('manifest.asSendable()', manifest.asSendable());
+      const result = await bindings.sign(
+        manifest.asSendable(),
+        buffer,
+        signOpts,
+      );
       const { assetBuffer: signedAssetBuffer, manifest: signedManifest } =
-        await bindings.sign(serializedManifest, {}, buffer, {
-          format: mimeType,
-          signer: options.signer,
-        });
+        result;
       const signedAsset: Asset = {
         mimeType,
         buffer: Buffer.from(signedAssetBuffer),
@@ -255,23 +261,22 @@ export function createIngredientFunction(opts: C2paOptions) {
   }: CreateIngredientProps): Promise<StorableIngredient> => {
     try {
       const hash = await labeledSha(asset, opts.ingredientHashAlgorithm);
-      const ingredient = await bindings.create_ingredient(
-        asset.mimeType,
-        asset.buffer,
-      );
+      const { ingredient: serializedIngredient, resources: existingResources } =
+        await bindings.create_ingredient(asset.mimeType, asset.buffer);
+      const ingredient = JSON.parse(serializedIngredient) as Ingredient;
 
       // Separate resources out into their own object so they can be stored more easily
       const resources: IngredientResourceStore = Object.keys(
-        ingredient.resources,
+        existingResources,
       ).reduce((acc, identifier) => {
         return {
           ...acc,
-          [identifier]: Buffer.from(ingredient.resources[identifier]),
+          [identifier]: Buffer.from(existingResources[identifier]),
         };
       }, {});
 
       // Clear out resources since we are not using this field
-      ingredient.resources = {} as ResourceStore;
+      ingredient.resources = undefined;
       ingredient.title = title;
       ingredient.hash = hash;
 

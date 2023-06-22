@@ -28,7 +28,7 @@ export async function labeledSha(
 
 export async function getResourceReference(
   asset: Asset,
-  instanceId: string | null,
+  instanceId: string | undefined,
   algorithm: Algorithm = DEFAULT_ALG,
 ): Promise<ResourceRef> {
   const suffix = asset.mimeType.split('/')[1] ?? 'bin';

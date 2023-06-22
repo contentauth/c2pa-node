@@ -1,6 +1,13 @@
+use std::collections::HashMap;
+
 use c2pa::{Ingredient, Manifest, ManifestStore};
 
 use crate::error::{Error, Result};
+
+pub(crate) struct StorableIngredient {
+    pub serialized_ingredient: String,
+    pub resources: HashMap<String, Vec<u8>>,
+}
 
 async fn fetch_remote_manifest(url: &str) -> Result<Vec<u8>> {
     let response = reqwest::get(url)
