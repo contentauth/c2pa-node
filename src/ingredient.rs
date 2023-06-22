@@ -11,7 +11,7 @@ async fn fetch_remote_manifest(url: &str) -> Result<Vec<u8>> {
     Ok(bytes.to_vec())
 }
 
-pub async fn create_ingredient(format: &str, buffer: &[u8]) -> Result<Ingredient> {
+pub async fn create_ingredient_from_memory(format: &str, buffer: &[u8]) -> Result<Ingredient> {
     let ingredient = Ingredient::from_memory(format, buffer)?;
 
     let remote_manifest_url = ingredient.validation_status().and_then(|status| {
@@ -39,7 +39,7 @@ pub async fn add_source_ingredient(
     format: &str,
     asset: &[u8],
 ) -> Result<()> {
-    let mut source_ingredient = create_ingredient(format, asset).await?;
+    let mut source_ingredient = create_ingredient_from_memory(format, asset).await?;
 
     if let Some(manifest_data) = source_ingredient.manifest_data() {
         let parent_manifest = ManifestStore::from_bytes("application/c2pa", &manifest_data, false)?;

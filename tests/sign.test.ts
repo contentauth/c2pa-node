@@ -54,10 +54,11 @@ describe('sign()', () => {
       expect(active_manifest?.signature_info?.cert_serial_number).toEqual(
         '640229841392226413189608867977836244731148734950',
       );
+
+      expect(validation_status.length).toEqual(0);
     });
 
-    // TODO: Add proper assertions
-    test.skip('should append a claim to a JPEG image with an existing manifest', async () => {
+    test('should append a claim to a JPEG image with an existing manifest', async () => {
       const fixture = await readFile('tests/fixtures/CAICAI.jpg');
       const asset: Asset = { mimeType: 'image/jpeg', buffer: fixture };
       const manifest = new ManifestBuilder({
@@ -75,7 +76,7 @@ describe('sign()', () => {
       const { active_manifest, manifests, validation_status } = result!;
 
       // Manifests
-      expect(Object.keys(manifests).length).toEqual(1);
+      expect(Object.keys(manifests).length).toEqual(3);
 
       // // Active manifest
       expect(active_manifest?.claim_generator).toMatch(
@@ -83,10 +84,12 @@ describe('sign()', () => {
       );
       expect(active_manifest?.title).toEqual('node_test_local_signer.jpg');
       expect(active_manifest?.format).toEqual('image/jpeg');
+
+      expect(validation_status.length).toEqual(0);
     });
   });
 
-  describe.only('remote signing', () => {
+  describe('remote signing', () => {
     let mockRemoteService: Scope;
 
     afterEach(async () => {

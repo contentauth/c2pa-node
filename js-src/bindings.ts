@@ -1,5 +1,6 @@
 import type { C2paOptions, Signer } from './';
 import { SigningError } from './lib/error';
+import { labeledSha } from './lib/hash';
 import { ManifestBuilder } from './lib/manifestBuilder';
 import type {
   Manifest,
@@ -167,4 +168,67 @@ export async function signClaimBytes({
   } catch (err: unknown) {
     throw new SigningError({ cause: err });
   }
+}
+
+export interface StorableIngredient {
+  ingredient: any;
+  resources: Record<string, ArrayBuffer>;
+}
+
+export function createIngredientFunction(opts: C2paOptions) {
+  return async (
+    // Asset containing the ingredient data
+    asset: Asset,
+    // Title of the ingredient
+    title: string,
+    // Pass a blob if you would like to supply a thumbnail, or `false` to disable thumbnail generation
+    // If no value is provided, a thumbnail will be generated if configured to do so globally
+    thumbnail?: Blob | false,
+  ): Promise<StorableIngredient> => {
+    const hash = await labeledSha(asset, 'sha256');
+    const ingredient = await bindings.create_ingredient(
+      asset.mimeType,
+      asset.buffer,
+    );
+
+    // Separate resources out into their own object so they can be stored more easily
+    const resources = Object.keys(ingredient.resources).reduce(
+      (acc, identifier) => {
+        return {
+          ...acc,
+          [identifier]: Buffer.from(ingredient.resources[identifier]),
+        };
+      },
+      {},
+    );
+
+    // Clear out resources since we are not using this field
+    ingredient.resources = {} as ResourceStore;
+    ingredient.title = title;
+    ingredient.hash = hash;
+
+    // Generate a thumbnail if one doesn't exist on the ingredient's manifest
+    if (!ingredient.thumbnail) {
+      const thumbnailBlob =
+        // Use thumbnail if provided
+        thumbnail ||
+        // Otherwise generate one if configured to do so
+        (opts.thumbnail && thumbnail !== false
+          ? await createThumbnail(blob, pool, globalConfig.thumbnail)
+          : null);
+      if (thumbnailBlob) {
+        const resourceRef = await getResourceReference(
+          thumbnailBlob,
+          ingredient.instance_id,
+        );
+        ingredient.thumbnail = resourceRef;
+        resources[resourceRef.identifier] = await thumbnailBlob.arrayBuffer();
+      }
+    }
+
+    return {
+      ingredient,
+      resources,
+    };
+  };
 }

@@ -9,10 +9,6 @@ describe('read()', () => {
     c2pa = createC2pa();
   });
 
-  afterEach(async () => {
-    await c2pa?.destroy();
-  });
-
   test('should read a JPEG image with an embedded manifest', async () => {
     const fixture = await readFile('tests/fixtures/CAICAI.jpg');
     const result = await c2pa.read({ mimeType: 'image/jpeg', buffer: fixture });
@@ -151,6 +147,7 @@ describe('read()', () => {
   });
 
   test('should read a JPEG image with a cloud manifest', async () => {
+    // Can't mock this unfortunately since fetching is being done via Rust/C
     const fixture = await readFile('tests/fixtures/cloud-only-firefly.jpg');
     const result = await c2pa.read({ mimeType: 'image/jpeg', buffer: fixture });
     const { active_manifest, manifests, validation_status } = result!;
@@ -202,7 +199,4 @@ describe('read()', () => {
         'asset hash error, name: jumbf manifest, error: hash verification( Hashes do not match )',
     });
   });
-
-  // TODO: Add test for reading a remote manifest
-  test.skip('should read a remote manifest properly', async () => {});
 });

@@ -1,4 +1,5 @@
 use c2pa::{cose_sign, create_signer, Manifest};
+use futures::{future, TryFutureExt};
 use neon::prelude::*;
 use neon::types::buffer::TypedArray;
 use neon::types::JsBuffer;
@@ -7,7 +8,7 @@ use std::collections::HashMap;
 mod local;
 mod remote;
 
-use crate::error::{Error, Result};
+use crate::error::{as_js_error, Error, Result};
 use crate::ingredient::add_source_ingredient;
 use crate::runtime::runtime;
 use crate::sign::remote::RemoteSigner;
@@ -132,22 +133,25 @@ pub fn sign(mut cx: FunctionContext) -> JsResult<JsPromise> {
     let resource_store = parse_js_resource_store(&mut cx, js_resource_store)?;
 
     rt.spawn(async move {
-        let mut manifest = process_manifest(&serialized_manifest, &resource_store).unwrap();
-        // FIXME: Put this back in
-        // add_source_ingredient(&mut manifest, &options.format, &asset)
-        //     .await
-        //     .unwrap();
-        let signed = sign_manifest(&mut manifest, &asset, options).await;
+        let format = options.format.to_owned();
+        let asset = asset.as_slice();
+        let signed = future::ready(process_manifest(&serialized_manifest, &resource_store))
+            .and_then(|mut manifest| async move {
+                add_source_ingredient(&mut manifest, &format, asset)
+                    .await
+                    .map(|_| manifest)
+                    .map_err(Error::from)
+            })
+            .and_then(
+                |mut manifest| async move { sign_manifest(&mut manifest, asset, options).await },
+            )
+            .await;
 
         deferred.settle_with(&channel, move |mut cx| {
             let signed_data = match signed {
                 Ok(signed) => JsArrayBuffer::from_slice(&mut cx, &signed)?,
                 Err(err) => {
-                    // TODO: See if we can factor this out into its own function without mutable borrow issues with `cx`
-                    let js_err = cx.error(err.to_string())?;
-                    let js_err_name = cx.string(format!("{:?}", err));
-                    js_err.set(&mut cx, "name", js_err_name)?;
-                    return cx.throw(js_err);
+                    return as_js_error(&mut cx, err).and_then(|err| cx.throw(err));
                 }
             };
 
@@ -192,11 +196,7 @@ pub fn sign_claim_bytes(mut cx: FunctionContext) -> JsResult<JsPromise> {
             let signed_data = match signed {
                 Ok(signed) => JsArrayBuffer::from_slice(&mut cx, &signed)?,
                 Err(err) => {
-                    // TODO: See if we can factor this out into its own function without mutable borrow issues with `cx`
-                    let js_err = cx.error(err.to_string())?;
-                    let js_err_name = cx.string(format!("{:?}", err));
-                    js_err.set(&mut cx, "name", js_err_name)?;
-                    return cx.throw(js_err);
+                    return as_js_error(&mut cx, err).and_then(|err| cx.throw(err));
                 }
             };
 
