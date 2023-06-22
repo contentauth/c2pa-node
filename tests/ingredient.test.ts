@@ -14,7 +14,10 @@ describe('createIngredient()', () => {
       mimeType: 'image/jpeg',
       buffer: fixture,
     };
-    const result = await c2pa.createIngredient(asset, 'test-ingredient.jpg');
+    const result = await c2pa.createIngredient({
+      asset,
+      title: 'test-ingredient.jpg',
+    });
     console.log('result', result);
 
     // Manifests

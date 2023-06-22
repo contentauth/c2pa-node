@@ -93,11 +93,16 @@ fn process_manifest(
     Ok(manifest)
 }
 
+struct SignOutput {
+    asset: Vec<u8>,
+    manifest: Option<Vec<u8>>,
+}
+
 async fn sign_manifest(
     manifest: &mut Manifest,
     asset: &[u8],
     options: SignOptions,
-) -> Result<Vec<u8>> {
+) -> Result<SignOutput> {
     match options.signer {
         SignerType::Local(config) => create_signer::from_keys(
             &config.cert,
@@ -106,17 +111,42 @@ async fn sign_manifest(
             config.tsa_url.to_owned(),
         )
         .map(|signer| manifest.embed_from_memory(&options.format, asset, &*signer))?
+        .map(|asset| SignOutput {
+            asset,
+            manifest: None,
+        })
         .map_err(Error::from),
 
         SignerType::Remote(config) => {
             let signer = RemoteSigner::from_config(config).await?;
-            let (signed_asset, _manifest) = manifest
+            let (asset, manifest) = manifest
                 .embed_from_memory_remote_signed(&options.format, asset, &signer)
                 .await?;
 
-            Ok(signed_asset)
+            Ok(SignOutput {
+                asset,
+                manifest: Some(manifest),
+            })
         }
     }
+}
+
+fn create_sign_response(
+    cx: &mut TaskContext,
+    response_obj: &Handle<'_, JsObject>,
+    sign_output: &SignOutput,
+) -> NeonResult<()> {
+    let signed_asset = JsArrayBuffer::from_slice(cx, sign_output.asset.as_ref())?;
+    response_obj.set(cx, "assetBuffer", signed_asset)?;
+
+    if let Some(signed_manifest) = &sign_output.manifest {
+        let signed_manifest = JsArrayBuffer::from_slice(cx, signed_manifest.as_ref())?;
+        response_obj
+            .set(cx, "manifest", signed_manifest)
+            .or_else(|err| cx.throw_error(err.to_string()))?;
+    }
+
+    Ok(())
 }
 
 pub fn sign(mut cx: FunctionContext) -> JsResult<JsPromise> {
@@ -148,14 +178,17 @@ pub fn sign(mut cx: FunctionContext) -> JsResult<JsPromise> {
             .await;
 
         deferred.settle_with(&channel, move |mut cx| {
-            let signed_data = match signed {
-                Ok(signed) => JsArrayBuffer::from_slice(&mut cx, &signed)?,
+            let response_obj = cx.empty_object();
+            match signed {
+                Ok(signed) => {
+                    create_sign_response(&mut cx, &response_obj, &signed)?;
+                }
                 Err(err) => {
                     return as_js_error(&mut cx, err).and_then(|err| cx.throw(err));
                 }
             };
 
-            Ok(signed_data)
+            Ok(response_obj)
         });
     });
 

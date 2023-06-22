@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto';
+import { StorableIngredient } from '..';
 import { name, version } from '../../package.json';
-import { ManifestBuilderError } from '../lib/error';
+import { IngredientHashMissingError, ManifestBuilderError } from '../lib/error';
 import type { Manifest } from '../types';
 
 export type ManifestDefinition = Partial<Omit<Manifest, 'signature_info'>> &
@@ -11,18 +12,25 @@ export type BaseManifestDefinition = Omit<
   'thumbnail' | 'ingredients'
 >;
 
+export type ManifestBuilderOptions = {
+  vendor?: string;
+};
+
 export class ManifestBuilder {
   static requiredFields = ['claim_generator', 'format'];
 
   #definition: ManifestDefinition;
 
-  // #ingredients: Record<string, StorableIngredient> = {};
+  #ingredients: Record<string, StorableIngredient> = {};
 
   static get generator() {
     return `${name}/${version}`;
   }
 
-  constructor(baseDefinition: BaseManifestDefinition) {
+  constructor(
+    baseDefinition: BaseManifestDefinition,
+    options?: ManifestBuilderOptions,
+  ) {
     const providedFields = Object.keys(baseDefinition);
     const missingFields = ManifestBuilder.requiredFields.filter(
       (x) => !providedFields.includes(x),
@@ -41,19 +49,42 @@ export class ManifestBuilder {
     baseDefinition.claim_generator = claimGenerator.join(' ');
 
     this.#definition = baseDefinition as ManifestDefinition;
+
+    // Create a label if not provided
+    if (!this.definition.label) {
+      this.definition.label = ManifestBuilder.createLabel(options?.vendor);
+    }
   }
 
-  public createLabel(vendor: string | null) {
-    const urn = randomUUID();
+  public addIngredient(input: StorableIngredient) {
+    const { ingredient } = input;
 
-    if (typeof vendor === 'string') {
-      this.#definition.label = `${vendor.toLowerCase()}:${urn}`;
+    if (!ingredient.hash) {
+      throw new IngredientHashMissingError(ingredient);
     }
 
-    this.#definition.label = urn;
+    if (!this.#ingredients.hasOwnProperty(ingredient.hash)) {
+      this.#ingredients[ingredient.hash] = input;
+    }
+
+    return this;
+  }
+
+  public static createLabel(vendor?: string) {
+    const urn = randomUUID();
+
+    if (vendor) {
+      return `${vendor.toLowerCase()}:${urn}`;
+    }
+
+    return urn;
   }
 
   public get definition() {
     return this.#definition;
+  }
+
+  public get ingredients() {
+    return Object.values(this.#ingredients);
   }
 }

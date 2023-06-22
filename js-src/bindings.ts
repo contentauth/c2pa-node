@@ -1,8 +1,14 @@
 import type { C2paOptions, Signer } from './';
-import { SigningError } from './lib/error';
-import { labeledSha } from './lib/hash';
+import {
+  CreateIngredientError,
+  MissingSignerError,
+  SigningError,
+} from './lib/error';
+import { getResourceReference, labeledSha } from './lib/hash';
 import { ManifestBuilder } from './lib/manifestBuilder';
+import { createThumbnail, getMetadata } from './lib/thumbnail';
 import type {
+  Ingredient,
   Manifest,
   ResourceStore as ManifestResourceStore,
   ManifestStore,
@@ -30,7 +36,8 @@ interface ResolvedSignatureInfo extends SignatureInfo {
   timeObject?: Date | null;
 }
 
-interface ResolvedManifest extends Omit<Manifest, 'thumbnail'> {
+interface ResolvedManifest extends Omit<Manifest, 'ingredients' | 'thumbnail'> {
+  ingredients: ResolvedIngredient[];
   thumbnail: ResolvedResource | null;
   signature_info?: ResolvedSignatureInfo | null;
 }
@@ -55,7 +62,39 @@ function parseSignatureInfo(manifest: Manifest) {
   };
 }
 
+interface ResolvedIngredient extends Omit<Ingredient, 'thumbnail'> {
+  manifest: Manifest | null;
+  thumbnail: ResolvedResource | null;
+}
+
+function createIngredientResolver(
+  manifestStore: ManifestStore,
+  resourceStore: ManifestResourceStore,
+) {
+  return (ingredient: Ingredient): ResolvedIngredient => {
+    const relatedManifest = ingredient.active_manifest;
+    const thumbnailIdentifier = ingredient.thumbnail?.identifier;
+    const thumbnailResource = thumbnailIdentifier
+      ? resourceStore[thumbnailIdentifier]
+      : null;
+
+    return {
+      ...ingredient,
+      manifest: relatedManifest
+        ? manifestStore.manifests[relatedManifest]
+        : null,
+      thumbnail: thumbnailResource
+        ? {
+            format: ingredient.thumbnail?.format ?? '',
+            data: thumbnailResource.buffer,
+          }
+        : null,
+    };
+  };
+}
+
 export function resolveManifest(
+  manifestStore: ManifestStore,
   manifest: Manifest,
   resourceStore: ManifestResourceStore,
 ): ResolvedManifest {
@@ -63,10 +102,15 @@ export function resolveManifest(
   const thumbnailResource = thumbnailIdentifier
     ? resourceStore[thumbnailIdentifier]
     : null;
+  const ingredientResolver = createIngredientResolver(
+    manifestStore,
+    resourceStore,
+  );
 
   return {
     ...manifest,
     ...parseSignatureInfo(manifest),
+    ingredients: (manifest.ingredients ?? []).map(ingredientResolver),
     thumbnail: thumbnailResource
       ? {
           format: manifest.thumbnail?.format ?? '',
@@ -103,7 +147,7 @@ export async function read(
 
       return {
         ...acc,
-        [label]: resolveManifest(manifest, resourceStore[label]),
+        [label]: resolveManifest(manifestStore, manifest, resourceStore[label]),
       };
     }, {});
 
@@ -125,29 +169,45 @@ export async function read(
 export interface SignProps {
   asset: Asset;
   manifest: ManifestBuilder;
-  options: C2paOptions;
 }
 
-export async function sign({
-  asset,
-  manifest,
-  options,
-}: SignProps): Promise<Asset> {
-  try {
-    const { mimeType, buffer } = asset;
-    const serializedManifest = JSON.stringify(manifest.definition);
-    const result = await bindings.sign(serializedManifest, {}, buffer, {
-      format: mimeType,
-      signer: options.signer,
-    });
+export interface SignOutput {
+  signedAsset: Asset;
+  signedManifest?: Buffer;
+}
 
-    return {
-      mimeType,
-      buffer: Buffer.from(result),
-    };
-  } catch (err: unknown) {
-    throw new SigningError({ cause: err });
-  }
+export function createSign(options: C2paOptions) {
+  return async function sign({
+    asset,
+    manifest,
+  }: SignProps): Promise<SignOutput> {
+    if (!options.signer) {
+      throw new MissingSignerError();
+    }
+
+    try {
+      const { mimeType, buffer } = asset;
+      const serializedManifest = JSON.stringify(manifest.definition);
+      const { assetBuffer: signedAssetBuffer, manifest: signedManifest } =
+        await bindings.sign(serializedManifest, {}, buffer, {
+          format: mimeType,
+          signer: options.signer,
+        });
+      const signedAsset: Asset = {
+        mimeType,
+        buffer: Buffer.from(signedAssetBuffer),
+      };
+
+      return {
+        signedAsset,
+        signedManifest: signedManifest
+          ? Buffer.from(signedManifest)
+          : undefined,
+      };
+    } catch (err: unknown) {
+      throw new SigningError({ cause: err });
+    }
+  };
 }
 
 export interface SignClaimBytesProps {
@@ -170,65 +230,81 @@ export async function signClaimBytes({
   }
 }
 
+export type IngredientResourceStore = Record<string, Buffer>;
+
 export interface StorableIngredient {
-  ingredient: any;
-  resources: Record<string, ArrayBuffer>;
+  ingredient: Ingredient;
+  resources: IngredientResourceStore;
+}
+
+export interface CreateIngredientProps {
+  // Asset containing the ingredient data
+  asset: Asset;
+  // Title of the ingredient
+  title: string;
+  // Pass a buffer if you would like to supply a thumbnail, or `false` to disable thumbnail generation
+  // If no value is provided, a thumbnail will be generated if configured to do so globally
+  thumbnail?: Buffer | false;
 }
 
 export function createIngredientFunction(opts: C2paOptions) {
-  return async (
-    // Asset containing the ingredient data
-    asset: Asset,
-    // Title of the ingredient
-    title: string,
-    // Pass a blob if you would like to supply a thumbnail, or `false` to disable thumbnail generation
-    // If no value is provided, a thumbnail will be generated if configured to do so globally
-    thumbnail?: Blob | false,
-  ): Promise<StorableIngredient> => {
-    const hash = await labeledSha(asset, 'sha256');
-    const ingredient = await bindings.create_ingredient(
-      asset.mimeType,
-      asset.buffer,
-    );
+  return async ({
+    asset,
+    title,
+    thumbnail,
+  }: CreateIngredientProps): Promise<StorableIngredient> => {
+    try {
+      const hash = await labeledSha(asset, opts.ingredientHashAlgorithm);
+      const ingredient = await bindings.create_ingredient(
+        asset.mimeType,
+        asset.buffer,
+      );
 
-    // Separate resources out into their own object so they can be stored more easily
-    const resources = Object.keys(ingredient.resources).reduce(
-      (acc, identifier) => {
+      // Separate resources out into their own object so they can be stored more easily
+      const resources: IngredientResourceStore = Object.keys(
+        ingredient.resources,
+      ).reduce((acc, identifier) => {
         return {
           ...acc,
           [identifier]: Buffer.from(ingredient.resources[identifier]),
         };
-      },
-      {},
-    );
+      }, {});
 
-    // Clear out resources since we are not using this field
-    ingredient.resources = {} as ResourceStore;
-    ingredient.title = title;
-    ingredient.hash = hash;
+      // Clear out resources since we are not using this field
+      ingredient.resources = {} as ResourceStore;
+      ingredient.title = title;
+      ingredient.hash = hash;
 
-    // Generate a thumbnail if one doesn't exist on the ingredient's manifest
-    if (!ingredient.thumbnail) {
-      const thumbnailBlob =
-        // Use thumbnail if provided
-        thumbnail ||
-        // Otherwise generate one if configured to do so
-        (opts.thumbnail && thumbnail !== false
-          ? await createThumbnail(blob, pool, globalConfig.thumbnail)
-          : null);
-      if (thumbnailBlob) {
-        const resourceRef = await getResourceReference(
-          thumbnailBlob,
-          ingredient.instance_id,
-        );
-        ingredient.thumbnail = resourceRef;
-        resources[resourceRef.identifier] = await thumbnailBlob.arrayBuffer();
+      // Generate a thumbnail if one doesn't exist on the ingredient's manifest
+      if (!ingredient.thumbnail) {
+        const thumbnailBuffer =
+          // Use thumbnail if provided
+          thumbnail ||
+          // Otherwise generate one if configured to do so
+          (opts.thumbnail && thumbnail !== false
+            ? await createThumbnail(asset.buffer, opts.thumbnail)
+            : null);
+        if (thumbnailBuffer) {
+          const { format } = await getMetadata(thumbnailBuffer);
+          const thumbnailAsset: Asset = {
+            mimeType: `image/${format}`,
+            buffer: thumbnailBuffer,
+          };
+          const resourceRef = await getResourceReference(
+            thumbnailAsset,
+            ingredient.instance_id,
+          );
+          ingredient.thumbnail = resourceRef;
+          resources[resourceRef.identifier] = thumbnailBuffer;
+        }
       }
-    }
 
-    return {
-      ingredient,
-      resources,
-    };
+      return {
+        ingredient,
+        resources,
+      };
+    } catch (err: unknown) {
+      throw new CreateIngredientError({ cause: err });
+    }
   };
 }

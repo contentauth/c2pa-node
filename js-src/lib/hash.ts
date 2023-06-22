@@ -2,9 +2,9 @@ import { createHash } from 'node:crypto';
 import type { Asset } from '../bindings';
 import type { ResourceRef } from '../types';
 
-type Algorithm = 'sha256' | 'sha384' | 'sha512';
+export type Algorithm = 'sha256' | 'sha384' | 'sha512';
 
-const DEFAULT_ALG: Algorithm = 'sha256';
+const DEFAULT_ALG: Algorithm = 'sha384';
 
 /**
  * Calculates the SHA of a buffer as base64
@@ -22,6 +22,7 @@ export async function labeledSha(
 ) {
   const hash = await sha(asset.buffer, algorithm);
   const suffix = asset.mimeType.split('/')[1] ?? 'bin';
+
   return `${algorithm}-${hash}.${suffix}`;
 }
 
