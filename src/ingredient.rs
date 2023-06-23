@@ -55,5 +55,6 @@ pub async fn add_source_ingredient(
         }
         manifest.set_parent(source_ingredient)?;
     }
+
     Ok(())
 }

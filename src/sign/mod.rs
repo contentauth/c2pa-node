@@ -259,7 +259,6 @@ pub fn sign(mut cx: FunctionContext) -> JsResult<JsPromise> {
     let channel = cx.channel();
     let (deferred, promise) = cx.promise();
 
-    println!("signing...");
     let manifest_repr = cx
         .argument::<JsObject>(0)
         .and_then(|data| parse_js_manifest_object(&mut cx, &data))?;

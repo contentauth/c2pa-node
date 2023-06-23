@@ -1,4 +1,5 @@
 import sharp, { type Metadata } from 'sharp';
+import { Asset } from '..';
 import { ThumbnailError } from './error';
 
 export interface ThumbnailOptions {
@@ -8,13 +9,13 @@ export interface ThumbnailOptions {
 
 export const defaultThumbnailOptions: ThumbnailOptions = {
   maxSize: 1024,
-  quality: 0.35,
+  quality: 0.8,
 };
 
 export async function createThumbnail(
   imageData: Buffer,
   options?: ThumbnailOptions,
-): Promise<Buffer> {
+): Promise<Asset | null> {
   try {
     const opts = Object.assign({}, defaultThumbnailOptions, options);
     const { maxSize, quality: rawQuality } = opts;
@@ -32,17 +33,16 @@ export async function createThumbnail(
     const output = hasAlpha
       ? resized.png({ quality })
       : resized.jpeg({ quality });
+    const buffer = await output.toBuffer();
 
-    return output.toBuffer();
+    return {
+      mimeType: hasAlpha ? 'image/png' : 'image/jpeg',
+      buffer,
+    };
   } catch (err: unknown) {
-    throw new ThumbnailError({ cause: err });
-  }
-}
+    const thumbnailError = new ThumbnailError({ cause: err });
+    console.warn(`Could not create thumbnail, omitting`, thumbnailError);
 
-export async function getMetadata(imageData: Buffer): Promise<Metadata> {
-  try {
-    return sharp(imageData).metadata();
-  } catch (err: unknown) {
-    throw new ThumbnailError({ cause: err });
+    return null;
   }
 }

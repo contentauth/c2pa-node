@@ -6,7 +6,7 @@ import {
 } from './lib/error';
 import { getResourceReference, labeledSha } from './lib/hash';
 import { ManifestBuilder } from './lib/manifestBuilder';
-import { createThumbnail, getMetadata } from './lib/thumbnail';
+import { createThumbnail } from './lib/thumbnail';
 import type {
   Ingredient,
   Manifest,
@@ -86,7 +86,7 @@ function createIngredientResolver(
       thumbnail: thumbnailResource
         ? {
             format: ingredient.thumbnail?.format ?? '',
-            data: thumbnailResource.buffer,
+            data: Buffer.from(thumbnailResource.buffer),
           }
         : null,
     };
@@ -114,7 +114,7 @@ export function resolveManifest(
     thumbnail: thumbnailResource
       ? {
           format: manifest.thumbnail?.format ?? '',
-          data: thumbnailResource.buffer,
+          data: Buffer.from(thumbnailResource.buffer),
         }
       : null,
   } as ResolvedManifest;
@@ -169,6 +169,7 @@ export async function read(
 export interface SignProps {
   asset: Asset;
   manifest: ManifestBuilder;
+  thumbnail?: Asset | false;
 }
 
 export interface SignOutput {
@@ -180,6 +181,7 @@ export function createSign(options: C2paOptions) {
   return async function sign({
     asset,
     manifest,
+    thumbnail,
   }: SignProps): Promise<SignOutput> {
     if (!options.signer) {
       throw new MissingSignerError();
@@ -191,6 +193,18 @@ export function createSign(options: C2paOptions) {
         format: mimeType,
         signer: options.signer,
       };
+      if (!manifest.definition.thumbnail) {
+        const thumbnailAsset =
+          // Use thumbnail if provided
+          thumbnail ||
+          // Otherwise generate one if configured to do so
+          (options.thumbnail && thumbnail !== false
+            ? await createThumbnail(asset.buffer, options.thumbnail)
+            : null);
+        if (thumbnailAsset) {
+          manifest.addThumbnail(thumbnailAsset);
+        }
+      }
       const result = await bindings.sign(
         manifest.asSendable(),
         buffer,
@@ -247,19 +261,19 @@ export interface CreateIngredientProps {
   asset: Asset;
   // Title of the ingredient
   title: string;
-  // Pass a buffer if you would like to supply a thumbnail, or `false` to disable thumbnail generation
+  // Pass an `Asset` if you would like to supply a thumbnail, or `false` to disable thumbnail generation
   // If no value is provided, a thumbnail will be generated if configured to do so globally
-  thumbnail?: Buffer | false;
+  thumbnail?: Asset | false;
 }
 
-export function createIngredientFunction(opts: C2paOptions) {
+export function createIngredientFunction(options: C2paOptions) {
   return async ({
     asset,
     title,
     thumbnail,
   }: CreateIngredientProps): Promise<StorableIngredient> => {
     try {
-      const hash = await labeledSha(asset, opts.ingredientHashAlgorithm);
+      const hash = labeledSha(asset, options.ingredientHashAlgorithm);
       const { ingredient: serializedIngredient, resources: existingResources } =
         await bindings.create_ingredient(asset.mimeType, asset.buffer);
       const ingredient = JSON.parse(serializedIngredient) as Ingredient;
@@ -281,25 +295,20 @@ export function createIngredientFunction(opts: C2paOptions) {
 
       // Generate a thumbnail if one doesn't exist on the ingredient's manifest
       if (!ingredient.thumbnail) {
-        const thumbnailBuffer =
+        const thumbnailAsset =
           // Use thumbnail if provided
           thumbnail ||
           // Otherwise generate one if configured to do so
-          (opts.thumbnail && thumbnail !== false
-            ? await createThumbnail(asset.buffer, opts.thumbnail)
+          (options.thumbnail && thumbnail !== false
+            ? await createThumbnail(asset.buffer, options.thumbnail)
             : null);
-        if (thumbnailBuffer) {
-          const { format } = await getMetadata(thumbnailBuffer);
-          const thumbnailAsset: Asset = {
-            mimeType: `image/${format}`,
-            buffer: thumbnailBuffer,
-          };
-          const resourceRef = await getResourceReference(
+        if (thumbnailAsset) {
+          const resourceRef = getResourceReference(
             thumbnailAsset,
             ingredient.instance_id,
           );
           ingredient.thumbnail = resourceRef;
-          resources[resourceRef.identifier] = thumbnailBuffer;
+          resources[resourceRef.identifier] = thumbnailAsset.buffer;
         }
       }
 

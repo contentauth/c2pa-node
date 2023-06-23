@@ -1,16 +1,20 @@
 import { randomUUID } from 'node:crypto';
-import { StorableIngredient } from '..';
+import type { Asset, StorableIngredient } from '..';
 import { name, version } from '../../package.json';
 import { IngredientHashMissingError, ManifestBuilderError } from '../lib/error';
 import type { Manifest } from '../types';
+import { getResourceReference } from './hash';
+
+type RequiredFields = Required<Pick<Manifest, 'claim_generator' | 'format'>>;
 
 export type ManifestDefinition = Partial<Omit<Manifest, 'signature_info'>> &
-  Required<Pick<Manifest, 'claim_generator' | 'format'>>;
+  RequiredFields;
 
 export type BaseManifestDefinition = Omit<
-  Manifest,
+  ManifestDefinition,
   'thumbnail' | 'ingredients'
->;
+> &
+  RequiredFields;
 
 // TODO: Add support for embedded / remote manifests
 export type ManifestBuilderOptions = {
@@ -73,8 +77,10 @@ export class ManifestBuilder {
     return this;
   }
 
-  public async addThumbnail() {
-    // TODO: Implement
+  public addThumbnail(thumbnail: Asset) {
+    const resourceRef = getResourceReference(thumbnail, this.#definition.label);
+    this.#definition.thumbnail = resourceRef;
+    this.#resourceStore[resourceRef.identifier] = thumbnail.buffer;
   }
 
   public static createLabel(vendor?: string) {
