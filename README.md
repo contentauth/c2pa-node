@@ -44,8 +44,8 @@ const buffer = await readFile('my-c2pa-file.jpg');
 const result = await c2pa.read({ mimeType: 'image/jpeg', buffer });
 
 if (result) {
-	const { active_manifest, manifests, validation_status } = result;
-	console.log(active_manifest.claim_generator);
+  const { active_manifest, manifests, validation_status } = result;
+  console.log(active_manifest.claim_generator);
 }
 ```
 
@@ -57,28 +57,28 @@ To create a manifest, you can pass in the claim information to a [`ManifestBuild
 import { ManifestBuilder } from 'c2pa-node';
 
 const manifest = new ManifestBuilder({
-	claim_generator: 'my-app/1.0.0',
-	format: 'image/jpeg',
-	title: 'node_test_local_signer.jpg',
-	assertions: [
-		{
-			label: 'c2pa.actions',
-			data: {
-				actions: [
-					{
-						action: 'c2pa.created',
-					},
-				],
-			},
-		},
-		{
-			label: 'com.custom.my-assertion',
-			data: {
-				description: 'My custom test assertion',
-				version: '1.0.0',
-			},
-		},
-	],
+  claim_generator: 'my-app/1.0.0',
+  format: 'image/jpeg',
+  title: 'node_test_local_signer.jpg',
+  assertions: [
+    {
+      label: 'c2pa.actions',
+      data: {
+        actions: [
+          {
+            action: 'c2pa.created',
+          },
+        ],
+      },
+    },
+    {
+      label: 'com.custom.my-assertion',
+      data: {
+        description: 'My custom test assertion',
+        version: '1.0.0',
+      },
+    },
+  ],
 });
 ```
 
@@ -90,8 +90,8 @@ if necessary and loaded in at signing time without the need for the original ing
 ```ts
 // Create the ingredient
 const ingredient = await c2pa.createIngredient({
-	asset: ingredientAsset,
-	title: 'ingredient.jpg',
+  asset: ingredientAsset,
+  title: 'ingredient.jpg',
 });
 // Add it to the manifest
 manifest.addIngredient(ingredient);
@@ -111,7 +111,7 @@ import { readFile } from 'node:fs/promises';
 import { SigningAlgorithm } from 'c2pa-node`;
 
 async function createLocalSigner() {
-	const [certificate, privateKey] = await Promise.all([
+  const [certificate, privateKey] = await Promise.all([
     readFile('tests/fixtures/es256_certs.pem'),
     readFile('tests/fixtures/es256_private.key'),
   ]);
@@ -126,14 +126,14 @@ async function createLocalSigner() {
 }
 
 async function sign(asset, manifest) {
-	const buffer = await readFile('to-be-signed.jpg');
-	const asset: Asset = { mimeType: 'image/jpeg', buffer };
-	const signer = await createLocalSigner();
-	const c2pa = createC2pa({
-		signer,
-	});
+  const buffer = await readFile('to-be-signed.jpg');
+  const asset: Asset = { mimeType: 'image/jpeg', buffer };
+  const signer = await createLocalSigner();
+  const c2pa = createC2pa({
+    signer,
+  });
 
-	const { signedAsset, signedManifest } = await c2pa.sign({ asset, manifest });
+  const { signedAsset, signedManifest } = await c2pa.sign({ asset, manifest });
 }
 
 sign(asset, manifest);
@@ -149,7 +149,7 @@ import { fetch, Headers } from 'node-fetch';
 import { SigningAlgorithm } from 'c2pa-node`;
 
 function createRemoteSigner() {
-	return {
+  return {
     type: 'remote',
     async reserveSize() {
       const url = `https://my.signing.service/box-size`;
@@ -172,14 +172,14 @@ function createRemoteSigner() {
 }
 
 async function sign(asset, manifest) {
-	const buffer = await readFile('to-be-signed.jpg');
-	const asset: Asset = { mimeType: 'image/jpeg', buffer };
-	const signer = createRemoteSigner();
-	const c2pa = createC2pa({
-		signer,
-	});
+  const buffer = await readFile('to-be-signed.jpg');
+  const asset: Asset = { mimeType: 'image/jpeg', buffer };
+  const signer = createRemoteSigner();
+  const c2pa = createC2pa({
+    signer,
+  });
 
-	const { signedAsset, signedManifest } = await c2pa.sign({ asset, manifest });
+  const { signedAsset, signedManifest } = await c2pa.sign({ asset, manifest });
 }
 
 sign(asset, manifest);

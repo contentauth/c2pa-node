@@ -1,5 +1,5 @@
 import nock, { type Scope } from 'nock';
-import { readFile, writeFile } from 'node:fs/promises';
+import { readFile } from 'node:fs/promises';
 import {
   Asset,
   C2pa,
