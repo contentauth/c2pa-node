@@ -1,5 +1,5 @@
 ---
-'c2pa-node': patch
+'c2pa-node': minor
 ---
 
 Add `sign`, `addIngredient`, `signClaimBytes` and `ManifestBuilder` APIs
