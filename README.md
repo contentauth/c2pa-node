@@ -146,7 +146,7 @@ If you have a service that you want to use for signing, you can use that to sign
 ```ts
 import { readFile } from 'node:fs/promises';
 import { fetch, Headers } from 'node-fetch';
-import { SigningAlgorithm } from 'c2pa-node`;
+import { SigningAlgorithm } from 'c2pa-node';
 
 function createRemoteSigner() {
   return {
