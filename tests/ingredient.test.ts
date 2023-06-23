@@ -1,6 +1,10 @@
 import { readFile } from 'node:fs/promises';
 import { C2pa, createC2pa } from '../dist/js-src/index';
 
+const instanceIdMatcher = /xmp(?:\:|\.)iid:\w{8}\-\w{4}-4\w{3}-\w{4}-\w{12}/i;
+const identifierMatcher =
+  /xmp-iid-\w{8}\-\w{4}-4\w{3}-\w{4}-\w{12}(\.\w{3,4})/i;
+
 describe('createIngredient()', () => {
   let c2pa: C2pa;
 
@@ -14,32 +18,32 @@ describe('createIngredient()', () => {
       mimeType: 'image/jpeg',
       buffer: fixture,
     };
-    const result = await c2pa.createIngredient({
+    const { ingredient, resources } = await c2pa.createIngredient({
       asset,
       title: 'test-ingredient.jpg',
     });
-    console.log('result', result);
 
-    // Manifests
-    // expect(Object.keys(manifests).length).toEqual(2);
-    // expect(Object.keys(manifests)).toEqual(
-    //   expect.arrayContaining([
-    //     'contentauth:urn:uuid:4fb77c8e-95f2-47a3-aa7a-adcd81b9cba7',
-    //     'contentauth:urn:uuid:4e8f1df8-8179-406c-91c7-0b9ecde31935',
-    //   ]),
-    // );
+    expect(ingredient.title).toEqual('test-ingredient.jpg');
+    expect(ingredient.format).toEqual('image/jpeg');
+    expect(ingredient.instance_id).toMatch(instanceIdMatcher);
+    expect(ingredient.thumbnail?.format).toEqual('image/jpeg');
+    expect(ingredient.thumbnail?.identifier).toMatch(identifierMatcher);
+    expect(ingredient.relationship).toEqual('componentOf');
+    expect(ingredient.active_manifest).toEqual(
+      'contentauth:urn:uuid:699750af-e07b-4c45-9d24-a131442111b8',
+    );
+    expect(ingredient.manifest_data?.format).toEqual('c2pa');
+    expect(ingredient.manifest_data?.identifier).toMatch(identifierMatcher);
+    expect(ingredient.hash).toEqual(
+      'sha384-sVINtK1arjyLR617Ta85vNXO7X3uVpsFAKI/9Us4MWL7pDF51cTbfA55KH2BxJYh.jpeg',
+    );
 
-    // // Active manifest
-    // expect(active_manifest?.label).toEqual(
-    //   'contentauth:urn:uuid:4e8f1df8-8179-406c-91c7-0b9ecde31935',
-    // );
-    // expect(active_manifest?.claim_generator).toEqual(
-    //   'make_test_images/0.24.0 c2pa-rs/0.24.0',
-    // );
-    // expect(active_manifest?.title).toEqual('CAICAI.jpg');
-    // expect(active_manifest?.format).toEqual('image/jpeg');
-    // expect(active_manifest?.instance_id).toEqual(
-    //   'xmp:iid:f9bff63a-016c-44d1-9ab1-9806b17ceeb5',
-    // );
+    expect(Object.keys(resources).length).toEqual(2);
+    expect(resources[ingredient.thumbnail!.identifier].byteLength).toEqual(
+      72217,
+    );
+    expect(resources[ingredient.manifest_data!.identifier].byteLength).toEqual(
+      585508,
+    );
   });
 });
