@@ -1,63 +1,63 @@
 import { readFile } from 'node:fs/promises';
-import { readAsset } from '../js-src';
-import type { ManifestAssertion } from '../js-src/types';
+import { C2pa, createC2pa } from '../dist/js-src/index';
+import type { ManifestAssertion } from '../dist/js-src/types';
 
-describe('readAsset()', () => {
+describe('read()', () => {
+  let c2pa: C2pa;
+
+  beforeEach(() => {
+    c2pa = createC2pa();
+  });
+
   test('should read a JPEG image with an embedded manifest', async () => {
     const fixture = await readFile('tests/fixtures/CAICAI.jpg');
-    const result = await readAsset('image/jpeg', fixture);
+    const result = await c2pa.read({ mimeType: 'image/jpeg', buffer: fixture });
     const { active_manifest, manifests, validation_status } = result!;
 
     // Manifests
     expect(Object.keys(manifests).length).toEqual(2);
     expect(Object.keys(manifests)).toEqual(
       expect.arrayContaining([
-        'contentauth:urn:uuid:4fb77c8e-95f2-47a3-aa7a-adcd81b9cba7',
-        'contentauth:urn:uuid:4e8f1df8-8179-406c-91c7-0b9ecde31935',
+        'contentauth:urn:uuid:699750af-e07b-4c45-9d24-a131442111b8',
+        'contentauth:urn:uuid:0796a693-d620-4b45-bba0-26c84f069102',
       ]),
     );
 
     // Active manifest
     expect(active_manifest?.label).toEqual(
-      'contentauth:urn:uuid:4e8f1df8-8179-406c-91c7-0b9ecde31935',
+      'contentauth:urn:uuid:699750af-e07b-4c45-9d24-a131442111b8',
     );
     expect(active_manifest?.claim_generator).toEqual(
-      'make_test_images/0.22.0 c2pa-rs/0.22.0',
+      'make_test_images/0.24.0 c2pa-rs/0.24.0',
     );
     expect(active_manifest?.title).toEqual('CAICAI.jpg');
     expect(active_manifest?.format).toEqual('image/jpeg');
     expect(active_manifest?.instance_id).toEqual(
-      'xmp:iid:f9bff63a-016c-44d1-9ab1-9806b17ceeb5',
+      'xmp:iid:1e546332-10d6-4f24-b4c6-a7cf221bbe58',
     );
 
     // Ingredients
     expect(active_manifest?.ingredients?.length).toEqual(2);
-    expect(active_manifest?.ingredients).toEqual(
-      expect.arrayContaining([
-        {
-          title: 'A.jpg',
-          format: 'image/jpeg',
-          document_id: 'xmp.did:813ee422-9736-4cdc-9be6-4e35ed8e41cb',
-          instance_id: 'xmp.iid:813ee422-9736-4cdc-9be6-4e35ed8e41cb',
-          thumbnail: {
-            format: 'image/jpeg',
-            identifier: 'xmp.iid-813ee422-9736-4cdc-9be6-4e35ed8e41cb.jpg',
-          },
-          relationship: 'parentOf',
-        },
-        {
-          title: 'CAI.jpg',
-          format: 'image/jpeg',
-          instance_id: 'xmp:iid:edc3339c-5e38-4449-b723-fe703254c4b4',
-          thumbnail: {
-            format: 'image/jpeg',
-            identifier: 'xmp-iid-edc3339c-5e38-4449-b723-fe703254c4b4.jpg',
-          },
-          relationship: 'componentOf',
-          active_manifest:
-            'contentauth:urn:uuid:4fb77c8e-95f2-47a3-aa7a-adcd81b9cba7',
-        },
-      ]),
+    const firstIngredient = active_manifest?.ingredients?.[0];
+    expect(firstIngredient?.title).toEqual('A.jpg');
+    expect(firstIngredient?.format).toEqual('image/jpeg');
+    expect(firstIngredient?.document_id).toEqual(
+      'xmp.did:813ee422-9736-4cdc-9be6-4e35ed8e41cb',
+    );
+    expect(firstIngredient?.instance_id).toEqual(
+      'xmp.iid:813ee422-9736-4cdc-9be6-4e35ed8e41cb',
+    );
+    expect(firstIngredient?.relationship).toEqual('parentOf');
+
+    const secondIngredient = active_manifest?.ingredients?.[1];
+    expect(secondIngredient?.title).toEqual('CAI.jpg');
+    expect(secondIngredient?.format).toEqual('image/jpeg');
+    expect(secondIngredient?.instance_id).toEqual(
+      'xmp:iid:90407d89-4680-4905-becd-01d929e2603d',
+    );
+    expect(secondIngredient?.relationship).toEqual('componentOf');
+    expect(secondIngredient?.manifest?.label).toEqual(
+      'contentauth:urn:uuid:0796a693-d620-4b45-bba0-26c84f069102',
     );
 
     // Assertions
@@ -106,7 +106,7 @@ describe('readAsset()', () => {
           },
           {
             action: 'c2pa.placed',
-            instanceId: 'xmp:iid:edc3339c-5e38-4449-b723-fe703254c4b4',
+            instanceId: 'xmp:iid:90407d89-4680-4905-becd-01d929e2603d',
             parameters: {
               ingredient: {
                 url: 'self#jumbf=c2pa.assertions/c2pa.ingredient__1',
@@ -125,24 +125,25 @@ describe('readAsset()', () => {
       'C2PA Test Signing Cert',
     );
     expect(active_manifest?.signature_info?.time).toEqual(
-      '2023-05-25T10:59:07+00:00',
+      '2023-06-23T00:22:45+00:00',
     );
     expect(active_manifest?.signature_info?.timeObject).toEqual(
-      new Date('2023-05-25T10:59:07+00:00'),
+      new Date('2023-06-23T00:22:45+00:00'),
     );
 
     // Thumbnail
     expect(active_manifest?.thumbnail?.format).toEqual('image/jpeg');
     expect(active_manifest?.thumbnail?.data).toBeInstanceOf(Buffer);
-    expect(active_manifest?.thumbnail?.data?.length).toEqual(72217);
+    expect(active_manifest?.thumbnail?.data?.byteLength).toEqual(72217);
 
     // Validation status
     expect(validation_status.length).toEqual(0);
   });
 
   test('should read a JPEG image with a cloud manifest', async () => {
+    // Can't mock this unfortunately since fetching is being done via Rust/C
     const fixture = await readFile('tests/fixtures/cloud-only-firefly.jpg');
-    const result = await readAsset('image/jpeg', fixture);
+    const result = await c2pa.read({ mimeType: 'image/jpeg', buffer: fixture });
     const { active_manifest, manifests, validation_status } = result!;
 
     // Manifests
@@ -175,14 +176,14 @@ describe('readAsset()', () => {
 
   test('should return null for an image with no manifest', async () => {
     const fixture = await readFile('tests/fixtures/A.jpg');
-    const result = await readAsset('image/jpeg', fixture);
+    const result = await c2pa.read({ mimeType: 'image/jpeg', buffer: fixture });
 
     expect(result).toBeNull();
   });
 
   test('should read a JPEG image that is OTGP', async () => {
     const fixture = await readFile('tests/fixtures/XCA.jpg');
-    const result = await readAsset('image/jpeg', fixture);
+    const result = await c2pa.read({ mimeType: 'image/jpeg', buffer: fixture });
 
     expect(result?.validation_status.length).toEqual(1);
     expect(result?.validation_status[0]).toMatchObject({

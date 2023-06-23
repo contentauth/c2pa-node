@@ -4,8 +4,8 @@ version = "0.1.0"
 description = "Node.js bindings for C2PA"
 authors = ["Dave Kozma <dkozma@adobe.com>"]
 license = "MIT"
-edition = "2018"
-exclude = ["index.node"]
+edition = "2021"
+exclude = ["generated/c2pa.node"]
 
 [lib]
 crate-type = ["cdylib"]
@@ -13,17 +13,27 @@ crate-type = ["cdylib"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-c2pa = { git = "https://github.com/contentauth/c2pa-rs", branch = "main", features = [
+async-trait = "0.1.68"
+# TODO: Update this to not use `add_thumbnails`
+c2pa = { version = "0.24.0", features = [
 	"fetch_remote_manifests",
 	"file_io",
 	"xmp_write",
 ] }
+futures = "0.3"
 once_cell = "1.17.1"
-tokio = { version = "1.28.1", features = ["rt-multi-thread"] }
+reqwest = { version = "0.11.18", features = [
+	"blocking",
+	"brotli",
+	"deflate",
+	"gzip",
+] }
 serde = "1.0.163"
 serde_json = "1.0.96"
+thiserror = "1.0.40"
+tokio = { version = "1.28.1", features = ["rt-multi-thread", "sync"] }
 
 [dependencies.neon]
 version = "1.0.0-alpha.4"
 default-features = false
-features = ["napi-6"]
+features = ["futures", "napi-6"]

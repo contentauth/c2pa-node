@@ -1,6 +1,7 @@
 const chokidar = require('chokidar');
 const chalk = require('chalk');
 const { exec } = require('node:child_process');
+const path = require('node:path');
 
 const execCallback = (err, stdout, stderr) => {
   if (err) {
@@ -12,31 +13,45 @@ const execCallback = (err, stdout, stderr) => {
   }
 };
 
-function rebuildTypeScript() {
-  exec('npx ts-node ./js-src/index.ts', execCallback);
+async function rebuildTypeScript() {
+  console.log(chalk.dim('📃 Rebuilding TypeScript...'));
+  return new Promise((resolve, reject) => {
+    const result = exec('pnpm run-s build:ts build:assets', execCallback);
+    result.on('exit', (code) => {
+      code === 0 ? resolve() : reject();
+    });
+  });
 }
 
-function rebuildRust() {
-  exec(
-    'npx cargo-cp-artifact -nc generated/c2pa.node -- cargo build --message-format=json-render-diagnostics',
-    execCallback,
-  );
+async function rebuildRust() {
+  console.log(chalk.dim('🦀 Rebuilding Rust...'));
+  return new Promise((resolve, reject) => {
+    const result = exec(
+      'npx cargo-cp-artifact -nc generated/c2pa.node -- cargo build --message-format=json-render-diagnostics',
+      execCallback,
+    );
+    result.on('exit', (code) => {
+      code === 0 ? resolve() : reject();
+    });
+  });
 }
 
-function main() {
+async function main() {
   console.log(chalk.yellow('🛠️  Creating an initial build...'));
-  rebuildTypeScript();
-  rebuildRust();
+  try {
+    await rebuildRust();
+    await rebuildTypeScript();
+  } catch (err) {
+    console.error('Error with initial build:', err);
+  }
   console.log(chalk.yellow('👀 Watching for changes...'));
 
   chokidar
-    .watch(['index.node', '{src,js-src}/**.{js,ts,rs}'])
+    .watch(['generated/c2pa.node', '{src,js-src,tests/mocks}/**/*.{js,ts,rs}'])
     .on('change', (path) => {
       if (/\.rs$/i.test(path)) {
-        console.log(chalk.dim('🦀 Rebuilding Rust...'));
         rebuildRust();
       } else {
-        console.log(chalk.dim('📃 Rebuilding TypeScript...'));
         rebuildTypeScript();
       }
     });
