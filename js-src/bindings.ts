@@ -20,9 +20,9 @@ const bindings = require(process.env.C2PA_LIBRARY_PATH ??
 
 const missingErrors = [
   // No embedded or remote provenance found in the asset
-  'ProvenanceMissing',
+  'C2pa(ProvenanceMissing)',
   // JUMBF not found
-  'JumbfNotFound',
+  'C2pa(JumbfNotFound)',
 ];
 
 type ResourceStore = Record<string, ManifestResourceStore>;

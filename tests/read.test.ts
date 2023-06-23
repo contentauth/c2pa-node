@@ -18,14 +18,14 @@ describe('read()', () => {
     expect(Object.keys(manifests).length).toEqual(2);
     expect(Object.keys(manifests)).toEqual(
       expect.arrayContaining([
-        'contentauth:urn:uuid:4fb77c8e-95f2-47a3-aa7a-adcd81b9cba7',
-        'contentauth:urn:uuid:4e8f1df8-8179-406c-91c7-0b9ecde31935',
+        'contentauth:urn:uuid:699750af-e07b-4c45-9d24-a131442111b8',
+        'contentauth:urn:uuid:0796a693-d620-4b45-bba0-26c84f069102',
       ]),
     );
 
     // Active manifest
     expect(active_manifest?.label).toEqual(
-      'contentauth:urn:uuid:4e8f1df8-8179-406c-91c7-0b9ecde31935',
+      'contentauth:urn:uuid:699750af-e07b-4c45-9d24-a131442111b8',
     );
     expect(active_manifest?.claim_generator).toEqual(
       'make_test_images/0.24.0 c2pa-rs/0.24.0',
@@ -33,37 +33,31 @@ describe('read()', () => {
     expect(active_manifest?.title).toEqual('CAICAI.jpg');
     expect(active_manifest?.format).toEqual('image/jpeg');
     expect(active_manifest?.instance_id).toEqual(
-      'xmp:iid:f9bff63a-016c-44d1-9ab1-9806b17ceeb5',
+      'xmp:iid:1e546332-10d6-4f24-b4c6-a7cf221bbe58',
     );
 
     // Ingredients
     expect(active_manifest?.ingredients?.length).toEqual(2);
-    expect(active_manifest?.ingredients).toEqual(
-      expect.arrayContaining([
-        {
-          title: 'A.jpg',
-          format: 'image/jpeg',
-          document_id: 'xmp.did:813ee422-9736-4cdc-9be6-4e35ed8e41cb',
-          instance_id: 'xmp.iid:813ee422-9736-4cdc-9be6-4e35ed8e41cb',
-          thumbnail: {
-            format: 'image/jpeg',
-            identifier: 'xmp.iid-813ee422-9736-4cdc-9be6-4e35ed8e41cb.jpg',
-          },
-          relationship: 'parentOf',
-        },
-        {
-          title: 'CAI.jpg',
-          format: 'image/jpeg',
-          instance_id: 'xmp:iid:edc3339c-5e38-4449-b723-fe703254c4b4',
-          thumbnail: {
-            format: 'image/jpeg',
-            identifier: 'xmp-iid-edc3339c-5e38-4449-b723-fe703254c4b4.jpg',
-          },
-          relationship: 'componentOf',
-          active_manifest:
-            'contentauth:urn:uuid:4fb77c8e-95f2-47a3-aa7a-adcd81b9cba7',
-        },
-      ]),
+    const firstIngredient = active_manifest?.ingredients?.[0];
+    expect(firstIngredient?.title).toEqual('A.jpg');
+    expect(firstIngredient?.format).toEqual('image/jpeg');
+    expect(firstIngredient?.document_id).toEqual(
+      'xmp.did:813ee422-9736-4cdc-9be6-4e35ed8e41cb',
+    );
+    expect(firstIngredient?.instance_id).toEqual(
+      'xmp.iid:813ee422-9736-4cdc-9be6-4e35ed8e41cb',
+    );
+    expect(firstIngredient?.relationship).toEqual('parentOf');
+
+    const secondIngredient = active_manifest?.ingredients?.[1];
+    expect(secondIngredient?.title).toEqual('CAI.jpg');
+    expect(secondIngredient?.format).toEqual('image/jpeg');
+    expect(secondIngredient?.instance_id).toEqual(
+      'xmp:iid:90407d89-4680-4905-becd-01d929e2603d',
+    );
+    expect(secondIngredient?.relationship).toEqual('componentOf');
+    expect(secondIngredient?.manifest?.label).toEqual(
+      'contentauth:urn:uuid:0796a693-d620-4b45-bba0-26c84f069102',
     );
 
     // Assertions
@@ -112,7 +106,7 @@ describe('read()', () => {
           },
           {
             action: 'c2pa.placed',
-            instanceId: 'xmp:iid:edc3339c-5e38-4449-b723-fe703254c4b4',
+            instanceId: 'xmp:iid:90407d89-4680-4905-becd-01d929e2603d',
             parameters: {
               ingredient: {
                 url: 'self#jumbf=c2pa.assertions/c2pa.ingredient__1',
@@ -131,15 +125,15 @@ describe('read()', () => {
       'C2PA Test Signing Cert',
     );
     expect(active_manifest?.signature_info?.time).toEqual(
-      '2023-05-25T10:59:07+00:00',
+      '2023-06-23T00:22:45+00:00',
     );
     expect(active_manifest?.signature_info?.timeObject).toEqual(
-      new Date('2023-05-25T10:59:07+00:00'),
+      new Date('2023-06-23T00:22:45+00:00'),
     );
 
     // Thumbnail
     expect(active_manifest?.thumbnail?.format).toEqual('image/jpeg');
-    expect(active_manifest?.thumbnail?.data).toBeInstanceOf(ArrayBuffer);
+    expect(active_manifest?.thumbnail?.data).toBeInstanceOf(Buffer);
     expect(active_manifest?.thumbnail?.data?.byteLength).toEqual(72217);
 
     // Validation status
