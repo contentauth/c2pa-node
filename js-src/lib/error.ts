@@ -40,3 +40,12 @@ export class ThumbnailError extends Error {
     super(`Error creating thumbnail`, options);
   }
 }
+
+export class InvalidStorageOptionsError extends Error {
+  constructor(options?: ErrorOptions) {
+    super(
+      `Embedding and remote manifest URL are both disabled - one must be specified.`,
+      options,
+    );
+  }
+}

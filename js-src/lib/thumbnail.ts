@@ -25,11 +25,13 @@ export async function createThumbnail(
     // Support both `0.8` and `80` for `quality`
     const quality = rawQuality <= 1 ? Math.round(rawQuality * 100) : rawQuality;
 
-    const resized = input.resize({
-      width: maxSize,
-      height: maxSize,
-      fit: 'inside',
-    });
+    const resized = input
+      .resize({
+        width: maxSize,
+        height: maxSize,
+        fit: 'inside',
+      })
+      .grayscale();
     const output = hasAlpha
       ? resized.png({ quality })
       : resized.jpeg({ quality });

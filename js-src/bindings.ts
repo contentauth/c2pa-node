@@ -1,6 +1,7 @@
 import type { C2paOptions, Signer } from './';
 import {
   CreateIngredientError,
+  InvalidStorageOptionsError,
   MissingSignerError,
   SigningError,
 } from './lib/error';
@@ -166,10 +167,16 @@ export async function read(
   }
 }
 
+export interface SignOptions {
+  embed?: boolean;
+  remoteManifestUrl?: string | null;
+}
+
 export interface SignProps {
   asset: Asset;
   manifest: ManifestBuilder;
   thumbnail?: Asset | false;
+  options?: SignOptions;
 }
 
 export interface SignOutput {
@@ -177,29 +184,41 @@ export interface SignOutput {
   signedManifest?: Buffer;
 }
 
-export function createSign(options: C2paOptions) {
+export const defaultSignOptions: SignOptions = {
+  embed: true,
+};
+
+export function createSign(globalOptions: C2paOptions) {
   return async function sign({
     asset,
     manifest,
     thumbnail,
+    options,
   }: SignProps): Promise<SignOutput> {
-    if (!options.signer) {
+    const signOptions = Object.assign({}, defaultSignOptions, options);
+
+    if (!globalOptions.signer) {
       throw new MissingSignerError();
+    }
+    if (!signOptions.embed && !signOptions.remoteManifestUrl) {
+      throw new InvalidStorageOptionsError();
     }
 
     try {
       const { mimeType, buffer } = asset;
       const signOpts = {
         format: mimeType,
-        signer: options.signer,
+        signer: globalOptions.signer,
+        embed: signOptions.embed,
+        remoteManifestUrl: signOptions.remoteManifestUrl,
       };
       if (!manifest.definition.thumbnail) {
         const thumbnailAsset =
           // Use thumbnail if provided
           thumbnail ||
           // Otherwise generate one if configured to do so
-          (options.thumbnail && thumbnail !== false
-            ? await createThumbnail(asset.buffer, options.thumbnail)
+          (globalOptions.thumbnail && thumbnail !== false
+            ? await createThumbnail(asset.buffer, globalOptions.thumbnail)
             : null);
         if (thumbnailAsset) {
           manifest.addThumbnail(thumbnailAsset);

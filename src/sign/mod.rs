@@ -123,6 +123,8 @@ enum SignerType {
 struct SignOptions {
     pub signer: SignerType,
     pub format: String,
+    pub embed: bool,
+    pub remote_manifest_url: Option<String>,
 }
 
 fn signer_config_from_opts(
@@ -151,8 +153,18 @@ fn parse_options(cx: &mut FunctionContext, obj: Handle<JsObject>) -> NeonResult<
         .get::<JsString, _, _>(cx, "format")
         .map(|val| val.value(cx))
         .or_else(|_| cx.throw_error("No format provided"))?;
+    let embed = obj.get::<JsBoolean, _, _>(cx, "embed")?.value(cx);
+    let remote_manifest_url = obj
+        .get_opt::<JsString, _, _>(cx, "remoteManifestUrl")?
+        .map(|val| val.value(cx))
+        .or(None);
 
-    Ok(SignOptions { signer, format })
+    Ok(SignOptions {
+        signer,
+        format,
+        embed,
+        remote_manifest_url,
+    })
 }
 
 fn ingredient_from_storable(storable_ingredient: &StorableIngredient) -> Result<Ingredient> {
@@ -208,6 +220,14 @@ async fn sign_manifest(
     asset: &[u8],
     options: SignOptions,
 ) -> Result<SignOutput> {
+    if let Some(remote_url) = options.remote_manifest_url {
+        if options.embed {
+            manifest.set_embedded_manifest_with_remote_ref(remote_url);
+        } else {
+            manifest.set_remote_manifest(remote_url);
+        }
+    }
+
     match options.signer {
         SignerType::Local(config) => create_signer::from_keys(
             &config.cert,

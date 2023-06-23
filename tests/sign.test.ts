@@ -188,6 +188,53 @@ describe('sign()', () => {
 
       expect(validation_status.length).toEqual(0);
     });
+
+    test.skip('should allow you to specify a remote manifest', async () => {
+      // TODO: Create a function that gives back the remote manifest URL if it exists
+      const fixture = await readFile('tests/fixtures/CAICAI.jpg');
+      const asset: Asset = { mimeType: 'image/jpeg', buffer: fixture };
+      const manifest = new ManifestBuilder({
+        claim_generator: 'my-app/1.0.0',
+        format: 'image/jpeg',
+        title: 'node_test_local_signer.jpg',
+      });
+      const remoteManifestUrl = 'https://remote-manifest.storage/manifest.c2pa';
+      const { signedAsset } = await c2pa.sign({
+        asset,
+        manifest,
+        options: { remoteManifestUrl },
+      });
+
+      const result = await c2pa.read(signedAsset);
+      const { active_manifest, manifests, validation_status } = result!;
+
+      console.log('result', result);
+
+      // Manifests
+      expect(Object.keys(manifests).length).toEqual(3);
+
+      // // Active manifest
+      expect(active_manifest?.claim_generator).toMatch(
+        /^my-app\/1.0.0 c2pa-node\//,
+      );
+      expect(active_manifest?.title).toEqual('node_test_local_signer.jpg');
+      expect(active_manifest?.format).toEqual('image/jpeg');
+
+      const ingredients = active_manifest?.ingredients;
+      expect(ingredients?.length).toEqual(2);
+
+      const parentIngredient = ingredients?.[0];
+      const parentManifest = manifests[parentIngredient?.active_manifest];
+      expect(parentIngredient?.title).toEqual('CAICAI.jpg');
+      expect(parentIngredient?.format).toEqual('image/jpeg');
+      expect(parentIngredient?.relationship).toEqual('parentOf');
+      expect(parentIngredient?.validation_status).toBeUndefined();
+      expect(parentManifest.claim_generator).toEqual(
+        'make_test_images/0.24.0 c2pa-rs/0.24.0',
+      );
+
+      expect(validation_status.length).toEqual(0);
+    });
   });
 
   describe('remote signing', () => {
