@@ -26,24 +26,26 @@ const missingErrors = [
   'C2pa(JumbfNotFound)',
 ];
 
-type ResourceStore = Record<string, ManifestResourceStore>;
+export type ResourceStore = Record<string, ManifestResourceStore>;
 
-interface ResolvedResource {
+export interface ResolvedResource {
   format: string;
   data: Buffer | null;
 }
 
-interface ResolvedSignatureInfo extends SignatureInfo {
+export interface ResolvedSignatureInfo extends SignatureInfo {
   timeObject?: Date | null;
 }
 
-interface ResolvedManifest extends Omit<Manifest, 'ingredients' | 'thumbnail'> {
+export interface ResolvedManifest
+  extends Omit<Manifest, 'ingredients' | 'thumbnail'> {
   ingredients: ResolvedIngredient[];
   thumbnail: ResolvedResource | null;
   signature_info?: ResolvedSignatureInfo | null;
 }
 
-interface ResolvedManifestStore extends Omit<ManifestStore, 'active_manifest'> {
+export interface ResolvedManifestStore
+  extends Omit<ManifestStore, 'active_manifest'> {
   active_manifest: ResolvedManifest | null;
   manifests: Record<string, ResolvedManifest>;
 }
@@ -63,7 +65,7 @@ function parseSignatureInfo(manifest: Manifest) {
   };
 }
 
-interface ResolvedIngredient extends Omit<Ingredient, 'thumbnail'> {
+export interface ResolvedIngredient extends Omit<Ingredient, 'thumbnail'> {
   manifest: Manifest | null;
   thumbnail: ResolvedResource | null;
 }
@@ -286,11 +288,17 @@ export interface CreateIngredientProps {
 }
 
 export function createIngredientFunction(options: C2paOptions) {
-  return async ({
+  /**
+   * @notExported
+   * Creates a storable ingredient from an asset.
+   *
+   * This allows ingredient data to be extracted, optionally stored, and passed in during signing at a later time if needed.
+   */
+  return async function createIngredient({
     asset,
     title,
     thumbnail,
-  }: CreateIngredientProps): Promise<StorableIngredient> => {
+  }: CreateIngredientProps): Promise<StorableIngredient> {
     try {
       const hash = labeledSha(asset, options.ingredientHashAlgorithm);
       const { ingredient: serializedIngredient, resources: existingResources } =
