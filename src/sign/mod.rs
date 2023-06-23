@@ -42,7 +42,7 @@ fn parse_js_storable_ingredient(
     js_ingredient: Handle<JsObject>,
 ) -> NeonResult<StorableIngredient> {
     let serialized_ingredient = js_ingredient
-        .get::<JsString, _, _>(cx, "serializedIngredient")?
+        .get::<JsString, _, _>(cx, "ingredient")?
         .value(cx)
         .as_str()
         .to_owned();

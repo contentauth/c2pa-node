@@ -6,7 +6,10 @@ import {
 } from './bindings';
 import { Algorithm as HashAlgorithm } from './lib/hash';
 import type { Signer } from './lib/signer';
-import type { ThumbnailOptions } from './lib/thumbnail';
+import {
+  defaultThumbnailOptions,
+  type ThumbnailOptions,
+} from './lib/thumbnail';
 
 export type C2paOptions = {
   signer?: Signer;
@@ -14,7 +17,9 @@ export type C2paOptions = {
   ingredientHashAlgorithm?: HashAlgorithm;
 };
 
-const defaultOptions: C2paOptions = {};
+const defaultOptions: C2paOptions = {
+  thumbnail: defaultThumbnailOptions,
+};
 
 export type C2pa = ReturnType<typeof createC2pa>;
 

@@ -191,7 +191,6 @@ export function createSign(options: C2paOptions) {
         format: mimeType,
         signer: options.signer,
       };
-      console.log('manifest.asSendable()', manifest.asSendable());
       const result = await bindings.sign(
         manifest.asSendable(),
         buffer,

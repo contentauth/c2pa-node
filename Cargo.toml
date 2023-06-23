@@ -14,7 +14,7 @@ crate-type = ["cdylib"]
 
 [dependencies]
 async-trait = "0.1.68"
-c2pa = { version = "0.23.3", features = [
+c2pa = { path = "../c2pa-rs/sdk", features = [
 	"fetch_remote_manifests",
 	"file_io",
 	"xmp_write",

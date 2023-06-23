@@ -34,7 +34,7 @@ describe('createIngredient()', () => {
     //   'contentauth:urn:uuid:4e8f1df8-8179-406c-91c7-0b9ecde31935',
     // );
     // expect(active_manifest?.claim_generator).toEqual(
-    //   'make_test_images/0.22.0 c2pa-rs/0.22.0',
+    //   'make_test_images/0.24.0 c2pa-rs/0.24.0',
     // );
     // expect(active_manifest?.title).toEqual('CAICAI.jpg');
     // expect(active_manifest?.format).toEqual('image/jpeg');

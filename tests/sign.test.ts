@@ -1,5 +1,5 @@
 import nock, { type Scope } from 'nock';
-import { readFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import {
   Asset,
   C2pa,
@@ -40,7 +40,7 @@ describe('sign()', () => {
       // Manifests
       expect(Object.keys(manifests).length).toEqual(1);
 
-      // // Active manifest
+      // Active manifest
       expect(active_manifest?.claim_generator).toMatch(
         /^my-app\/1.0.0 c2pa-node\//,
       );
@@ -89,7 +89,7 @@ describe('sign()', () => {
       expect(parentIngredient?.relationship).toEqual('parentOf');
       expect(parentIngredient?.validation_status).toBeUndefined();
       expect(parentManifest.claim_generator).toEqual(
-        'make_test_images/0.22.0 c2pa-rs/0.22.0',
+        'make_test_images/0.24.0 c2pa-rs/0.24.0',
       );
 
       expect(validation_status.length).toEqual(0);
@@ -115,9 +115,14 @@ describe('sign()', () => {
       manifest.addIngredient(ingredient);
       const { signedAsset } = await c2pa.sign({ asset, manifest });
 
+      await writeFile(
+        '/Users/dkozma/Downloads/test-sign-node-3.jpg',
+        signedAsset.buffer,
+      );
+
       const result = await c2pa.read(signedAsset);
+      console.log('result', result);
       const { active_manifest, manifests, validation_status } = result!;
-      console.log('active_manifest.ingredients', active_manifest?.ingredients);
 
       // Manifests
       expect(Object.keys(manifests).length).toEqual(3);
@@ -130,7 +135,7 @@ describe('sign()', () => {
       expect(active_manifest?.format).toEqual('image/jpeg');
 
       const ingredients = active_manifest?.ingredients;
-      expect(ingredients?.length).toEqual(1);
+      expect(ingredients?.length).toEqual(2);
 
       const parentIngredient = ingredients?.[0];
       const parentManifest = manifests[parentIngredient?.active_manifest];
@@ -139,7 +144,7 @@ describe('sign()', () => {
       expect(parentIngredient?.relationship).toEqual('parentOf');
       expect(parentIngredient?.validation_status).toBeUndefined();
       expect(parentManifest.claim_generator).toEqual(
-        'make_test_images/0.22.0 c2pa-rs/0.22.0',
+        'make_test_images/0.24.0 c2pa-rs/0.24.0',
       );
 
       expect(validation_status.length).toEqual(0);

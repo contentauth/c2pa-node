@@ -6,7 +6,7 @@ export interface ThumbnailOptions {
   quality: number;
 }
 
-const defaultThumbnailOptions: ThumbnailOptions = {
+export const defaultThumbnailOptions: ThumbnailOptions = {
   maxSize: 1024,
   quality: 0.35,
 };
