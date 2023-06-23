@@ -108,7 +108,7 @@ If you have a signing certificate and key, you can sign locally using a local si
 
 ```ts
 import { readFile } from 'node:fs/promises';
-import { SigningAlgorithm } from 'c2pa-node`;
+import { SigningAlgorithm } from 'c2pa-node';
 
 async function createLocalSigner() {
   const [certificate, privateKey] = await Promise.all([
