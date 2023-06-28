@@ -18,6 +18,8 @@
     "build:docs": "typedoc --plugin typedoc-plugin-markdown --out docs js-src/index.ts",
     "build": "run-s build:rust build:ts build:assets build:docs",
     "ci": "cargo test --release && jest",
+    "publish": "changeset publish",
+    "release": "run-s build publish",
     "test": "cargo test && jest",
     "test:watch": "cargo test && jest --watch --runInBand --detectOpenHandles --forceExit",
     "clean": "rimraf dist generated target"
