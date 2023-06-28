@@ -175,9 +175,15 @@ export interface SignOptions {
 }
 
 export interface SignProps {
+  // The asset to sign
   asset: Asset;
+  // The manifest to sign and optionally embed
   manifest: ManifestBuilder;
+  // Allows you to pass in a thumbnail to be used instead of generating one, or `false` to prevent thumbnail generation
   thumbnail?: Asset | false;
+  // Allows you to pass in a custom signer for this operation instead of using the global signer (if passed)
+  signer?: Signer;
+  // Options for this operation
   options?: SignOptions;
 }
 
@@ -195,11 +201,13 @@ export function createSign(globalOptions: C2paOptions) {
     asset,
     manifest,
     thumbnail,
+    signer: customSigner,
     options,
   }: SignProps): Promise<SignOutput> {
     const signOptions = Object.assign({}, defaultSignOptions, options);
+    const signer = customSigner ?? globalOptions.signer;
 
-    if (!globalOptions.signer) {
+    if (!signer) {
       throw new MissingSignerError();
     }
     if (!signOptions.embed && !signOptions.remoteManifestUrl) {
@@ -210,7 +218,7 @@ export function createSign(globalOptions: C2paOptions) {
       const { mimeType, buffer } = asset;
       const signOpts = {
         format: mimeType,
-        signer: globalOptions.signer,
+        signer,
         embed: signOptions.embed,
         remoteManifestUrl: signOptions.remoteManifestUrl,
       };

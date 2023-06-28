@@ -241,7 +241,6 @@ describe('sign()', () => {
     let mockRemoteService: Scope;
 
     afterEach(async () => {
-      mockRemoteService?.done();
       nock.restore();
     });
 
@@ -280,6 +279,34 @@ describe('sign()', () => {
       );
 
       expect(validation_status.length).toEqual(0);
+
+      // Calls should be made to the mock service
+      expect(mockRemoteService.isDone()).toBeTruthy();
+    });
+
+    test('should be able to override the signer during the sign call', async () => {
+      mockRemoteService = createSuccessRemoteServiceMock();
+      const signer = createRemoteSigner();
+      const c2pa = createC2pa({
+        signer,
+      });
+      const fixture = await readFile('tests/fixtures/A.jpg');
+      const asset: Asset = { mimeType: 'image/jpeg', buffer: fixture };
+      const manifest = new ManifestBuilder({
+        claim_generator: 'my-app/1.0.0',
+        format: 'image/jpeg',
+        title: 'node_test_local_signer.jpg',
+      });
+      const { signedAsset } = await c2pa.sign({
+        asset,
+        manifest,
+        signer: await createTestSigner(),
+      });
+
+      await c2pa.read(signedAsset);
+
+      // Calls should not be made to the mock service
+      expect(mockRemoteService.isDone()).toBeFalsy();
     });
   });
 });
