@@ -4,6 +4,10 @@
 
 ## Table of contents
 
+### Namespaces
+
+- [types](modules/types.md)
+
 ### Enumerations
 
 - [SigningAlgorithm](enums/SigningAlgorithm.md)
@@ -16,9 +20,7 @@
 
 - [Asset](interfaces/Asset.md)
 - [CreateIngredientProps](interfaces/CreateIngredientProps.md)
-- [Ingredient](interfaces/Ingredient.md)
 - [LocalSigner](interfaces/LocalSigner.md)
-- [Manifest](interfaces/Manifest.md)
 - [RemoteSigner](interfaces/RemoteSigner.md)
 - [ResolvedIngredient](interfaces/ResolvedIngredient.md)
 - [ResolvedManifest](interfaces/ResolvedManifest.md)
@@ -63,7 +65,7 @@
 
 #### Defined in
 
-[index.ts:24](https://github.com/contentauth/c2pa-node/blob/7225e97/js-src/index.ts#L24)
+[index.ts:24](https://github.com/contentauth/c2pa-node/blob/46975b6/js-src/index.ts#L24)
 
 ___
 
@@ -81,7 +83,7 @@ ___
 
 #### Defined in
 
-[index.ts:14](https://github.com/contentauth/c2pa-node/blob/7225e97/js-src/index.ts#L14)
+[index.ts:14](https://github.com/contentauth/c2pa-node/blob/46975b6/js-src/index.ts#L14)
 
 ___
 
@@ -91,7 +93,7 @@ ___
 
 #### Defined in
 
-[lib/hash.ts:5](https://github.com/contentauth/c2pa-node/blob/7225e97/js-src/lib/hash.ts#L5)
+[lib/hash.ts:5](https://github.com/contentauth/c2pa-node/blob/46975b6/js-src/lib/hash.ts#L5)
 
 ___
 
@@ -101,7 +103,7 @@ ___
 
 #### Defined in
 
-[bindings.ts:273](https://github.com/contentauth/c2pa-node/blob/7225e97/js-src/bindings.ts#L273)
+[bindings.ts:281](https://github.com/contentauth/c2pa-node/blob/46975b6/js-src/bindings.ts#L281)
 
 ___
 
@@ -111,7 +113,7 @@ ___
 
 #### Defined in
 
-[lib/signer.ts:39](https://github.com/contentauth/c2pa-node/blob/7225e97/js-src/lib/signer.ts#L39)
+[lib/signer.ts:39](https://github.com/contentauth/c2pa-node/blob/46975b6/js-src/lib/signer.ts#L39)
 
 ## Functions
 
@@ -133,7 +135,7 @@ Creates an instance of the SDK that encompasses a set of global options
 
 #### Defined in
 
-[index.ts:36](https://github.com/contentauth/c2pa-node/blob/7225e97/js-src/index.ts#L36)
+[index.ts:36](https://github.com/contentauth/c2pa-node/blob/46975b6/js-src/index.ts#L36)
 
 ___
 
@@ -147,4 +149,4 @@ ___
 
 #### Defined in
 
-[lib/signer.ts:41](https://github.com/contentauth/c2pa-node/blob/7225e97/js-src/lib/signer.ts#L41)
+[lib/signer.ts:41](https://github.com/contentauth/c2pa-node/blob/46975b6/js-src/lib/signer.ts#L41)

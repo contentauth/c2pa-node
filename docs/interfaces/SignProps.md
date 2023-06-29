@@ -9,6 +9,7 @@
 - [asset](SignProps.md#asset)
 - [manifest](SignProps.md#manifest)
 - [options](SignProps.md#options)
+- [signer](SignProps.md#signer)
 - [thumbnail](SignProps.md#thumbnail)
 
 ## Properties
@@ -19,7 +20,7 @@
 
 #### Defined in
 
-[bindings.ts:178](https://github.com/contentauth/c2pa-node/blob/7225e97/js-src/bindings.ts#L178)
+[bindings.ts:179](https://github.com/contentauth/c2pa-node/blob/46975b6/js-src/bindings.ts#L179)
 
 ___
 
@@ -29,7 +30,7 @@ ___
 
 #### Defined in
 
-[bindings.ts:179](https://github.com/contentauth/c2pa-node/blob/7225e97/js-src/bindings.ts#L179)
+[bindings.ts:181](https://github.com/contentauth/c2pa-node/blob/46975b6/js-src/bindings.ts#L181)
 
 ___
 
@@ -39,7 +40,17 @@ ___
 
 #### Defined in
 
-[bindings.ts:181](https://github.com/contentauth/c2pa-node/blob/7225e97/js-src/bindings.ts#L181)
+[bindings.ts:187](https://github.com/contentauth/c2pa-node/blob/46975b6/js-src/bindings.ts#L187)
+
+___
+
+### signer
+
+• `Optional` **signer**: [`Signer`](../modules.md#signer)
+
+#### Defined in
+
+[bindings.ts:185](https://github.com/contentauth/c2pa-node/blob/46975b6/js-src/bindings.ts#L185)
 
 ___
 
@@ -49,4 +60,4 @@ ___
 
 #### Defined in
 
-[bindings.ts:180](https://github.com/contentauth/c2pa-node/blob/7225e97/js-src/bindings.ts#L180)
+[bindings.ts:183](https://github.com/contentauth/c2pa-node/blob/46975b6/js-src/bindings.ts#L183)

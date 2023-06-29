@@ -2,9 +2,11 @@
 
 # Interface: ResolvedSignatureInfo
 
+Holds information about a signature
+
 ## Hierarchy
 
-- `SignatureInfo`
+- [`SignatureInfo`](types.SignatureInfo.md)
 
   ↳ **`ResolvedSignatureInfo`**
 
@@ -26,11 +28,11 @@ human readable issuing authority for this signature
 
 #### Inherited from
 
-SignatureInfo.issuer
+[SignatureInfo](types.SignatureInfo.md).[issuer](types.SignatureInfo.md#issuer)
 
 #### Defined in
 
-[types.d.ts:299](https://github.com/contentauth/c2pa-node/blob/7225e97/js-src/types.d.ts#L299)
+[types.d.ts:299](https://github.com/contentauth/c2pa-node/blob/46975b6/js-src/types.d.ts#L299)
 
 ___
 
@@ -42,11 +44,11 @@ the time the signature was created
 
 #### Inherited from
 
-SignatureInfo.time
+[SignatureInfo](types.SignatureInfo.md).[time](types.SignatureInfo.md#time)
 
 #### Defined in
 
-[types.d.ts:303](https://github.com/contentauth/c2pa-node/blob/7225e97/js-src/types.d.ts#L303)
+[types.d.ts:303](https://github.com/contentauth/c2pa-node/blob/46975b6/js-src/types.d.ts#L303)
 
 ___
 
@@ -56,4 +58,4 @@ ___
 
 #### Defined in
 
-[bindings.ts:37](https://github.com/contentauth/c2pa-node/blob/7225e97/js-src/bindings.ts#L37)
+[bindings.ts:37](https://github.com/contentauth/c2pa-node/blob/46975b6/js-src/bindings.ts#L37)

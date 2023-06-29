@@ -4,7 +4,7 @@
 
 ## Hierarchy
 
-- `Omit`<[`Ingredient`](Ingredient.md), ``"thumbnail"``\>
+- `Omit`<[`Ingredient`](types.Ingredient.md), ``"thumbnail"``\>
 
   ↳ **`ResolvedIngredient`**
 
@@ -19,11 +19,11 @@
 
 ### manifest
 
-• **manifest**: ``null`` \| [`Manifest`](Manifest.md)
+• **manifest**: ``null`` \| [`Manifest`](types.Manifest.md)
 
 #### Defined in
 
-[bindings.ts:69](https://github.com/contentauth/c2pa-node/blob/7225e97/js-src/bindings.ts#L69)
+[bindings.ts:69](https://github.com/contentauth/c2pa-node/blob/46975b6/js-src/bindings.ts#L69)
 
 ___
 
@@ -33,4 +33,4 @@ ___
 
 #### Defined in
 
-[bindings.ts:70](https://github.com/contentauth/c2pa-node/blob/7225e97/js-src/bindings.ts#L70)
+[bindings.ts:70](https://github.com/contentauth/c2pa-node/blob/46975b6/js-src/bindings.ts#L70)
