@@ -13,11 +13,11 @@
 
 ### ingredient
 
-• **ingredient**: [`Ingredient`](Ingredient.md)
+• **ingredient**: [`Ingredient`](types.Ingredient.md)
 
 #### Defined in
 
-[bindings.ts:276](https://github.com/contentauth/c2pa-node/blob/7225e97/js-src/bindings.ts#L276)
+[bindings.ts:284](https://github.com/contentauth/c2pa-node/blob/46975b6/js-src/bindings.ts#L284)
 
 ___
 
@@ -27,4 +27,4 @@ ___
 
 #### Defined in
 
-[bindings.ts:277](https://github.com/contentauth/c2pa-node/blob/7225e97/js-src/bindings.ts#L277)
+[bindings.ts:285](https://github.com/contentauth/c2pa-node/blob/46975b6/js-src/bindings.ts#L285)

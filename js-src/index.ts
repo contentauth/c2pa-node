@@ -70,4 +70,4 @@ export {
   createTestSigner,
 } from './lib/signer';
 export type { ThumbnailOptions } from './lib/thumbnail';
-export type { Ingredient, Manifest } from './types';
+export type * as types from './types';
