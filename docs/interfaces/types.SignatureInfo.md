@@ -33,7 +33,7 @@ human readable issuing authority for this signature
 
 #### Defined in
 
-[types.d.ts:299](https://github.com/contentauth/c2pa-node/blob/46975b6/js-src/types.d.ts#L299)
+[types.d.ts:299](https://github.com/contentauth/c2pa-node/blob/8f4a321/js-src/types.d.ts#L299)
 
 ___
 
@@ -45,4 +45,4 @@ the time the signature was created
 
 #### Defined in
 
-[types.d.ts:303](https://github.com/contentauth/c2pa-node/blob/46975b6/js-src/types.d.ts#L303)
+[types.d.ts:303](https://github.com/contentauth/c2pa-node/blob/8f4a321/js-src/types.d.ts#L303)

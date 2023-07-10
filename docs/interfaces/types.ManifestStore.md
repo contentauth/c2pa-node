@@ -28,7 +28,7 @@ A label for the active (most recent) manifest in the store
 
 #### Defined in
 
-[types.d.ts:8](https://github.com/contentauth/c2pa-node/blob/46975b6/js-src/types.d.ts#L8)
+[types.d.ts:8](https://github.com/contentauth/c2pa-node/blob/8f4a321/js-src/types.d.ts#L8)
 
 ___
 
@@ -44,7 +44,7 @@ A HashMap of Manifests
 
 #### Defined in
 
-[types.d.ts:12](https://github.com/contentauth/c2pa-node/blob/46975b6/js-src/types.d.ts#L12)
+[types.d.ts:12](https://github.com/contentauth/c2pa-node/blob/8f4a321/js-src/types.d.ts#L12)
 
 ___
 
@@ -56,4 +56,4 @@ ValidationStatus generated when loading the ManifestStore from an asset
 
 #### Defined in
 
-[types.d.ts:16](https://github.com/contentauth/c2pa-node/blob/46975b6/js-src/types.d.ts#L16)
+[types.d.ts:16](https://github.com/contentauth/c2pa-node/blob/8f4a321/js-src/types.d.ts#L16)

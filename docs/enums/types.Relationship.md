@@ -23,7 +23,7 @@ There can only be one parent ingredient in the ingredients.
 
 #### Defined in
 
-[types.d.ts:263](https://github.com/contentauth/c2pa-node/blob/46975b6/js-src/types.d.ts#L263)
+[types.d.ts:263](https://github.com/contentauth/c2pa-node/blob/8f4a321/js-src/types.d.ts#L263)
 
 ___
 
@@ -33,4 +33,4 @@ ___
 
 #### Defined in
 
-[types.d.ts:264](https://github.com/contentauth/c2pa-node/blob/46975b6/js-src/types.d.ts#L264)
+[types.d.ts:264](https://github.com/contentauth/c2pa-node/blob/8f4a321/js-src/types.d.ts#L264)

@@ -29,7 +29,7 @@ The data of the assertion as Value
 
 #### Defined in
 
-[types.d.ts:83](https://github.com/contentauth/c2pa-node/blob/46975b6/js-src/types.d.ts#L83)
+[types.d.ts:83](https://github.com/contentauth/c2pa-node/blob/8f4a321/js-src/types.d.ts#L83)
 
 ___
 
@@ -41,7 +41,7 @@ There can be more than one assertion for any label
 
 #### Defined in
 
-[types.d.ts:87](https://github.com/contentauth/c2pa-node/blob/46975b6/js-src/types.d.ts#L87)
+[types.d.ts:87](https://github.com/contentauth/c2pa-node/blob/8f4a321/js-src/types.d.ts#L87)
 
 ___
 
@@ -53,7 +53,7 @@ The [ManifestAssertionKind] for this assertion (as stored in c2pa content)
 
 #### Defined in
 
-[types.d.ts:91](https://github.com/contentauth/c2pa-node/blob/46975b6/js-src/types.d.ts#L91)
+[types.d.ts:91](https://github.com/contentauth/c2pa-node/blob/8f4a321/js-src/types.d.ts#L91)
 
 ___
 
@@ -65,4 +65,4 @@ An assertion label in reverse domain format
 
 #### Defined in
 
-[types.d.ts:95](https://github.com/contentauth/c2pa-node/blob/46975b6/js-src/types.d.ts#L95)
+[types.d.ts:95](https://github.com/contentauth/c2pa-node/blob/8f4a321/js-src/types.d.ts#L95)
