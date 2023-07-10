@@ -231,7 +231,7 @@ export function createSign(globalOptions: C2paOptions) {
             ? await createThumbnail(asset.buffer, globalOptions.thumbnail)
             : null);
         if (thumbnailAsset) {
-          manifest.addThumbnail(thumbnailAsset);
+          await manifest.addThumbnail(thumbnailAsset);
         }
       }
       const result = await bindings.sign(
@@ -286,8 +286,9 @@ export interface StorableIngredient {
 }
 
 export interface CreateIngredientProps {
-  // Asset containing the ingredient data
-  asset: Asset;
+  // The ingredient data to create an ingredient from. This can be an `Asset` if you want to process data in memory, or
+  // a string if you want to pass in a path to a file to be processed.
+  asset: Asset | string;
   // Title of the ingredient
   title: string;
   // Pass an `Asset` if you would like to supply a thumbnail, or `false` to disable thumbnail generation
@@ -308,9 +309,21 @@ export function createIngredientFunction(options: C2paOptions) {
     thumbnail,
   }: CreateIngredientProps): Promise<StorableIngredient> {
     try {
-      const hash = labeledSha(asset, options.ingredientHashAlgorithm);
-      const { ingredient: serializedIngredient, resources: existingResources } =
-        await bindings.create_ingredient(asset.mimeType, asset.buffer);
+      let serializedIngredient: string;
+      let existingResources: Record<string, Uint8Array>;
+
+      const hash = await labeledSha(asset, options.ingredientHashAlgorithm);
+      if (typeof asset === 'string') {
+        ({ ingredient: serializedIngredient, resources: existingResources } =
+          await bindings.create_ingredient_from_file(asset));
+      } else {
+        ({ ingredient: serializedIngredient, resources: existingResources } =
+          await bindings.create_ingredient_from_asset(
+            asset.mimeType,
+            asset.buffer,
+          ));
+      }
+
       const ingredient = JSON.parse(serializedIngredient) as Ingredient;
 
       // Separate resources out into their own object so they can be stored more easily
@@ -330,15 +343,16 @@ export function createIngredientFunction(options: C2paOptions) {
 
       // Generate a thumbnail if one doesn't exist on the ingredient's manifest
       if (!ingredient.thumbnail) {
+        const thumbnailInput = typeof asset === 'string' ? asset : asset.buffer;
         const thumbnailAsset =
           // Use thumbnail if provided
           thumbnail ||
           // Otherwise generate one if configured to do so
           (options.thumbnail && thumbnail !== false
-            ? await createThumbnail(asset.buffer, options.thumbnail)
+            ? await createThumbnail(thumbnailInput ?? asset, options.thumbnail)
             : null);
         if (thumbnailAsset) {
-          const resourceRef = getResourceReference(
+          const resourceRef = await getResourceReference(
             thumbnailAsset,
             ingredient.instance_id,
           );

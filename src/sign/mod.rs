@@ -9,7 +9,7 @@ mod local;
 mod remote;
 
 use crate::error::{as_js_error, Error, Result};
-use crate::ingredient::{add_source_ingredient, StorableIngredient};
+use crate::ingredient::{add_source_ingredient, IngredientSource, StorableIngredient};
 use crate::runtime::runtime;
 use crate::sign::remote::RemoteSigner;
 
@@ -292,7 +292,8 @@ pub fn sign(mut cx: FunctionContext) -> JsResult<JsPromise> {
         let asset = asset.as_slice();
         let signed = future::ready(process_manifest(manifest_repr))
             .and_then(|mut manifest| async move {
-                add_source_ingredient(&mut manifest, &format, asset)
+                let source = IngredientSource::Memory(&format, asset);
+                add_source_ingredient(&mut manifest, source)
                     .await
                     .map(|_| manifest)
                     .map_err(Error::from)

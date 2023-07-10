@@ -77,8 +77,11 @@ export class ManifestBuilder {
     return this;
   }
 
-  public addThumbnail(thumbnail: Asset) {
-    const resourceRef = getResourceReference(thumbnail, this.#definition.label);
+  public async addThumbnail(thumbnail: Asset) {
+    const resourceRef = await getResourceReference(
+      thumbnail,
+      this.#definition.label,
+    );
     this.#definition.thumbnail = resourceRef;
     this.#resourceStore[resourceRef.identifier] = thumbnail.buffer;
   }

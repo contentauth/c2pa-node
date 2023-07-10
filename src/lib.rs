@@ -11,7 +11,7 @@ mod runtime;
 mod sign;
 
 use self::error::{as_js_error, Error};
-use self::ingredient::create_ingredient_from_memory;
+use self::ingredient::{create_ingredient, IngredientSource};
 use self::runtime::runtime;
 
 fn add_to_resource_object(
@@ -135,7 +135,7 @@ fn process_ingredient(
     Ok(response_obj)
 }
 
-fn create_ingredient(mut cx: FunctionContext) -> JsResult<JsPromise> {
+fn create_ingredient_from_asset(mut cx: FunctionContext) -> JsResult<JsPromise> {
     let rt = runtime(&mut cx)?;
     let channel = cx.channel();
     let (deferred, promise) = cx.promise();
@@ -144,7 +144,34 @@ fn create_ingredient(mut cx: FunctionContext) -> JsResult<JsPromise> {
     let buffer = cx.argument::<JsBuffer>(1)?.as_slice(&cx).to_vec();
 
     rt.spawn(async move {
-        let ingredient = create_ingredient_from_memory(&format, &buffer).await;
+        let source = IngredientSource::Memory(&format, &buffer);
+        let ingredient = create_ingredient(source).await;
+
+        deferred.settle_with(&channel, move |mut cx| {
+            let ingredient = match ingredient {
+                Ok(ingredient) => ingredient,
+                Err(err) => {
+                    return as_js_error(&mut cx, err).and_then(|err| cx.throw(err));
+                }
+            };
+
+            cx.compute_scoped(move |cx| process_ingredient(cx, ingredient))
+        });
+    });
+
+    Ok(promise)
+}
+
+fn create_ingredient_from_file(mut cx: FunctionContext) -> JsResult<JsPromise> {
+    let rt = runtime(&mut cx)?;
+    let channel = cx.channel();
+    let (deferred, promise) = cx.promise();
+
+    let path = cx.argument::<JsString>(0)?.value(&mut cx);
+
+    rt.spawn(async move {
+        let source = IngredientSource::File(&path);
+        let ingredient = create_ingredient(source).await;
 
         deferred.settle_with(&channel, move |mut cx| {
             let ingredient = match ingredient {
@@ -163,7 +190,8 @@ fn create_ingredient(mut cx: FunctionContext) -> JsResult<JsPromise> {
 
 #[neon::main]
 fn main(mut cx: ModuleContext) -> NeonResult<()> {
-    cx.export_function("create_ingredient", create_ingredient)?;
+    cx.export_function("create_ingredient_from_asset", create_ingredient_from_asset)?;
+    cx.export_function("create_ingredient_from_file", create_ingredient_from_file)?;
     cx.export_function("read", read)?;
     cx.export_function("sign", sign::sign)?;
     cx.export_function("sign_claim_bytes", sign::sign_claim_bytes)?;

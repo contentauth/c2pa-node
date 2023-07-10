@@ -13,7 +13,7 @@ export const defaultThumbnailOptions: ThumbnailOptions = {
 };
 
 export async function createThumbnail(
-  imageData: Buffer,
+  imageData: Buffer | string,
   options?: ThumbnailOptions,
 ): Promise<Asset | null> {
   try {

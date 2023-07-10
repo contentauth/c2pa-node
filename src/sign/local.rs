@@ -28,7 +28,7 @@ impl LocalSignerConfiguration {
         let alg_str = opts
             .get::<JsString, _, _>(cx, "algorithm")
             .map(|val| val.value(cx))
-            .or(Ok(String::from("es256")))?;
+            .or_else(|_| Ok(String::from("es256")))?;
         let alg = SigningAlg::from_str(&alg_str).or_else(|err| cx.throw_error(err.to_string()))?;
         let tsa_url = opts
             .get::<JsString, _, _>(cx, "tsaUrl")
