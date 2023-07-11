@@ -102,6 +102,63 @@ manifest.addIngredient(ingredient);
 You can use the `c2pa.sign()` method to sign an ingredient, either locally if you have a signing certificate and key
 available, or by using a remote signing API.
 
+#### Signing buffers
+
+If you have file data loaded into memory, you can sign them using a buffer.
+
+**Note:** This is currently only supported for `image/jpeg` and `image/png` data. All other file types should use
+the file-based approach below.
+
+```ts
+import { readFile } from 'node:fs/promises';
+import { createC2pa, createTestSigner } from 'c2pa-node';
+
+async function sign(asset, manifest) {
+  const buffer = await readFile('to-be-signed.jpg');
+  const asset: Asset = { mimeType: 'image/jpeg', buffer };
+  const signer = createTestSigner();
+  const c2pa = createC2pa({
+    signer,
+  });
+
+  const { signedAsset, signedManifest } = await c2pa.sign({
+    sourceType: 'file',
+    inputPath,
+    outputPath,
+    manifest,
+  });
+}
+
+sign(asset, manifest);
+```
+
+#### Signing files
+
+You can pass in a file path to be signed to avoid loading entire assets into memory, or if a certain file type doesn't
+have in-memory support.
+
+```ts
+import { resolve } from 'node:path';
+import { createC2pa, createTestSigner } from 'c2pa-node';
+
+async function sign(asset, manifest) {
+  const inputPath = resolve('to-be-signed.jpg');
+  const outputPath = resolve('signed.jpg');
+  const signer = createTestSigner();
+  const c2pa = createC2pa({
+    signer,
+  });
+
+  const { signedAsset, signedManifest } = await c2pa.sign({
+    sourceType: 'memory',
+    asset,
+    manifest,
+  });
+}
+
+sign(asset, manifest);
+```
+
 #### Local signing
 
 If you have a signing certificate and key, you can sign locally using a local signer:
@@ -133,7 +190,11 @@ async function sign(asset, manifest) {
     signer,
   });
 
-  const { signedAsset, signedManifest } = await c2pa.sign({ asset, manifest });
+  const { signedAsset, signedManifest } = await c2pa.sign({
+    sourceType: 'memory',
+    asset,
+    manifest,
+  });
 }
 
 sign(asset, manifest);
@@ -146,7 +207,7 @@ If you have a service that you want to use for signing, you can use that to sign
 ```ts
 import { readFile } from 'node:fs/promises';
 import { fetch, Headers } from 'node-fetch';
-import { SigningAlgorithm } from 'c2pa-node';
+import { createC2pa, SigningAlgorithm } from 'c2pa-node';
 
 function createRemoteSigner() {
   return {
@@ -179,7 +240,11 @@ async function sign(asset, manifest) {
     signer,
   });
 
-  const { signedAsset, signedManifest } = await c2pa.sign({ asset, manifest });
+  const { signedAsset, signedManifest } = await c2pa.sign({
+    sourceType: 'memory',
+    asset,
+    manifest,
+  });
 }
 
 sign(asset, manifest);
