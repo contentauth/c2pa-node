@@ -17,7 +17,7 @@
 
 #### Defined in
 
-[lib/signer.ts:38](https://github.com/contentauth/c2pa-node/blob/8ab0fc7/js-src/lib/signer.ts#L38)
+[lib/signer.ts:38](https://github.com/contentauth/c2pa-node/blob/de93f0b/js-src/lib/signer.ts#L38)
 
 ___
 
@@ -27,4 +27,4 @@ ___
 
 #### Defined in
 
-[lib/signer.ts:39](https://github.com/contentauth/c2pa-node/blob/8ab0fc7/js-src/lib/signer.ts#L39)
+[lib/signer.ts:39](https://github.com/contentauth/c2pa-node/blob/de93f0b/js-src/lib/signer.ts#L39)
