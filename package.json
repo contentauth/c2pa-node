@@ -5,7 +5,7 @@
   "main": "dist/js-src/index.js",
   "types": "dist/js-src/index.d.ts",
   "files": [
-    "dist"
+    "dist/js-src"
   ],
   "engines": {
     "node": ">=16.20.0"
@@ -16,7 +16,8 @@
     "build:ts": "tsc -b && cpy js-src/types.d.ts dist",
     "build:assets": "cpy generated dist",
     "build:docs": "typedoc --plugin typedoc-plugin-markdown --out docs js-src/index.ts",
-    "build": "run-s build:rust build:ts build:assets build:docs",
+    "build": "run-s build:rust build:ts build:docs",
+    "postinstall": "run-s build:rust build:assets",
     "ci": "cargo test --release && jest",
     "publish": "changeset publish",
     "release": "run-s build publish",
