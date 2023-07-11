@@ -1,5 +1,11 @@
 # c2pa-node
 
+## 0.3.1
+
+### Patch Changes
+
+- 43b427c: Build the bindings file locally instead of publishing
+
 ## 0.3.0
 
 ### Minor Changes
