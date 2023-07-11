@@ -78,7 +78,7 @@ fn process_store(
 }
 
 // Allows us to fetch an embedded or remote manifest
-fn read(mut cx: FunctionContext) -> JsResult<JsPromise> {
+fn read_buffer(mut cx: FunctionContext) -> JsResult<JsPromise> {
     let rt = runtime(&mut cx)?;
     let channel = cx.channel();
     let (deferred, promise) = cx.promise();
@@ -90,6 +90,31 @@ fn read(mut cx: FunctionContext) -> JsResult<JsPromise> {
 
     rt.spawn(async move {
         let store = ManifestStore::from_bytes(&format, &data, true).map_err(Error::from);
+
+        deferred.settle_with(&channel, move |mut cx| {
+            let store = match store {
+                Ok(store) => store,
+                Err(err) => {
+                    return as_js_error(&mut cx, err).and_then(|err| cx.throw(err));
+                }
+            };
+
+            cx.compute_scoped(move |cx| process_store(cx, store))
+        });
+    });
+
+    Ok(promise)
+}
+
+fn read_file(mut cx: FunctionContext) -> JsResult<JsPromise> {
+    let rt = runtime(&mut cx)?;
+    let channel = cx.channel();
+    let (deferred, promise) = cx.promise();
+
+    let input = cx.argument::<JsString>(0)?.value(&mut cx);
+
+    rt.spawn(async move {
+        let store = ManifestStore::from_file(&input).map_err(Error::from);
 
         deferred.settle_with(&channel, move |mut cx| {
             let store = match store {
@@ -135,7 +160,7 @@ fn process_ingredient(
     Ok(response_obj)
 }
 
-fn create_ingredient_from_asset(mut cx: FunctionContext) -> JsResult<JsPromise> {
+fn create_ingredient_from_buffer(mut cx: FunctionContext) -> JsResult<JsPromise> {
     let rt = runtime(&mut cx)?;
     let channel = cx.channel();
     let (deferred, promise) = cx.promise();
@@ -190,10 +215,15 @@ fn create_ingredient_from_file(mut cx: FunctionContext) -> JsResult<JsPromise> {
 
 #[neon::main]
 fn main(mut cx: ModuleContext) -> NeonResult<()> {
-    cx.export_function("create_ingredient_from_asset", create_ingredient_from_asset)?;
+    cx.export_function(
+        "create_ingredient_from_buffer",
+        create_ingredient_from_buffer,
+    )?;
     cx.export_function("create_ingredient_from_file", create_ingredient_from_file)?;
-    cx.export_function("read", read)?;
+    cx.export_function("read_buffer", read_buffer)?;
+    cx.export_function("read_file", read_file)?;
     cx.export_function("sign_buffer", sign::sign_buffer)?;
+    cx.export_function("sign_file", sign::sign_file)?;
     cx.export_function("sign_claim_bytes", sign::sign_claim_bytes)?;
     Ok(())
 }

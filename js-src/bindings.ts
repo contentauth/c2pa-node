@@ -135,11 +135,16 @@ export interface Asset {
  * @returns A promise containing C2PA data, if present
  */
 export async function read(
-  asset: Asset,
+  asset: Asset | string,
 ): Promise<ResolvedManifestStore | null> {
   try {
-    const { mimeType, buffer } = asset;
-    const result = await bindings.read(mimeType, buffer);
+    let result;
+    if (typeof asset === 'string') {
+      result = await bindings.read_file(asset);
+    } else {
+      const { mimeType, buffer } = asset;
+      result = await bindings.read_buffer(mimeType, buffer);
+    }
     const manifestStore = JSON.parse(result.manifest_store) as ManifestStore;
     const resourceStore = result.resource_store as ResourceStore;
     const activeManifestLabel = manifestStore.active_manifest;
@@ -170,13 +175,12 @@ export async function read(
 }
 
 export interface SignOptions {
+  format?: string;
   embed?: boolean;
   remoteManifestUrl?: string | null;
 }
 
-export interface SignProps {
-  // The asset to sign
-  asset: Asset;
+type BaseSignProps = {
   // The manifest to sign and optionally embed
   manifest: ManifestBuilder;
   // Allows you to pass in a thumbnail to be used instead of generating one, or `false` to prevent thumbnail generation
@@ -185,25 +189,42 @@ export interface SignProps {
   signer?: Signer;
   // Options for this operation
   options?: SignOptions;
-}
+};
+
+type BufferSignProps = BaseSignProps & {
+  sourceType: 'memory';
+  // The asset to sign
+  asset: Asset;
+};
+
+type FileSignProps = BaseSignProps & {
+  sourceType: 'file';
+  inputPath: string;
+  outputPath: string;
+};
+
+export type SignProps = BufferSignProps | FileSignProps;
 
 export interface SignOutput {
-  signedAsset: Asset;
+  signedAsset: Asset | string;
   signedManifest?: Buffer;
 }
 
 export const defaultSignOptions: SignOptions = {
+  format: 'application/octet-stream',
   embed: true,
 };
 
 export function createSign(globalOptions: C2paOptions) {
-  return async function sign({
-    asset,
-    manifest,
-    thumbnail,
-    signer: customSigner,
-    options,
-  }: SignProps): Promise<SignOutput> {
+  return async function sign(props: SignProps): Promise<SignOutput> {
+    const {
+      sourceType,
+      manifest,
+      thumbnail,
+      signer: customSigner,
+      options,
+    } = props;
+
     const signOptions = Object.assign({}, defaultSignOptions, options);
     const signer = customSigner ?? globalOptions.signer;
 
@@ -215,43 +236,54 @@ export function createSign(globalOptions: C2paOptions) {
     }
 
     try {
-      const { mimeType, buffer } = asset;
-      const signOpts = {
-        format: mimeType,
-        signer,
-        embed: signOptions.embed,
-        remoteManifestUrl: signOptions.remoteManifestUrl,
-      };
+      const signOpts = { ...signOptions, signer };
       if (!manifest.definition.thumbnail) {
+        const thumbnailInput =
+          sourceType === 'memory' ? props.asset.buffer : props.inputPath;
         const thumbnailAsset =
           // Use thumbnail if provided
           thumbnail ||
           // Otherwise generate one if configured to do so
           (globalOptions.thumbnail && thumbnail !== false
-            ? await createThumbnail(asset.buffer, globalOptions.thumbnail)
+            ? await createThumbnail(thumbnailInput, globalOptions.thumbnail)
             : null);
         if (thumbnailAsset) {
           await manifest.addThumbnail(thumbnailAsset);
         }
       }
-      const result = await bindings.sign(
-        manifest.asSendable(),
-        buffer,
-        signOpts,
-      );
-      const { assetBuffer: signedAssetBuffer, manifest: signedManifest } =
-        result;
-      const signedAsset: Asset = {
-        mimeType,
-        buffer: Buffer.from(signedAssetBuffer),
-      };
 
-      return {
-        signedAsset,
-        signedManifest: signedManifest
-          ? Buffer.from(signedManifest)
-          : undefined,
-      };
+      if (sourceType === 'memory') {
+        const { mimeType, buffer } = props.asset;
+        const assetSignOpts = { ...signOpts, format: mimeType };
+        const result = await bindings.sign_buffer(
+          manifest.asSendable(),
+          buffer,
+          assetSignOpts,
+        );
+        const { assetBuffer: signedAssetBuffer, manifest: signedManifest } =
+          result;
+        const signedAsset: Asset = {
+          mimeType,
+          buffer: Buffer.from(signedAssetBuffer),
+        };
+        return {
+          signedAsset,
+          signedManifest: signedManifest
+            ? Buffer.from(signedManifest)
+            : undefined,
+        };
+      } else {
+        const { inputPath, outputPath } = props;
+        const result = await bindings.sign_file(
+          manifest.asSendable(),
+          inputPath,
+          outputPath,
+          signOpts,
+        );
+        return {
+          signedAsset: result.outputPath,
+        };
+      }
     } catch (err: unknown) {
       throw new SigningError({ cause: err });
     }
@@ -318,7 +350,7 @@ export function createIngredientFunction(options: C2paOptions) {
           await bindings.create_ingredient_from_file(asset));
       } else {
         ({ ingredient: serializedIngredient, resources: existingResources } =
-          await bindings.create_ingredient_from_asset(
+          await bindings.create_ingredient_from_buffer(
             asset.mimeType,
             asset.buffer,
           ));
