@@ -22,7 +22,7 @@
     "build:assets": "cpy src Cargo.* generated dist",
     "build:docs": "typedoc --plugin typedoc-plugin-markdown --out docs js-src/index.ts",
     "build": "run-s build:rust build:ts build:docs build:assets",
-    "postinstall": "if [ -z \"dist/Cargo.toml\" ]; then run-s build:rust:dist:pre build:rust:dist; fi",
+    "postinstall": "if [ -f \"dist/Cargo.toml\" ]; then run-s build:rust:dist:pre build:rust:dist; fi",
     "ci": "cargo test --release && jest",
     "publish": "changeset publish",
     "release": "run-s build publish",
