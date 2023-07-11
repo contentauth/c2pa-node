@@ -8,6 +8,23 @@ Installing c2pa-node requires a [supported version of Node and Rust](https://git
 [nvm](https://github.com/nvm-sh/nvm) is a good tool for managing multiple versions of Node on your machine, and you can install
 Rust by [visiting this link](https://www.rust-lang.org/tools/install).
 
+### Installing for usage in a client app
+
+```sh
+# npm
+$ npm install c2pa-node
+# yarn
+$ yarn add c2pa-node
+# pnpm
+$ pnpm add c2pa-node
+```
+
+This will pull down the latest Rust SDK and build it as a binding locally, hence the need for Rust to be locally installed.
+
+**Note:** We will be working on creating binary releases so that you will not need Rust installed on your machine in the future.
+
+### Installing for development / contributions
+
 You can install the project with npm. In the project directory, run:
 
 ```sh
