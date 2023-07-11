@@ -28,7 +28,7 @@ A list of [`Actor`]s associated with this source.
 
 #### Defined in
 
-[types.d.ts:206](https://github.com/contentauth/c2pa-node/blob/8f4a321/js-src/types.d.ts#L206)
+[types.d.ts:215](https://github.com/contentauth/c2pa-node/blob/d91574f/js-src/types.d.ts#L215)
 
 ___
 
@@ -40,7 +40,7 @@ A human-readable string giving details about the source of the assertion data.
 
 #### Defined in
 
-[types.d.ts:210](https://github.com/contentauth/c2pa-node/blob/8f4a321/js-src/types.d.ts#L210)
+[types.d.ts:219](https://github.com/contentauth/c2pa-node/blob/d91574f/js-src/types.d.ts#L219)
 
 ___
 
@@ -52,4 +52,4 @@ A value from among the enumerated list indicating the source of the assertion.
 
 #### Defined in
 
-[types.d.ts:214](https://github.com/contentauth/c2pa-node/blob/8f4a321/js-src/types.d.ts#L214)
+[types.d.ts:223](https://github.com/contentauth/c2pa-node/blob/d91574f/js-src/types.d.ts#L223)

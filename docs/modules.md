@@ -31,7 +31,6 @@
 - [SignInput](interfaces/SignInput.md)
 - [SignOptions](interfaces/SignOptions.md)
 - [SignOutput](interfaces/SignOutput.md)
-- [SignProps](interfaces/SignProps.md)
 - [StorableIngredient](interfaces/StorableIngredient.md)
 - [ThumbnailOptions](interfaces/ThumbnailOptions.md)
 
@@ -41,6 +40,7 @@
 - [C2paOptions](modules.md#c2paoptions)
 - [HashAlgorithm](modules.md#hashalgorithm)
 - [IngredientResourceStore](modules.md#ingredientresourcestore)
+- [SignProps](modules.md#signprops)
 - [Signer](modules.md#signer)
 
 ### Functions
@@ -65,7 +65,7 @@
 
 #### Defined in
 
-[index.ts:24](https://github.com/contentauth/c2pa-node/blob/8f4a321/js-src/index.ts#L24)
+[index.ts:33](https://github.com/contentauth/c2pa-node/blob/d91574f/js-src/index.ts#L33)
 
 ___
 
@@ -83,7 +83,7 @@ ___
 
 #### Defined in
 
-[index.ts:14](https://github.com/contentauth/c2pa-node/blob/8f4a321/js-src/index.ts#L14)
+[index.ts:23](https://github.com/contentauth/c2pa-node/blob/d91574f/js-src/index.ts#L23)
 
 ___
 
@@ -93,7 +93,7 @@ ___
 
 #### Defined in
 
-[lib/hash.ts:5](https://github.com/contentauth/c2pa-node/blob/8f4a321/js-src/lib/hash.ts#L5)
+[lib/hash.ts:17](https://github.com/contentauth/c2pa-node/blob/d91574f/js-src/lib/hash.ts#L17)
 
 ___
 
@@ -103,7 +103,17 @@ ___
 
 #### Defined in
 
-[bindings.ts:281](https://github.com/contentauth/c2pa-node/blob/8f4a321/js-src/bindings.ts#L281)
+[bindings.ts:333](https://github.com/contentauth/c2pa-node/blob/d91574f/js-src/bindings.ts#L333)
+
+___
+
+### SignProps
+
+Ƭ **SignProps**: `BufferSignProps` \| `FileSignProps`
+
+#### Defined in
+
+[bindings.ts:215](https://github.com/contentauth/c2pa-node/blob/d91574f/js-src/bindings.ts#L215)
 
 ___
 
@@ -113,7 +123,7 @@ ___
 
 #### Defined in
 
-[lib/signer.ts:39](https://github.com/contentauth/c2pa-node/blob/8f4a321/js-src/lib/signer.ts#L39)
+[lib/signer.ts:48](https://github.com/contentauth/c2pa-node/blob/d91574f/js-src/lib/signer.ts#L48)
 
 ## Functions
 
@@ -135,7 +145,7 @@ Creates an instance of the SDK that encompasses a set of global options
 
 #### Defined in
 
-[index.ts:36](https://github.com/contentauth/c2pa-node/blob/8f4a321/js-src/index.ts#L36)
+[index.ts:45](https://github.com/contentauth/c2pa-node/blob/d91574f/js-src/index.ts#L45)
 
 ___
 
@@ -149,4 +159,4 @@ ___
 
 #### Defined in
 
-[lib/signer.ts:41](https://github.com/contentauth/c2pa-node/blob/8f4a321/js-src/lib/signer.ts#L41)
+[lib/signer.ts:50](https://github.com/contentauth/c2pa-node/blob/d91574f/js-src/lib/signer.ts#L50)

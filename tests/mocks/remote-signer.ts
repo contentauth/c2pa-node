@@ -1,3 +1,12 @@
+/**
+ * Copyright 2023 Adobe
+ * All Rights Reserved.
+ *
+ * NOTICE: Adobe permits you to use, modify, and distribute this file in
+ * accordance with the terms of the Adobe license agreement accompanying
+ * it.
+ */
+
 import nock from 'nock';
 import fetch, { Headers } from 'node-fetch';
 import { createC2pa, createTestSigner, type Signer } from '../../dist/js-src';

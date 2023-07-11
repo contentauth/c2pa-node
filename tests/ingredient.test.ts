@@ -1,3 +1,12 @@
+/**
+ * Copyright 2023 Adobe
+ * All Rights Reserved.
+ *
+ * NOTICE: Adobe permits you to use, modify, and distribute this file in
+ * accordance with the terms of the Adobe license agreement accompanying
+ * it.
+ */
+
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { C2pa, createC2pa } from '../dist/js-src/index';

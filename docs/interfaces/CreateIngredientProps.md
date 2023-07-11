@@ -14,11 +14,11 @@
 
 ### asset
 
-• **asset**: [`Asset`](Asset.md)
+• **asset**: `string` \| [`Asset`](Asset.md)
 
 #### Defined in
 
-[bindings.ts:290](https://github.com/contentauth/c2pa-node/blob/8f4a321/js-src/bindings.ts#L290)
+[bindings.ts:343](https://github.com/contentauth/c2pa-node/blob/d91574f/js-src/bindings.ts#L343)
 
 ___
 
@@ -28,7 +28,7 @@ ___
 
 #### Defined in
 
-[bindings.ts:295](https://github.com/contentauth/c2pa-node/blob/8f4a321/js-src/bindings.ts#L295)
+[bindings.ts:348](https://github.com/contentauth/c2pa-node/blob/d91574f/js-src/bindings.ts#L348)
 
 ___
 
@@ -38,4 +38,4 @@ ___
 
 #### Defined in
 
-[bindings.ts:292](https://github.com/contentauth/c2pa-node/blob/8f4a321/js-src/bindings.ts#L292)
+[bindings.ts:345](https://github.com/contentauth/c2pa-node/blob/d91574f/js-src/bindings.ts#L345)

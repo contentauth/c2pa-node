@@ -27,7 +27,7 @@ List of references to W3C Verifiable Credentials.
 
 #### Defined in
 
-[types.d.ts:225](https://github.com/contentauth/c2pa-node/blob/8f4a321/js-src/types.d.ts#L225)
+[types.d.ts:234](https://github.com/contentauth/c2pa-node/blob/d91574f/js-src/types.d.ts#L234)
 
 ___
 
@@ -39,4 +39,4 @@ An identifier for a human actor, used when the "type" is `humanEntry.identified`
 
 #### Defined in
 
-[types.d.ts:229](https://github.com/contentauth/c2pa-node/blob/8f4a321/js-src/types.d.ts#L229)
+[types.d.ts:238](https://github.com/contentauth/c2pa-node/blob/d91574f/js-src/types.d.ts#L238)
