@@ -21,6 +21,8 @@ $ pnpm install
 $ pnpm run build
 ```
 
+**Note:** We will be working on creating binary releases so that you will not need Rust installed on your machine in the future.
+
 ## Quick start
 
 ### Creating a `c2pa` object
