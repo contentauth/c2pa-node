@@ -9,7 +9,6 @@
 
 import { randomUUID } from 'node:crypto';
 import type { Asset, StorableIngredient } from '..';
-import { name, version } from '../../package.json';
 import { IngredientHashMissingError, ManifestBuilderError } from '../lib/error';
 import type { Manifest } from '../types';
 import { getResourceReference } from './hash';
@@ -39,10 +38,6 @@ export class ManifestBuilder {
 
   #ingredients: Record<string, StorableIngredient> = {};
 
-  static get generator() {
-    return `${name}/${version}`;
-  }
-
   constructor(
     baseDefinition: BaseManifestDefinition,
     options?: ManifestBuilderOptions,
@@ -61,7 +56,8 @@ export class ManifestBuilder {
 
     // Append Node library to claim generator
     const claimGenerator = baseDefinition.claim_generator.split(/\s+/);
-    claimGenerator.push(ManifestBuilder.generator);
+    // FIXME: This should be the actual version
+    claimGenerator.push(`c2pa-node/0.0.0`);
     baseDefinition.claim_generator = claimGenerator.join(' ');
 
     this.#definition = baseDefinition as ManifestDefinition;

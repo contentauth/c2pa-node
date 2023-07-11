@@ -19,7 +19,6 @@
 
 - [definition](ManifestBuilder.md#definition)
 - [sendableIngredients](ManifestBuilder.md#sendableingredients)
-- [generator](ManifestBuilder.md#generator)
 
 ### Methods
 
@@ -43,7 +42,7 @@
 
 #### Defined in
 
-[lib/manifestBuilder.ts:46](https://github.com/contentauth/c2pa-node/blob/de93f0b/js-src/lib/manifestBuilder.ts#L46)
+[lib/manifestBuilder.ts:41](https://github.com/contentauth/c2pa-node/blob/c147a66/js-src/lib/manifestBuilder.ts#L41)
 
 ## Properties
 
@@ -53,7 +52,7 @@
 
 #### Defined in
 
-[lib/manifestBuilder.ts:36](https://github.com/contentauth/c2pa-node/blob/de93f0b/js-src/lib/manifestBuilder.ts#L36)
+[lib/manifestBuilder.ts:35](https://github.com/contentauth/c2pa-node/blob/c147a66/js-src/lib/manifestBuilder.ts#L35)
 
 ___
 
@@ -63,7 +62,7 @@ ___
 
 #### Defined in
 
-[lib/manifestBuilder.ts:40](https://github.com/contentauth/c2pa-node/blob/de93f0b/js-src/lib/manifestBuilder.ts#L40)
+[lib/manifestBuilder.ts:39](https://github.com/contentauth/c2pa-node/blob/c147a66/js-src/lib/manifestBuilder.ts#L39)
 
 ___
 
@@ -73,7 +72,7 @@ ___
 
 #### Defined in
 
-[lib/manifestBuilder.ts:38](https://github.com/contentauth/c2pa-node/blob/de93f0b/js-src/lib/manifestBuilder.ts#L38)
+[lib/manifestBuilder.ts:37](https://github.com/contentauth/c2pa-node/blob/c147a66/js-src/lib/manifestBuilder.ts#L37)
 
 ___
 
@@ -83,7 +82,7 @@ ___
 
 #### Defined in
 
-[lib/manifestBuilder.ts:34](https://github.com/contentauth/c2pa-node/blob/de93f0b/js-src/lib/manifestBuilder.ts#L34)
+[lib/manifestBuilder.ts:33](https://github.com/contentauth/c2pa-node/blob/c147a66/js-src/lib/manifestBuilder.ts#L33)
 
 ## Accessors
 
@@ -97,7 +96,7 @@ ___
 
 #### Defined in
 
-[lib/manifestBuilder.ts:108](https://github.com/contentauth/c2pa-node/blob/de93f0b/js-src/lib/manifestBuilder.ts#L108)
+[lib/manifestBuilder.ts:104](https://github.com/contentauth/c2pa-node/blob/c147a66/js-src/lib/manifestBuilder.ts#L104)
 
 ___
 
@@ -111,21 +110,7 @@ ___
 
 #### Defined in
 
-[lib/manifestBuilder.ts:112](https://github.com/contentauth/c2pa-node/blob/de93f0b/js-src/lib/manifestBuilder.ts#L112)
-
-___
-
-### generator
-
-• `Static` `get` **generator**(): `string`
-
-#### Returns
-
-`string`
-
-#### Defined in
-
-[lib/manifestBuilder.ts:42](https://github.com/contentauth/c2pa-node/blob/de93f0b/js-src/lib/manifestBuilder.ts#L42)
+[lib/manifestBuilder.ts:108](https://github.com/contentauth/c2pa-node/blob/c147a66/js-src/lib/manifestBuilder.ts#L108)
 
 ## Methods
 
@@ -145,7 +130,7 @@ ___
 
 #### Defined in
 
-[lib/manifestBuilder.ts:75](https://github.com/contentauth/c2pa-node/blob/de93f0b/js-src/lib/manifestBuilder.ts#L75)
+[lib/manifestBuilder.ts:71](https://github.com/contentauth/c2pa-node/blob/c147a66/js-src/lib/manifestBuilder.ts#L71)
 
 ___
 
@@ -165,7 +150,7 @@ ___
 
 #### Defined in
 
-[lib/manifestBuilder.ts:89](https://github.com/contentauth/c2pa-node/blob/de93f0b/js-src/lib/manifestBuilder.ts#L89)
+[lib/manifestBuilder.ts:85](https://github.com/contentauth/c2pa-node/blob/c147a66/js-src/lib/manifestBuilder.ts#L85)
 
 ___
 
@@ -185,7 +170,7 @@ ___
 
 #### Defined in
 
-[lib/manifestBuilder.ts:121](https://github.com/contentauth/c2pa-node/blob/de93f0b/js-src/lib/manifestBuilder.ts#L121)
+[lib/manifestBuilder.ts:117](https://github.com/contentauth/c2pa-node/blob/c147a66/js-src/lib/manifestBuilder.ts#L117)
 
 ___
 
@@ -205,4 +190,4 @@ ___
 
 #### Defined in
 
-[lib/manifestBuilder.ts:98](https://github.com/contentauth/c2pa-node/blob/de93f0b/js-src/lib/manifestBuilder.ts#L98)
+[lib/manifestBuilder.ts:94](https://github.com/contentauth/c2pa-node/blob/c147a66/js-src/lib/manifestBuilder.ts#L94)
