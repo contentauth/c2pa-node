@@ -43,7 +43,7 @@ If this ingredient has a [`ManifestStore`], this will hold the label of the acti
 
 #### Defined in
 
-[types.d.ts:121](https://github.com/contentauth/c2pa-node/blob/46975b6/js-src/types.d.ts#L121)
+[types.d.ts:121](https://github.com/contentauth/c2pa-node/blob/8f4a321/js-src/types.d.ts#L121)
 
 ___
 
@@ -55,7 +55,7 @@ Document ID from `xmpMM:DocumentID` in XMP metadata.
 
 #### Defined in
 
-[types.d.ts:125](https://github.com/contentauth/c2pa-node/blob/46975b6/js-src/types.d.ts#L125)
+[types.d.ts:125](https://github.com/contentauth/c2pa-node/blob/8f4a321/js-src/types.d.ts#L125)
 
 ___
 
@@ -67,7 +67,7 @@ The format of the source file as a MIME type.
 
 #### Defined in
 
-[types.d.ts:129](https://github.com/contentauth/c2pa-node/blob/46975b6/js-src/types.d.ts#L129)
+[types.d.ts:129](https://github.com/contentauth/c2pa-node/blob/8f4a321/js-src/types.d.ts#L129)
 
 ___
 
@@ -79,7 +79,7 @@ An optional hash of the asset to prevent duplicates.
 
 #### Defined in
 
-[types.d.ts:133](https://github.com/contentauth/c2pa-node/blob/46975b6/js-src/types.d.ts#L133)
+[types.d.ts:133](https://github.com/contentauth/c2pa-node/blob/8f4a321/js-src/types.d.ts#L133)
 
 ___
 
@@ -91,7 +91,7 @@ Instance ID from `xmpMM:InstanceID` in XMP metadata.
 
 #### Defined in
 
-[types.d.ts:137](https://github.com/contentauth/c2pa-node/blob/46975b6/js-src/types.d.ts#L137)
+[types.d.ts:137](https://github.com/contentauth/c2pa-node/blob/8f4a321/js-src/types.d.ts#L137)
 
 ___
 
@@ -105,7 +105,7 @@ A [`ManifestStore`] from the source asset extracted as a binary C2PA blob.
 
 #### Defined in
 
-[types.d.ts:143](https://github.com/contentauth/c2pa-node/blob/46975b6/js-src/types.d.ts#L143)
+[types.d.ts:143](https://github.com/contentauth/c2pa-node/blob/8f4a321/js-src/types.d.ts#L143)
 
 ___
 
@@ -119,7 +119,7 @@ Any additional [`Metadata`] as defined in the C2PA spec.
 
 #### Defined in
 
-[types.d.ts:149](https://github.com/contentauth/c2pa-node/blob/46975b6/js-src/types.d.ts#L149)
+[types.d.ts:149](https://github.com/contentauth/c2pa-node/blob/8f4a321/js-src/types.d.ts#L149)
 
 ___
 
@@ -131,7 +131,7 @@ URI from `dcterms:provenance` in XMP metadata.
 
 #### Defined in
 
-[types.d.ts:153](https://github.com/contentauth/c2pa-node/blob/46975b6/js-src/types.d.ts#L153)
+[types.d.ts:153](https://github.com/contentauth/c2pa-node/blob/8f4a321/js-src/types.d.ts#L153)
 
 ___
 
@@ -145,7 +145,7 @@ There can only be one parent ingredient in the ingredients.
 
 #### Defined in
 
-[types.d.ts:159](https://github.com/contentauth/c2pa-node/blob/46975b6/js-src/types.d.ts#L159)
+[types.d.ts:159](https://github.com/contentauth/c2pa-node/blob/8f4a321/js-src/types.d.ts#L159)
 
 ___
 
@@ -155,7 +155,7 @@ ___
 
 #### Defined in
 
-[types.d.ts:160](https://github.com/contentauth/c2pa-node/blob/46975b6/js-src/types.d.ts#L160)
+[types.d.ts:160](https://github.com/contentauth/c2pa-node/blob/8f4a321/js-src/types.d.ts#L160)
 
 ___
 
@@ -169,7 +169,7 @@ A tuple of thumbnail MIME format (i.e. `image/jpeg`) and binary bits of the imag
 
 #### Defined in
 
-[types.d.ts:166](https://github.com/contentauth/c2pa-node/blob/46975b6/js-src/types.d.ts#L166)
+[types.d.ts:166](https://github.com/contentauth/c2pa-node/blob/8f4a321/js-src/types.d.ts#L166)
 
 ___
 
@@ -181,7 +181,7 @@ A human-readable title, generally source filename.
 
 #### Defined in
 
-[types.d.ts:170](https://github.com/contentauth/c2pa-node/blob/46975b6/js-src/types.d.ts#L170)
+[types.d.ts:170](https://github.com/contentauth/c2pa-node/blob/8f4a321/js-src/types.d.ts#L170)
 
 ___
 
@@ -193,4 +193,4 @@ Validation results.
 
 #### Defined in
 
-[types.d.ts:174](https://github.com/contentauth/c2pa-node/blob/46975b6/js-src/types.d.ts#L174)
+[types.d.ts:174](https://github.com/contentauth/c2pa-node/blob/8f4a321/js-src/types.d.ts#L174)

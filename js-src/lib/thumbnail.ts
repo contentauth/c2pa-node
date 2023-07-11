@@ -1,4 +1,4 @@
-import sharp, { type Metadata } from 'sharp';
+import sharp from 'sharp';
 import { Asset } from '..';
 import { ThumbnailError } from './error';
 
@@ -13,7 +13,7 @@ export const defaultThumbnailOptions: ThumbnailOptions = {
 };
 
 export async function createThumbnail(
-  imageData: Buffer,
+  imageData: Buffer | string,
   options?: ThumbnailOptions,
 ): Promise<Asset | null> {
   try {
@@ -25,13 +25,11 @@ export async function createThumbnail(
     // Support both `0.8` and `80` for `quality`
     const quality = rawQuality <= 1 ? Math.round(rawQuality * 100) : rawQuality;
 
-    const resized = input
-      .resize({
-        width: maxSize,
-        height: maxSize,
-        fit: 'inside',
-      })
-      .grayscale();
+    const resized = input.resize({
+      width: maxSize,
+      height: maxSize,
+      fit: 'inside',
+    });
     const output = hasAlpha
       ? resized.png({ quality })
       : resized.jpeg({ quality });

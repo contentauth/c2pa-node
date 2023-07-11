@@ -29,7 +29,7 @@ See
 
 #### Defined in
 
-[types.d.ts:251](https://github.com/contentauth/c2pa-node/blob/46975b6/js-src/types.d.ts#L251)
+[types.d.ts:251](https://github.com/contentauth/c2pa-node/blob/8f4a321/js-src/types.d.ts#L251)
 
 ___
 
@@ -39,7 +39,7 @@ ___
 
 #### Defined in
 
-[types.d.ts:252](https://github.com/contentauth/c2pa-node/blob/46975b6/js-src/types.d.ts#L252)
+[types.d.ts:252](https://github.com/contentauth/c2pa-node/blob/8f4a321/js-src/types.d.ts#L252)
 
 ___
 
@@ -49,4 +49,4 @@ ___
 
 #### Defined in
 
-[types.d.ts:253](https://github.com/contentauth/c2pa-node/blob/46975b6/js-src/types.d.ts#L253)
+[types.d.ts:253](https://github.com/contentauth/c2pa-node/blob/8f4a321/js-src/types.d.ts#L253)

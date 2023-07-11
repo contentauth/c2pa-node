@@ -10,18 +10,21 @@ export class ManifestBuilderError extends Error {
 export class MissingSignerError extends Error {
   constructor(options?: ErrorOptions) {
     super(`Signer not provided to options`, options);
+    this.name = this.constructor.name;
   }
 }
 
 export class SigningError extends Error {
   constructor(options?: ErrorOptions) {
     super(`Signing error`, options);
+    this.name = this.constructor.name;
   }
 }
 
 export class CreateIngredientError extends Error {
   constructor(options?: ErrorOptions) {
     super(`Error creating ingredient`, options);
+    this.name = this.constructor.name;
   }
 }
 
@@ -38,6 +41,7 @@ export class IngredientHashMissingError extends Error {
 export class ThumbnailError extends Error {
   constructor(options?: ErrorOptions) {
     super(`Error creating thumbnail`, options);
+    this.name = this.constructor.name;
   }
 }
 
@@ -47,5 +51,6 @@ export class InvalidStorageOptionsError extends Error {
       `Embedding and remote manifest URL are both disabled - one must be specified.`,
       options,
     );
+    this.name = this.constructor.name;
   }
 }

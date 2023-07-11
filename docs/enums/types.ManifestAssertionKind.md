@@ -23,7 +23,7 @@ Assertions in C2PA can be stored in several formats
 
 #### Defined in
 
-[types.d.ts:103](https://github.com/contentauth/c2pa-node/blob/46975b6/js-src/types.d.ts#L103)
+[types.d.ts:103](https://github.com/contentauth/c2pa-node/blob/8f4a321/js-src/types.d.ts#L103)
 
 ___
 
@@ -33,7 +33,7 @@ ___
 
 #### Defined in
 
-[types.d.ts:104](https://github.com/contentauth/c2pa-node/blob/46975b6/js-src/types.d.ts#L104)
+[types.d.ts:104](https://github.com/contentauth/c2pa-node/blob/8f4a321/js-src/types.d.ts#L104)
 
 ___
 
@@ -43,7 +43,7 @@ ___
 
 #### Defined in
 
-[types.d.ts:105](https://github.com/contentauth/c2pa-node/blob/46975b6/js-src/types.d.ts#L105)
+[types.d.ts:105](https://github.com/contentauth/c2pa-node/blob/8f4a321/js-src/types.d.ts#L105)
 
 ___
 
@@ -53,4 +53,4 @@ ___
 
 #### Defined in
 
-[types.d.ts:106](https://github.com/contentauth/c2pa-node/blob/46975b6/js-src/types.d.ts#L106)
+[types.d.ts:106](https://github.com/contentauth/c2pa-node/blob/8f4a321/js-src/types.d.ts#L106)

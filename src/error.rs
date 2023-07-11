@@ -23,6 +23,9 @@ pub enum Error {
 
     #[error(transparent)]
     C2pa(#[from] c2pa::Error),
+
+    #[error(transparent)]
+    FileIO(#[from] std::io::Error),
 }
 
 pub type Result<T> = std::result::Result<T, Error>;

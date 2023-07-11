@@ -9,7 +9,7 @@ mod local;
 mod remote;
 
 use crate::error::{as_js_error, Error, Result};
-use crate::ingredient::{add_source_ingredient, StorableIngredient};
+use crate::ingredient::{add_source_ingredient, IngredientSource, StorableIngredient};
 use crate::runtime::runtime;
 use crate::sign::remote::RemoteSigner;
 
@@ -115,6 +115,11 @@ fn parse_js_manifest_object(
     })
 }
 
+pub enum AssetSource<'a> {
+    Memory(&'a str, &'a [u8]),
+    File(&'a str, &'a str),
+}
+
 enum SignerType {
     Local(LocalSignerConfiguration),
     Remote(RemoteSignerConfiguration),
@@ -217,7 +222,7 @@ struct SignOutput {
 
 async fn sign_manifest(
     manifest: &mut Manifest,
-    asset: &[u8],
+    asset: AssetSource<'_>,
     options: SignOptions,
 ) -> Result<SignOutput> {
     if let Some(remote_url) = options.remote_manifest_url {
@@ -235,7 +240,14 @@ async fn sign_manifest(
             config.alg,
             config.tsa_url.to_owned(),
         )
-        .map(|signer| manifest.embed_from_memory(&options.format, asset, &*signer))?
+        .map(|signer| match asset {
+            AssetSource::Memory(format, asset) => {
+                manifest.embed_from_memory(format, asset, &*signer)
+            }
+            AssetSource::File(source_path, dest_path) => {
+                manifest.embed(source_path, dest_path, &*signer)
+            }
+        })?
         .map(|asset| SignOutput {
             asset,
             manifest: None,
@@ -244,14 +256,18 @@ async fn sign_manifest(
 
         SignerType::Remote(config) => {
             let signer = RemoteSigner::from_config(config).await?;
-            let (asset, manifest) = manifest
-                .embed_from_memory_remote_signed(&options.format, asset, &signer)
-                .await?;
+            let (asset, manifest) = match asset {
+                AssetSource::Memory(format, asset) => manifest
+                    .embed_from_memory_remote_signed(format, asset, &signer)
+                    .await
+                    .map(|(asset, manifest)| (asset, Some(manifest))),
+                AssetSource::File(source_path, dest_path) => manifest
+                    .embed_remote_signed(source_path, dest_path, &signer)
+                    .await
+                    .map(|asset| (asset, None)),
+            }?;
 
-            Ok(SignOutput {
-                asset,
-                manifest: Some(manifest),
-            })
+            Ok(SignOutput { asset, manifest })
         }
     }
 }
@@ -274,7 +290,7 @@ fn create_sign_response(
     Ok(())
 }
 
-pub fn sign(mut cx: FunctionContext) -> JsResult<JsPromise> {
+pub fn sign_buffer(mut cx: FunctionContext) -> JsResult<JsPromise> {
     let rt = runtime(&mut cx)?;
     let channel = cx.channel();
     let (deferred, promise) = cx.promise();
@@ -290,16 +306,18 @@ pub fn sign(mut cx: FunctionContext) -> JsResult<JsPromise> {
     rt.spawn(async move {
         let format = options.format.to_owned();
         let asset = asset.as_slice();
+        let ingredient_source = IngredientSource::Memory(&format, asset);
+        let asset_source = AssetSource::Memory(&format, asset);
         let signed = future::ready(process_manifest(manifest_repr))
             .and_then(|mut manifest| async move {
-                add_source_ingredient(&mut manifest, &format, asset)
+                add_source_ingredient(&mut manifest, ingredient_source)
                     .await
                     .map(|_| manifest)
                     .map_err(Error::from)
             })
-            .and_then(
-                |mut manifest| async move { sign_manifest(&mut manifest, asset, options).await },
-            )
+            .and_then(|mut manifest| async move {
+                sign_manifest(&mut manifest, asset_source, options).await
+            })
             .await;
 
         deferred.settle_with(&channel, move |mut cx| {
@@ -307,6 +325,55 @@ pub fn sign(mut cx: FunctionContext) -> JsResult<JsPromise> {
             match signed {
                 Ok(signed) => {
                     create_sign_response(&mut cx, &response_obj, &signed)?;
+                }
+                Err(err) => {
+                    return as_js_error(&mut cx, err).and_then(|err| cx.throw(err));
+                }
+            };
+
+            Ok(response_obj)
+        });
+    });
+
+    Ok(promise)
+}
+
+pub fn sign_file(mut cx: FunctionContext) -> JsResult<JsPromise> {
+    let rt = runtime(&mut cx)?;
+    let channel = cx.channel();
+    let (deferred, promise) = cx.promise();
+
+    let manifest_repr = cx
+        .argument::<JsObject>(0)
+        .and_then(|data| parse_js_manifest_object(&mut cx, &data))?;
+    let input_path = cx.argument::<JsString>(1)?.value(&mut cx);
+    let output_path = cx.argument::<JsString>(2)?.value(&mut cx);
+    let options = cx
+        .argument::<JsObject>(3)
+        .and_then(|opts| parse_options(&mut cx, opts))?;
+
+    rt.spawn(async move {
+        let ingredient_source = IngredientSource::File(&input_path);
+        let asset_source = AssetSource::File(&input_path, &output_path);
+        let signed = future::ready(process_manifest(manifest_repr))
+            .and_then(|mut manifest| async move {
+                add_source_ingredient(&mut manifest, ingredient_source)
+                    .await
+                    .map(|_| manifest)
+                    .map_err(Error::from)
+            })
+            .and_then(|mut manifest| async move {
+                sign_manifest(&mut manifest, asset_source, options).await
+            })
+            .await;
+
+        deferred.settle_with(&channel, move |mut cx| {
+            let response_obj = cx.empty_object();
+
+            match signed {
+                Ok(_) => {
+                    let output_path_val = cx.string(&output_path);
+                    response_obj.set(&mut cx, "outputPath", output_path_val)?;
                 }
                 Err(err) => {
                     return as_js_error(&mut cx, err).and_then(|err| cx.throw(err));
