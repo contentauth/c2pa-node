@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto';
 import { createReadStream } from 'node:fs';
 import { extname } from 'node:path';
-import { Readable, Stream } from 'node:stream';
+import { Readable } from 'node:stream';
 import type { Asset } from '../bindings';
 import type { ResourceRef } from '../types';
 

@@ -227,12 +227,23 @@ export function createSign(globalOptions: C2paOptions) {
 
     const signOptions = Object.assign({}, defaultSignOptions, options);
     const signer = customSigner ?? globalOptions.signer;
+    const memoryFileTypes = ['image/jpeg', 'image/png'];
 
     if (!signer) {
       throw new MissingSignerError();
     }
     if (!signOptions.embed && !signOptions.remoteManifestUrl) {
       throw new InvalidStorageOptionsError();
+    }
+    if (
+      sourceType === 'memory' &&
+      !memoryFileTypes.includes(props.asset.mimeType)
+    ) {
+      throw new Error(
+        `Only ${memoryFileTypes.join(
+          ', ',
+        )} files can be signed using the 'memory' source type.`,
+      );
     }
 
     try {

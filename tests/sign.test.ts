@@ -272,6 +272,46 @@ describe('sign()', () => {
       expect(validation_status.length).toEqual(0);
     });
 
+    test('should throw an error if trying to sign an MP4 file from a buffer', async () => {
+      const fixture = await readFile('tests/fixtures/earth.mp4');
+      const asset: Asset = { mimeType: 'video/mp4', buffer: fixture };
+      const manifest = new ManifestBuilder(
+        {
+          claim_generator: 'my-app/1.0.0',
+          format: 'video/mp4',
+          title: 'node_test_local_signer.jpg',
+          assertions: [
+            {
+              label: 'c2pa.actions',
+              data: {
+                actions: [
+                  {
+                    action: 'c2pa.created',
+                  },
+                ],
+              },
+            },
+            {
+              label: 'com.custom.my-assertion',
+              data: {
+                description: 'My custom test assertion',
+                version: '1.0.0',
+              },
+            },
+          ],
+        },
+        { vendor: 'cai' },
+      );
+      expect(
+        c2pa.sign({
+          sourceType: 'memory',
+          asset,
+          manifest,
+          thumbnail: false,
+        }),
+      ).rejects.toThrow();
+    });
+
     test('should append a claim to a JPEG image with an existing manifest', async () => {
       const fixture = await readFile('tests/fixtures/CAICAI.jpg');
       const asset: Asset = { mimeType: 'image/jpeg', buffer: fixture };
@@ -345,7 +385,7 @@ describe('sign()', () => {
       // Manifests
       expect(Object.keys(manifests).length).toEqual(3);
 
-      // // Active manifest
+      // Active manifest
       expect(active_manifest?.claim_generator).toMatch(
         /^my-app\/1.0.0 c2pa-node\//,
       );
@@ -393,7 +433,7 @@ describe('sign()', () => {
       // Manifests
       expect(Object.keys(manifests).length).toEqual(3);
 
-      // // Active manifest
+      // Active manifest
       expect(active_manifest?.claim_generator).toMatch(
         /^my-app\/1.0.0 c2pa-node\//,
       );
@@ -449,7 +489,7 @@ describe('sign()', () => {
       // Manifests
       expect(Object.keys(manifests).length).toEqual(1);
 
-      // // Active manifest
+      // Active manifest
       expect(active_manifest?.claim_generator).toMatch(
         /^my-app\/1.0.0 c2pa-node\//,
       );
