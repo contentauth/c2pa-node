@@ -138,10 +138,8 @@ async function sign(asset, manifest) {
     signer,
   });
 
-  const { signedAsset, signedManifest } = await c2pa.sign({
-    sourceType: 'file',
-    inputPath,
-    outputPath,
+  const { signedAsset, signedManifest } = await c2pa.signBuffer({
+    asset,
     manifest,
   });
 }
@@ -166,9 +164,9 @@ async function sign(asset, manifest) {
     signer,
   });
 
-  const { signedAsset, signedManifest } = await c2pa.sign({
-    sourceType: 'memory',
-    asset,
+  const { signedAsset, signedManifest } = await c2pa.signFile({
+    inputPath,
+    outputPath,
     manifest,
   });
 }
@@ -207,8 +205,7 @@ async function sign(asset, manifest) {
     signer,
   });
 
-  const { signedAsset, signedManifest } = await c2pa.sign({
-    sourceType: 'memory',
+  const { signedAsset, signedManifest } = await c2pa.signBuffer({
     asset,
     manifest,
   });
@@ -257,8 +254,7 @@ async function sign(asset, manifest) {
     signer,
   });
 
-  const { signedAsset, signedManifest } = await c2pa.sign({
-    sourceType: 'memory',
+  const { signedAsset, signedManifest } = await c2pa.signBuffer({
     asset,
     manifest,
   });
