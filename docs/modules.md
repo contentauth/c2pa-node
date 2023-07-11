@@ -36,8 +36,10 @@
 
 ### Type Aliases
 
+- [BufferSignProps](modules.md#buffersignprops)
 - [C2pa](modules.md#c2pa)
 - [C2paOptions](modules.md#c2paoptions)
+- [FileSignProps](modules.md#filesignprops)
 - [HashAlgorithm](modules.md#hashalgorithm)
 - [IngredientResourceStore](modules.md#ingredientresourcestore)
 - [SignProps](modules.md#signprops)
@@ -50,22 +52,23 @@
 
 ## Type Aliases
 
-### C2pa
+### BufferSignProps
 
-Ƭ **C2pa**: `Object`
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `createIngredient` | `ReturnType`<typeof `createIngredientFunction`\> |
-| `read` | typeof `read` |
-| `sign` | `ReturnType`<typeof `createSign`\> |
-| `signClaimBytes` | typeof `signClaimBytes` |
+Ƭ **BufferSignProps**: `BaseSignProps` & { `asset`: [`Asset`](interfaces/Asset.md) ; `sourceType`: ``"memory"``  }
 
 #### Defined in
 
-[index.ts:33](https://github.com/contentauth/c2pa-node/blob/d91574f/js-src/index.ts#L33)
+[bindings.ts:203](https://github.com/contentauth/c2pa-node/blob/8ab0fc7/js-src/bindings.ts#L203)
+
+___
+
+### C2pa
+
+Ƭ **C2pa**: `ReturnType`<typeof `createSign`\> & { `createIngredient`: `ReturnType`<typeof `createIngredientFunction`\> ; `read`: typeof `read`  }
+
+#### Defined in
+
+[index.ts:28](https://github.com/contentauth/c2pa-node/blob/8ab0fc7/js-src/index.ts#L28)
 
 ___
 
@@ -83,7 +86,17 @@ ___
 
 #### Defined in
 
-[index.ts:23](https://github.com/contentauth/c2pa-node/blob/d91574f/js-src/index.ts#L23)
+[index.ts:18](https://github.com/contentauth/c2pa-node/blob/8ab0fc7/js-src/index.ts#L18)
+
+___
+
+### FileSignProps
+
+Ƭ **FileSignProps**: `BaseSignProps` & { `inputPath`: `string` ; `outputPath`: `string` ; `sourceType`: ``"file"``  }
+
+#### Defined in
+
+[bindings.ts:209](https://github.com/contentauth/c2pa-node/blob/8ab0fc7/js-src/bindings.ts#L209)
 
 ___
 
@@ -93,7 +106,7 @@ ___
 
 #### Defined in
 
-[lib/hash.ts:17](https://github.com/contentauth/c2pa-node/blob/d91574f/js-src/lib/hash.ts#L17)
+[lib/hash.ts:17](https://github.com/contentauth/c2pa-node/blob/8ab0fc7/js-src/lib/hash.ts#L17)
 
 ___
 
@@ -103,17 +116,17 @@ ___
 
 #### Defined in
 
-[bindings.ts:333](https://github.com/contentauth/c2pa-node/blob/d91574f/js-src/bindings.ts#L333)
+[bindings.ts:345](https://github.com/contentauth/c2pa-node/blob/8ab0fc7/js-src/bindings.ts#L345)
 
 ___
 
 ### SignProps
 
-Ƭ **SignProps**: `BufferSignProps` \| `FileSignProps`
+Ƭ **SignProps**: [`BufferSignProps`](modules.md#buffersignprops) \| [`FileSignProps`](modules.md#filesignprops)
 
 #### Defined in
 
-[bindings.ts:215](https://github.com/contentauth/c2pa-node/blob/d91574f/js-src/bindings.ts#L215)
+[bindings.ts:215](https://github.com/contentauth/c2pa-node/blob/8ab0fc7/js-src/bindings.ts#L215)
 
 ___
 
@@ -123,7 +136,7 @@ ___
 
 #### Defined in
 
-[lib/signer.ts:48](https://github.com/contentauth/c2pa-node/blob/d91574f/js-src/lib/signer.ts#L48)
+[lib/signer.ts:48](https://github.com/contentauth/c2pa-node/blob/8ab0fc7/js-src/lib/signer.ts#L48)
 
 ## Functions
 
@@ -145,7 +158,7 @@ Creates an instance of the SDK that encompasses a set of global options
 
 #### Defined in
 
-[index.ts:45](https://github.com/contentauth/c2pa-node/blob/d91574f/js-src/index.ts#L45)
+[index.ts:38](https://github.com/contentauth/c2pa-node/blob/8ab0fc7/js-src/index.ts#L38)
 
 ___
 
@@ -159,4 +172,4 @@ ___
 
 #### Defined in
 
-[lib/signer.ts:50](https://github.com/contentauth/c2pa-node/blob/d91574f/js-src/lib/signer.ts#L50)
+[lib/signer.ts:50](https://github.com/contentauth/c2pa-node/blob/8ab0fc7/js-src/lib/signer.ts#L50)
