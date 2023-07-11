@@ -7,12 +7,7 @@
  * it.
  */
 
-import {
-  createIngredientFunction,
-  createSign,
-  read,
-  signClaimBytes,
-} from './bindings';
+import { createIngredientFunction, createSign, read } from './bindings';
 import { Algorithm as HashAlgorithm } from './lib/hash';
 import type { Signer } from './lib/signer';
 import {
@@ -30,11 +25,9 @@ const defaultOptions: C2paOptions = {
   thumbnail: defaultThumbnailOptions,
 };
 
-export type C2pa = {
+export type C2pa = ReturnType<typeof createSign> & {
   createIngredient: ReturnType<typeof createIngredientFunction>;
   read: typeof read;
-  sign: ReturnType<typeof createSign>;
-  signClaimBytes: typeof signClaimBytes;
 };
 
 /**
@@ -44,18 +37,20 @@ export type C2pa = {
  */
 export function createC2pa(options?: C2paOptions) {
   const opts: C2paOptions = Object.assign({}, defaultOptions, options);
+  const signFns = createSign(opts);
 
   return {
     createIngredient: createIngredientFunction(opts),
     read,
-    sign: createSign(opts),
-    signClaimBytes,
+    ...signFns,
   } as C2pa;
 }
 
 export type {
   Asset,
+  BufferSignProps,
   CreateIngredientProps,
+  FileSignProps,
   IngredientResourceStore,
   ResolvedIngredient,
   ResolvedManifest,

@@ -65,8 +65,7 @@ describe('sign()', () => {
         },
         { vendor: 'cai' },
       );
-      const { signedAsset } = await c2pa.sign({
-        sourceType: 'memory',
+      const { signedAsset } = await c2pa.signBuffer({
         asset,
         manifest,
       });
@@ -146,8 +145,7 @@ describe('sign()', () => {
         },
         { vendor: 'cai' },
       );
-      const { signedAsset } = await c2pa.sign({
-        sourceType: 'file',
+      const { signedAsset } = await c2pa.signFile({
         inputPath: asset,
         outputPath,
         manifest,
@@ -228,8 +226,7 @@ describe('sign()', () => {
         },
         { vendor: 'cai' },
       );
-      const { signedAsset } = await c2pa.sign({
-        sourceType: 'file',
+      const { signedAsset } = await c2pa.signFile({
         inputPath: asset,
         outputPath,
         manifest,
@@ -312,8 +309,7 @@ describe('sign()', () => {
         { vendor: 'cai' },
       );
       expect(
-        c2pa.sign({
-          sourceType: 'memory',
+        c2pa.signBuffer({
           asset,
           manifest,
           thumbnail: false,
@@ -329,8 +325,7 @@ describe('sign()', () => {
         format: 'image/jpeg',
         title: 'node_test_local_signer.jpg',
       });
-      const { signedAsset } = await c2pa.sign({
-        sourceType: 'memory',
+      const { signedAsset } = await c2pa.signBuffer({
         asset,
         manifest,
       });
@@ -382,8 +377,7 @@ describe('sign()', () => {
         title: 'A-added.jpg',
       });
       manifest.addIngredient(ingredient);
-      const { signedAsset } = await c2pa.sign({
-        sourceType: 'memory',
+      const { signedAsset } = await c2pa.signBuffer({
         asset,
         manifest,
       });
@@ -427,8 +421,7 @@ describe('sign()', () => {
         title: 'node_test_local_signer.jpg',
       });
       const remoteManifestUrl = 'https://remote-manifest.storage/manifest.c2pa';
-      const { signedAsset } = await c2pa.sign({
-        sourceType: 'memory',
+      const { signedAsset } = await c2pa.signBuffer({
         asset,
         manifest,
         options: { remoteManifestUrl },
@@ -486,8 +479,7 @@ describe('sign()', () => {
         format: 'image/jpeg',
         title: 'node_test_local_signer.jpg',
       });
-      const { signedAsset } = await c2pa.sign({
-        sourceType: 'memory',
+      const { signedAsset } = await c2pa.signBuffer({
         asset,
         manifest,
       });
@@ -530,8 +522,7 @@ describe('sign()', () => {
         format: 'image/jpeg',
         title: 'node_test_local_signer.jpg',
       });
-      const { signedAsset } = await c2pa.sign({
-        sourceType: 'memory',
+      const { signedAsset } = await c2pa.signBuffer({
         asset,
         manifest,
         signer: await createTestSigner(),

@@ -200,19 +200,25 @@ type BaseSignProps = {
   options?: SignOptions;
 };
 
-type BufferSignProps = BaseSignProps & {
+export type BufferSignProps = BaseSignProps & {
   sourceType: 'memory';
   // The asset to sign
   asset: Asset;
 };
 
-type FileSignProps = BaseSignProps & {
+export type FileSignProps = BaseSignProps & {
   sourceType: 'file';
   inputPath: string;
   outputPath: string;
 };
 
 export type SignProps = BufferSignProps | FileSignProps;
+
+export interface SignClaimBytesProps {
+  claim: Buffer;
+  reserveSize: number;
+  signer: Signer;
+}
 
 export interface SignOutput {
   signedAsset: Asset | string;
@@ -225,7 +231,7 @@ export const defaultSignOptions: SignOptions = {
 };
 
 export function createSign(globalOptions: C2paOptions) {
-  return async function sign(props: SignProps): Promise<SignOutput> {
+  const sign = async (props: SignProps): Promise<SignOutput> => {
     const {
       sourceType,
       manifest,
@@ -308,26 +314,32 @@ export function createSign(globalOptions: C2paOptions) {
       throw new SigningError({ cause: err });
     }
   };
-}
 
-export interface SignClaimBytesProps {
-  claim: Buffer;
-  reserveSize: number;
-  signer: Signer;
-}
+  return {
+    async signBuffer(props: Omit<BufferSignProps, 'sourceType'>) {
+      return sign({ ...props, sourceType: 'memory' });
+    },
+    async signFile(props: Omit<FileSignProps, 'sourceType'>) {
+      return sign({ ...props, sourceType: 'file' });
+    },
+    async signClaimBytes({
+      claim,
+      reserveSize,
+      signer,
+    }: SignClaimBytesProps): Promise<Buffer> {
+      try {
+        const result = await bindings.sign_claim_bytes(
+          claim,
+          reserveSize,
+          signer,
+        );
 
-export async function signClaimBytes({
-  claim,
-  reserveSize,
-  signer,
-}: SignClaimBytesProps): Promise<Buffer> {
-  try {
-    const result = await bindings.sign_claim_bytes(claim, reserveSize, signer);
-
-    return Buffer.from(result);
-  } catch (err: unknown) {
-    throw new SigningError({ cause: err });
-  }
+        return Buffer.from(result);
+      } catch (err: unknown) {
+        throw new SigningError({ cause: err });
+      }
+    },
+  };
 }
 
 export type IngredientResourceStore = Record<string, Buffer>;
