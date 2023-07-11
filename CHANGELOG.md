@@ -1,5 +1,11 @@
 # c2pa-node
 
+## 0.4.0
+
+### Minor Changes
+
+- e5efaaf: Update signing functions (`sign` is now `signBuffer` and `signFile`), fix packaging
+
 ## 0.3.1
 
 ### Patch Changes
