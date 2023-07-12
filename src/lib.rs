@@ -200,9 +200,13 @@ fn create_ingredient_from_file(mut cx: FunctionContext) -> JsResult<JsPromise> {
     let (deferred, promise) = cx.promise();
 
     let path = cx.argument::<JsString>(0)?.value(&mut cx);
+    let format = cx
+        .argument_opt(1)
+        .map(|arg| arg.downcast_or_throw::<JsString, _>(&mut cx))
+        .map_or(Ok(None), |x| x.map(|h| h.value(&mut cx)).map(Some))?;
 
     rt.spawn(async move {
-        let source = IngredientSource::File(&path);
+        let source = IngredientSource::File(&path, format.as_deref());
         let ingredient = create_ingredient(source).await;
 
         deferred.settle_with(&channel, move |mut cx| {

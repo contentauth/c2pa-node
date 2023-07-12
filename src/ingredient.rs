@@ -13,7 +13,7 @@ use crate::error::{Error, Result};
 
 pub enum IngredientSource<'a> {
     Memory(&'a str, &'a [u8]),
-    File(&'a str),
+    File(&'a str, Option<&'a str>),
 }
 
 pub(crate) struct StorableIngredient {
@@ -30,11 +30,22 @@ async fn fetch_remote_manifest(url: &str) -> Result<Vec<u8>> {
     Ok(bytes.to_vec())
 }
 
-pub async fn create_ingredient(source: IngredientSource<'_>) -> Result<Ingredient> {
-    let ingredient = match source {
+pub fn load_ingredient(source: &IngredientSource<'_>) -> Result<Ingredient> {
+    match source {
         IngredientSource::Memory(format, buffer) => Ingredient::from_memory(format, buffer),
-        IngredientSource::File(path) => Ingredient::from_file(path),
-    }?;
+        IngredientSource::File(path, format) => {
+            let mut file = File::open(path)?;
+            let format = format
+                .map(|f| f.to_owned())
+                .unwrap_or_else(|| Ingredient::from_file_info(path).format().to_owned());
+            Ingredient::from_stream(&format, &mut file)
+        }
+    }
+    .map_err(Error::from)
+}
+
+pub async fn create_ingredient(source: IngredientSource<'_>) -> Result<Ingredient> {
+    let ingredient = load_ingredient(&source)?;
 
     let remote_manifest_url = ingredient.validation_status().and_then(|status| {
         status.iter().find_map(|item| {
@@ -54,11 +65,12 @@ pub async fn create_ingredient(source: IngredientSource<'_>) -> Result<Ingredien
                     .await
                     .map_err(Error::from)
             }
-            IngredientSource::File(path) => {
-                let info = Ingredient::from_file_info(path);
-                let format = info.format();
+            IngredientSource::File(path, format) => {
+                let format = format
+                    .map(|f| f.to_owned())
+                    .unwrap_or_else(|| Ingredient::from_file_info(path).format().to_owned());
                 let mut file = File::open(path).map_err(Error::from)?;
-                Ingredient::from_manifest_and_asset_stream_async(manifest_bytes, format, &mut file)
+                Ingredient::from_manifest_and_asset_stream_async(manifest_bytes, &format, &mut file)
                     .await
                     .map_err(Error::from)
             }
@@ -72,10 +84,7 @@ pub async fn add_source_ingredient(
     manifest: &mut Manifest,
     source: IngredientSource<'_>,
 ) -> Result<()> {
-    let mut source_ingredient = match source {
-        IngredientSource::Memory(format, buffer) => Ingredient::from_memory(format, buffer),
-        IngredientSource::File(path) => Ingredient::from_file(path),
-    }?;
+    let mut source_ingredient = load_ingredient(&source)?;
 
     if let Some(manifest_data) = source_ingredient.manifest_data() {
         let parent_manifest = ManifestStore::from_bytes("application/c2pa", &manifest_data, false)?;

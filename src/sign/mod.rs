@@ -360,7 +360,8 @@ pub fn sign_file(mut cx: FunctionContext) -> JsResult<JsPromise> {
         .and_then(|opts| parse_options(&mut cx, opts))?;
 
     rt.spawn(async move {
-        let ingredient_source = IngredientSource::File(&input_path);
+        let format = options.format.to_owned();
+        let ingredient_source = IngredientSource::File(&input_path, Some(&format));
         let asset_source = AssetSource::File(&input_path, &output_path);
         let signed = future::ready(process_manifest(manifest_repr))
             .and_then(|mut manifest| async move {
