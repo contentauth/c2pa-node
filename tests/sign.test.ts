@@ -363,6 +363,56 @@ describe('sign()', () => {
       expect(validation_status.length).toEqual(0);
     });
 
+    test('should sign a file without an extension', async () => {
+      const fixture = resolve('tests/fixtures/CAICAI');
+      const asset: Asset = { path: fixture, mimeType: 'image/jpeg' };
+      const outputPath = temporaryFile({ name: 'no-extension.jpg' });
+      const manifest = new ManifestBuilder({
+        claim_generator: 'my-app/1.0.0',
+        format: 'image/jpeg',
+        title: 'node_test_local_signer.jpg',
+      });
+      const { signedAsset } = await c2pa.sign({
+        asset,
+        manifest,
+        options: {
+          outputPath,
+        },
+      });
+
+      const result = await c2pa.read(signedAsset);
+      const { active_manifest, manifests, validation_status } = result!;
+
+      // Manifests
+      expect(Object.keys(manifests).length).toEqual(3);
+
+      // Active manifest
+      expect(active_manifest?.claim_generator).toMatch(
+        /^my-app\/1.0.0 c2pa-node\//,
+      );
+      expect(active_manifest?.title).toEqual('node_test_local_signer.jpg');
+      expect(active_manifest?.format).toEqual('image/jpeg');
+
+      expect(validation_status.length).toEqual(0);
+    });
+
+    test('should throw an error if trying to sign an file without an output path', async () => {
+      const fixture = resolve('tests/fixtures/CAICAI');
+      const asset: Asset = { path: fixture, mimeType: 'image/jpeg' };
+      const manifest = new ManifestBuilder({
+        claim_generator: 'my-app/1.0.0',
+        format: 'image/jpeg',
+        title: 'node_test_local_signer.jpg',
+      });
+      expect(
+        c2pa.sign({
+          asset,
+          manifest,
+          thumbnail: false,
+        }),
+      ).rejects.toThrow();
+    });
+
     test('should allow you to add an ingredient to a signed image', async () => {
       const fixture = await readFile('tests/fixtures/CAICAI.jpg');
       const ingredientFixture = await readFile('tests/fixtures/A.jpg');

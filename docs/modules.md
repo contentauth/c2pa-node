@@ -18,8 +18,9 @@
 
 ### Interfaces
 
-- [Asset](interfaces/Asset.md)
+- [BufferAsset](interfaces/BufferAsset.md)
 - [CreateIngredientProps](interfaces/CreateIngredientProps.md)
+- [FileAsset](interfaces/FileAsset.md)
 - [LocalSigner](interfaces/LocalSigner.md)
 - [RemoteSigner](interfaces/RemoteSigner.md)
 - [ResolvedIngredient](interfaces/ResolvedIngredient.md)
@@ -36,10 +37,9 @@
 
 ### Type Aliases
 
-- [BufferSignProps](modules.md#buffersignprops)
+- [Asset](modules.md#asset)
 - [C2pa](modules.md#c2pa)
 - [C2paOptions](modules.md#c2paoptions)
-- [FileSignProps](modules.md#filesignprops)
 - [HashAlgorithm](modules.md#hashalgorithm)
 - [IngredientResourceStore](modules.md#ingredientresourcestore)
 - [SignProps](modules.md#signprops)
@@ -52,13 +52,15 @@
 
 ## Type Aliases
 
-### BufferSignProps
+### Asset
 
-Ƭ **BufferSignProps**: `BaseSignProps` & { `asset`: [`Asset`](interfaces/Asset.md) ; `sourceType`: ``"memory"``  }
+Ƭ **Asset**: [`BufferAsset`](interfaces/BufferAsset.md) \| [`FileAsset`](interfaces/FileAsset.md)
+
+An asset that can either be in memory or on disk
 
 #### Defined in
 
-[bindings.ts:203](https://github.com/contentauth/c2pa-node/blob/db40930/js-src/bindings.ts#L203)
+[bindings.ts:153](https://github.com/contentauth/c2pa-node/blob/a776a47/js-src/bindings.ts#L153)
 
 ___
 
@@ -68,7 +70,7 @@ ___
 
 #### Defined in
 
-[index.ts:28](https://github.com/contentauth/c2pa-node/blob/db40930/js-src/index.ts#L28)
+[index.ts:28](https://github.com/contentauth/c2pa-node/blob/a776a47/js-src/index.ts#L28)
 
 ___
 
@@ -86,17 +88,7 @@ ___
 
 #### Defined in
 
-[index.ts:18](https://github.com/contentauth/c2pa-node/blob/db40930/js-src/index.ts#L18)
-
-___
-
-### FileSignProps
-
-Ƭ **FileSignProps**: `BaseSignProps` & { `inputPath`: `string` ; `outputPath`: `string` ; `sourceType`: ``"file"``  }
-
-#### Defined in
-
-[bindings.ts:209](https://github.com/contentauth/c2pa-node/blob/db40930/js-src/bindings.ts#L209)
+[index.ts:18](https://github.com/contentauth/c2pa-node/blob/a776a47/js-src/index.ts#L18)
 
 ___
 
@@ -106,7 +98,7 @@ ___
 
 #### Defined in
 
-[lib/hash.ts:17](https://github.com/contentauth/c2pa-node/blob/db40930/js-src/lib/hash.ts#L17)
+[lib/hash.ts:17](https://github.com/contentauth/c2pa-node/blob/a776a47/js-src/lib/hash.ts#L17)
 
 ___
 
@@ -116,17 +108,27 @@ ___
 
 #### Defined in
 
-[bindings.ts:345](https://github.com/contentauth/c2pa-node/blob/db40930/js-src/bindings.ts#L345)
+[bindings.ts:344](https://github.com/contentauth/c2pa-node/blob/a776a47/js-src/bindings.ts#L344)
 
 ___
 
 ### SignProps
 
-Ƭ **SignProps**: [`BufferSignProps`](modules.md#buffersignprops) \| [`FileSignProps`](modules.md#filesignprops)
+Ƭ **SignProps**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `asset` | [`Asset`](modules.md#asset) |
+| `manifest` | [`ManifestBuilder`](classes/ManifestBuilder.md) |
+| `options?` | [`SignOptions`](interfaces/SignOptions.md) |
+| `signer?` | [`Signer`](modules.md#signer) |
+| `thumbnail?` | [`BufferAsset`](interfaces/BufferAsset.md) \| ``false`` |
 
 #### Defined in
 
-[bindings.ts:215](https://github.com/contentauth/c2pa-node/blob/db40930/js-src/bindings.ts#L215)
+[bindings.ts:200](https://github.com/contentauth/c2pa-node/blob/a776a47/js-src/bindings.ts#L200)
 
 ___
 
@@ -136,7 +138,7 @@ ___
 
 #### Defined in
 
-[lib/signer.ts:48](https://github.com/contentauth/c2pa-node/blob/db40930/js-src/lib/signer.ts#L48)
+[lib/signer.ts:48](https://github.com/contentauth/c2pa-node/blob/a776a47/js-src/lib/signer.ts#L48)
 
 ## Functions
 
@@ -158,7 +160,7 @@ Creates an instance of the SDK that encompasses a set of global options
 
 #### Defined in
 
-[index.ts:38](https://github.com/contentauth/c2pa-node/blob/db40930/js-src/index.ts#L38)
+[index.ts:38](https://github.com/contentauth/c2pa-node/blob/a776a47/js-src/index.ts#L38)
 
 ___
 
@@ -172,4 +174,4 @@ ___
 
 #### Defined in
 
-[lib/signer.ts:50](https://github.com/contentauth/c2pa-node/blob/db40930/js-src/lib/signer.ts#L50)
+[lib/signer.ts:50](https://github.com/contentauth/c2pa-node/blob/a776a47/js-src/lib/signer.ts#L50)

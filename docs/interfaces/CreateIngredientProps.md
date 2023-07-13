@@ -14,21 +14,21 @@
 
 ### asset
 
-• **asset**: `string` \| [`Asset`](Asset.md)
+• **asset**: [`Asset`](../modules.md#asset)
 
 #### Defined in
 
-[bindings.ts:355](https://github.com/contentauth/c2pa-node/blob/db40930/js-src/bindings.ts#L355)
+[bindings.ts:354](https://github.com/contentauth/c2pa-node/blob/a776a47/js-src/bindings.ts#L354)
 
 ___
 
 ### thumbnail
 
-• `Optional` **thumbnail**: ``false`` \| [`Asset`](Asset.md)
+• `Optional` **thumbnail**: ``false`` \| [`BufferAsset`](BufferAsset.md)
 
 #### Defined in
 
-[bindings.ts:360](https://github.com/contentauth/c2pa-node/blob/db40930/js-src/bindings.ts#L360)
+[bindings.ts:359](https://github.com/contentauth/c2pa-node/blob/a776a47/js-src/bindings.ts#L359)
 
 ___
 
@@ -38,4 +38,4 @@ ___
 
 #### Defined in
 
-[bindings.ts:357](https://github.com/contentauth/c2pa-node/blob/db40930/js-src/bindings.ts#L357)
+[bindings.ts:356](https://github.com/contentauth/c2pa-node/blob/a776a47/js-src/bindings.ts#L356)

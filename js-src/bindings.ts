@@ -133,21 +133,28 @@ export function resolveManifest(
 }
 
 export interface BufferAsset {
+  // A buffer containing the asset data
   buffer: Buffer;
+  // The MIME type of the asset, for instance `image/jpeg`
   mimeType: string;
 }
 
 export interface FileAsset {
+  // The path to the asset
   path: string;
+  // The optional MIME type of the asset, for instance `image/jpeg`.
+  // If not supplied, the MIME type will be inferred from the file extension, if available.
   mimeType?: string;
 }
 
+/**
+ * An asset that can either be in memory or on disk
+ */
 export type Asset = BufferAsset | FileAsset;
 
 /**
  * Reads C2PA data from an asset
- * @param mimeType The MIME type of the asset, for instance `image/jpeg`
- * @param buffer A buffer containing the asset data
+ * @param asset
  * @returns A promise containing C2PA data, if present
  */
 export async function read(
