@@ -20,7 +20,7 @@ describe('read()', () => {
 
   test('should read a JPEG image with an embedded manifest', async () => {
     const fixture = await readFile('tests/fixtures/CAICAI.jpg');
-    const result = await c2pa.read({ mimeType: 'image/jpeg', buffer: fixture });
+    const result = await c2pa.read({ buffer: fixture, mimeType: 'image/jpeg' });
     const { active_manifest, manifests, validation_status } = result!;
 
     // Manifests
@@ -152,7 +152,7 @@ describe('read()', () => {
   test('should read a JPEG image with a cloud manifest', async () => {
     // Can't mock this unfortunately since fetching is being done via Rust/C
     const fixture = await readFile('tests/fixtures/cloud-only-firefly.jpg');
-    const result = await c2pa.read({ mimeType: 'image/jpeg', buffer: fixture });
+    const result = await c2pa.read({ buffer: fixture, mimeType: 'image/jpeg' });
     const { active_manifest, manifests, validation_status } = result!;
 
     // Manifests
@@ -185,14 +185,14 @@ describe('read()', () => {
 
   test('should return null for an image with no manifest', async () => {
     const fixture = await readFile('tests/fixtures/A.jpg');
-    const result = await c2pa.read({ mimeType: 'image/jpeg', buffer: fixture });
+    const result = await c2pa.read({ buffer: fixture, mimeType: 'image/jpeg' });
 
     expect(result).toBeNull();
   });
 
   test('should read a JPEG image that is OTGP', async () => {
     const fixture = await readFile('tests/fixtures/XCA.jpg');
-    const result = await c2pa.read({ mimeType: 'image/jpeg', buffer: fixture });
+    const result = await c2pa.read({ buffer: fixture, mimeType: 'image/jpeg' });
 
     expect(result?.validation_status.length).toEqual(1);
     expect(result?.validation_status[0]).toMatchObject({

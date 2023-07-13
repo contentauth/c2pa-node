@@ -13,11 +13,11 @@
 
 ### signedAsset
 
-• **signedAsset**: `string` \| [`Asset`](Asset.md)
+• **signedAsset**: [`Asset`](../modules.md#asset)
 
 #### Defined in
 
-[bindings.ts:224](https://github.com/contentauth/c2pa-node/blob/db40930/js-src/bindings.ts#L224)
+[bindings.ts:220](https://github.com/contentauth/c2pa-node/blob/a776a47/js-src/bindings.ts#L220)
 
 ___
 
@@ -27,4 +27,4 @@ ___
 
 #### Defined in
 
-[bindings.ts:225](https://github.com/contentauth/c2pa-node/blob/db40930/js-src/bindings.ts#L225)
+[bindings.ts:221](https://github.com/contentauth/c2pa-node/blob/a776a47/js-src/bindings.ts#L221)

@@ -60,7 +60,7 @@ You can read a manifest by using the `c2pa.read()` function:
 import { readFile } from 'node:fs/promises';
 
 const buffer = await readFile('my-c2pa-file.jpg');
-const result = await c2pa.read({ mimeType: 'image/jpeg', buffer });
+const result = await c2pa.read({ buffer, mimeType: 'image/jpeg' });
 
 if (result) {
   const { active_manifest, manifests, validation_status } = result;
@@ -107,9 +107,19 @@ You can use `c2pa.createIngredient()` to load ingredient data for inclusion into
 if necessary and loaded in at signing time without the need for the original ingredient if it is no longer available.
 
 ```ts
+// Create the ingredient asset from a buffer
+const ingredientAssetFromBuffer = {
+  buffer: await readFile('my-ingredient.jpg'),
+  mimeType: 'image/jpeg',
+};
+// or from a file
+const ingredientAssetFromFile = {
+  path: resolve('my-ingredient.jpg'),
+};
+
 // Create the ingredient
 const ingredient = await c2pa.createIngredient({
-  asset: ingredientAsset,
+  asset: ingredientAssetFromBuffer,
   title: 'ingredient.jpg',
 });
 // Add it to the manifest
@@ -134,13 +144,13 @@ import { createC2pa, createTestSigner } from 'c2pa-node';
 
 async function sign(asset, manifest) {
   const buffer = await readFile('to-be-signed.jpg');
-  const asset: Asset = { mimeType: 'image/jpeg', buffer };
+  const asset: Asset = { buffer, mimeType: 'image/jpeg' };
   const signer = createTestSigner();
   const c2pa = createC2pa({
     signer,
   });
 
-  const { signedAsset, signedManifest } = await c2pa.signBuffer({
+  const { signedAsset, signedManifest } = await c2pa.sign({
     asset,
     manifest,
   });
@@ -159,17 +169,21 @@ import { resolve } from 'node:path';
 import { createC2pa, createTestSigner } from 'c2pa-node';
 
 async function sign(asset, manifest) {
-  const inputPath = resolve('to-be-signed.jpg');
+  const asset = {
+    path: resolve('to-be-signed.jpg'),
+  };
   const outputPath = resolve('signed.jpg');
   const signer = createTestSigner();
   const c2pa = createC2pa({
     signer,
   });
 
-  const { signedAsset, signedManifest } = await c2pa.signFile({
-    inputPath,
-    outputPath,
+  const { signedAsset, signedManifest } = await c2pa.sign({
     manifest,
+    asset,
+    options: {
+      outputPath
+    },
   });
 }
 
@@ -201,13 +215,13 @@ async function createLocalSigner() {
 
 async function sign(asset, manifest) {
   const buffer = await readFile('to-be-signed.jpg');
-  const asset: Asset = { mimeType: 'image/jpeg', buffer };
+  const asset: Asset = { buffer, mimeType: 'image/jpeg' };
   const signer = await createLocalSigner();
   const c2pa = createC2pa({
     signer,
   });
 
-  const { signedAsset, signedManifest } = await c2pa.signBuffer({
+  const { signedAsset, signedManifest } = await c2pa.sign({
     asset,
     manifest,
   });
@@ -250,13 +264,13 @@ function createRemoteSigner() {
 
 async function sign(asset, manifest) {
   const buffer = await readFile('to-be-signed.jpg');
-  const asset: Asset = { mimeType: 'image/jpeg', buffer };
+  const asset: Asset = { buffer, mimeType: 'image/jpeg' };
   const signer = createRemoteSigner();
   const c2pa = createC2pa({
     signer,
   });
 
-  const { signedAsset, signedManifest } = await c2pa.signBuffer({
+  const { signedAsset, signedManifest } = await c2pa.sign({
     asset,
     manifest,
   });

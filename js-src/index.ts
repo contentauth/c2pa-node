@@ -48,9 +48,9 @@ export function createC2pa(options?: C2paOptions) {
 
 export type {
   Asset,
-  BufferSignProps,
+  BufferAsset,
   CreateIngredientProps,
-  FileSignProps,
+  FileAsset,
   IngredientResourceStore,
   ResolvedIngredient,
   ResolvedManifest,

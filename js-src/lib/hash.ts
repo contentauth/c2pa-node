@@ -40,14 +40,14 @@ export function sha(data: Buffer | string, algorithm: Algorithm = DEFAULT_ALG) {
 }
 
 export async function labeledSha(
-  asset: Asset | string,
+  asset: Asset,
   algorithm: Algorithm = DEFAULT_ALG,
 ) {
   let hash, suffix;
 
-  if (typeof asset === 'string') {
-    hash = await sha(asset, algorithm);
-    suffix = extname(asset).slice(1) || 'bin';
+  if ('path' in asset) {
+    hash = await sha(asset.path, algorithm);
+    suffix = extname(asset.path).slice(1) || 'bin';
   } else {
     hash = await sha(asset.buffer, algorithm);
     suffix = asset.mimeType.split('/')[1] ?? 'bin';
@@ -61,13 +61,13 @@ export async function getResourceReference(
   identifier: string | undefined,
   algorithm: Algorithm = DEFAULT_ALG,
 ): Promise<ResourceRef> {
-  const suffix = asset.mimeType.split('/')[1] ?? 'bin';
+  const suffix = asset.mimeType?.split('/')[1] ?? 'bin';
   const base =
     identifier?.replace(/[^a-z0-9\-]+/gi, '-') ??
     (await labeledSha(asset, algorithm));
 
   return {
-    format: asset.mimeType,
+    format: asset.mimeType ?? 'application/octet-stream',
     identifier: `${base}.${suffix}`,
   };
 }

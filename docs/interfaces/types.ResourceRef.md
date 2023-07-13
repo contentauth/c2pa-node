@@ -25,7 +25,7 @@ A reference to a resource to be used in JSON serialization
 
 #### Defined in
 
-[types.d.ts:191](https://github.com/contentauth/c2pa-node/blob/db40930/js-src/types.d.ts#L191)
+[types.d.ts:191](https://github.com/contentauth/c2pa-node/blob/a776a47/js-src/types.d.ts#L191)
 
 ___
 
@@ -35,4 +35,4 @@ ___
 
 #### Defined in
 
-[types.d.ts:192](https://github.com/contentauth/c2pa-node/blob/db40930/js-src/types.d.ts#L192)
+[types.d.ts:192](https://github.com/contentauth/c2pa-node/blob/a776a47/js-src/types.d.ts#L192)

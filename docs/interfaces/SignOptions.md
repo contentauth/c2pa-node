@@ -7,7 +7,7 @@
 ### Properties
 
 - [embed](SignOptions.md#embed)
-- [format](SignOptions.md#format)
+- [outputPath](SignOptions.md#outputpath)
 - [remoteManifestUrl](SignOptions.md#remotemanifesturl)
 
 ## Properties
@@ -18,17 +18,17 @@
 
 #### Defined in
 
-[bindings.ts:188](https://github.com/contentauth/c2pa-node/blob/db40930/js-src/bindings.ts#L188)
+[bindings.ts:195](https://github.com/contentauth/c2pa-node/blob/a776a47/js-src/bindings.ts#L195)
 
 ___
 
-### format
+### outputPath
 
-• `Optional` **format**: `string`
+• `Optional` **outputPath**: `string`
 
 #### Defined in
 
-[bindings.ts:187](https://github.com/contentauth/c2pa-node/blob/db40930/js-src/bindings.ts#L187)
+[bindings.ts:196](https://github.com/contentauth/c2pa-node/blob/a776a47/js-src/bindings.ts#L196)
 
 ___
 
@@ -38,4 +38,4 @@ ___
 
 #### Defined in
 
-[bindings.ts:189](https://github.com/contentauth/c2pa-node/blob/db40930/js-src/bindings.ts#L189)
+[bindings.ts:197](https://github.com/contentauth/c2pa-node/blob/a776a47/js-src/bindings.ts#L197)

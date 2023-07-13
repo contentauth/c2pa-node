@@ -284,7 +284,7 @@ checksum = "89b2fd2a0dcf38d7971e2194b6b6eebab45ae01067456a7fd93d5547a61b70be"
 [[package]]
 name = "c2pa"
 version = "0.24.0"
-source = "git+https://github.com/contentauth/c2pa-rs?branch=dkozma/wasm-improvements#58526caf5a02daac559575e2f6b88c96a7c0ecfc"
+source = "git+https://github.com/contentauth/c2pa-rs#2723117d95d8e234ea20d1425c1be6fba2046400"
 dependencies = [
  "asn1-rs",
  "async-trait",
@@ -303,6 +303,7 @@ dependencies = [
  "extfmt",
  "fast-xml",
  "getrandom",
+ "half",
  "hex",
  "img-parts",
  "instant",
