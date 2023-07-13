@@ -1,5 +1,11 @@
 # c2pa-node
 
+## 0.5.0
+
+### Minor Changes
+
+- bc880c5: Updated APIs to take a standard `asset` object as input that can represent both buffer and file assets
+
 ## 0.4.0
 
 ### Minor Changes
