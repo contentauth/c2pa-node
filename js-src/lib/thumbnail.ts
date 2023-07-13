@@ -8,7 +8,7 @@
  */
 
 import sharp from 'sharp';
-import { Asset } from '..';
+import { BufferAsset } from '..';
 import { ThumbnailError } from './error';
 
 export interface ThumbnailOptions {
@@ -24,7 +24,7 @@ export const defaultThumbnailOptions: ThumbnailOptions = {
 export async function createThumbnail(
   imageData: Buffer | string,
   options?: ThumbnailOptions,
-): Promise<Asset | null> {
+): Promise<BufferAsset | null> {
   try {
     const opts = Object.assign({}, defaultThumbnailOptions, options);
     const { maxSize, quality: rawQuality } = opts;

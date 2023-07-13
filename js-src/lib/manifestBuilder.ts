@@ -8,7 +8,7 @@
  */
 
 import { randomUUID } from 'node:crypto';
-import type { Asset, StorableIngredient } from '..';
+import type { BufferAsset, StorableIngredient } from '..';
 import { IngredientHashMissingError, ManifestBuilderError } from '../lib/error';
 import type { Manifest } from '../types';
 import { getResourceReference } from './hash';
@@ -82,7 +82,7 @@ export class ManifestBuilder {
     return this;
   }
 
-  public async addThumbnail(thumbnail: Asset) {
+  public async addThumbnail(thumbnail: BufferAsset) {
     const resourceRef = await getResourceReference(
       thumbnail,
       this.#definition.label,

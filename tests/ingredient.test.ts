@@ -26,8 +26,8 @@ describe('createIngredient()', () => {
     test('should read a JPEG image with an embedded manifest', async () => {
       const fixture = await readFile('tests/fixtures/CAICAI.jpg');
       const asset = {
-        mimeType: 'image/jpeg',
         buffer: fixture,
+        mimeType: 'image/jpeg',
       };
       const { ingredient, resources } = await c2pa.createIngredient({
         asset,
@@ -61,7 +61,9 @@ describe('createIngredient()', () => {
 
   describe('from file', () => {
     test('should read a JPEG image with an embedded manifest', async () => {
-      const asset = resolve('tests/fixtures/CAICAI.jpg');
+      const asset = {
+        path: resolve('tests/fixtures/CAICAI.jpg'),
+      };
       const { ingredient, resources } = await c2pa.createIngredient({
         asset,
         title: 'test-ingredient.jpg',

@@ -251,7 +251,7 @@ async fn sign_manifest(
         )
         .map(|signer| match asset {
             Asset::Buffer(buffer, format) => manifest.embed_from_memory(format, buffer, &*signer),
-            Asset::File(source_path, format) => {
+            Asset::File(source_path, _) => {
                 manifest.embed(source_path, &output_path.unwrap(), &*signer)
             }
         })?
@@ -268,7 +268,7 @@ async fn sign_manifest(
                     .embed_from_memory_remote_signed(format, buffer, &signer)
                     .await
                     .map(|(asset, manifest)| (asset, Some(manifest))),
-                Asset::File(source_path, format) => manifest
+                Asset::File(source_path, _) => manifest
                     .embed_remote_signed(source_path, &output_path.unwrap(), &signer)
                     .await
                     .map(|asset| (asset, None)),

@@ -5,12 +5,11 @@
 // accordance with the terms of the Adobe license agreement accompanying
 // it.
 
-use asset::parse_asset;
+use asset::{parse_asset, Asset};
 use c2pa::{Ingredient, ManifestStore};
 use neon::prelude::*;
 use neon::result::Throw;
-use neon::types::buffer::TypedArray;
-use neon::types::{JsBuffer, JsUint8Array};
+use neon::types::JsUint8Array;
 use std::result::Result as StdResult;
 
 mod asset;
@@ -85,44 +84,21 @@ fn process_store(
     Ok(response_obj)
 }
 
-// Allows us to fetch an embedded or remote manifest
-fn read_buffer(mut cx: FunctionContext) -> JsResult<JsPromise> {
+fn read(mut cx: FunctionContext) -> JsResult<JsPromise> {
     let rt = runtime(&mut cx)?;
     let channel = cx.channel();
     let (deferred, promise) = cx.promise();
 
-    let format = cx.argument::<JsString>(0)?.value(&mut cx);
-    let buffer = cx.argument::<JsBuffer>(1)?;
-    // TODO: See if we can do this without copying
-    let data = buffer.as_slice(&cx).to_vec();
+    let asset = cx
+        .argument::<JsObject>(0)
+        .and_then(|obj| parse_asset(&mut cx, obj))?;
 
     rt.spawn(async move {
-        let store = ManifestStore::from_bytes(&format, &data, true).map_err(Error::from);
-
-        deferred.settle_with(&channel, move |mut cx| {
-            let store = match store {
-                Ok(store) => store,
-                Err(err) => {
-                    return as_js_error(&mut cx, err).and_then(|err| cx.throw(err));
-                }
-            };
-
-            cx.compute_scoped(move |cx| process_store(cx, store))
-        });
-    });
-
-    Ok(promise)
-}
-
-fn read_file(mut cx: FunctionContext) -> JsResult<JsPromise> {
-    let rt = runtime(&mut cx)?;
-    let channel = cx.channel();
-    let (deferred, promise) = cx.promise();
-
-    let input = cx.argument::<JsString>(0)?.value(&mut cx);
-
-    rt.spawn(async move {
-        let store = ManifestStore::from_file(&input).map_err(Error::from);
+        let store = match &asset {
+            Asset::Buffer(buffer, format) => ManifestStore::from_bytes(format, buffer, true),
+            Asset::File(path, _) => ManifestStore::from_file(path),
+        }
+        .map_err(Error::from);
 
         deferred.settle_with(&channel, move |mut cx| {
             let store = match store {
@@ -198,8 +174,7 @@ fn create_ingredient(mut cx: FunctionContext) -> JsResult<JsPromise> {
 #[neon::main]
 fn main(mut cx: ModuleContext) -> NeonResult<()> {
     cx.export_function("create_ingredient", create_ingredient)?;
-    cx.export_function("read_buffer", read_buffer)?;
-    cx.export_function("read_file", read_file)?;
+    cx.export_function("read", read)?;
     cx.export_function("sign", sign::sign)?;
     cx.export_function("sign_claim_bytes", sign::sign_claim_bytes)?;
     Ok(())

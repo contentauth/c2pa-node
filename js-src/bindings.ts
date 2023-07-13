@@ -132,10 +132,17 @@ export function resolveManifest(
   } as ResolvedManifest;
 }
 
-export interface Asset {
-  mimeType: string;
+export interface BufferAsset {
   buffer: Buffer;
+  mimeType: string;
 }
+
+export interface FileAsset {
+  path: string;
+  mimeType?: string;
+}
+
+export type Asset = BufferAsset | FileAsset;
 
 /**
  * Reads C2PA data from an asset
@@ -144,16 +151,10 @@ export interface Asset {
  * @returns A promise containing C2PA data, if present
  */
 export async function read(
-  asset: Asset | string,
+  asset: Asset,
 ): Promise<ResolvedManifestStore | null> {
   try {
-    let result;
-    if (typeof asset === 'string') {
-      result = await bindings.read_file(asset);
-    } else {
-      const { mimeType, buffer } = asset;
-      result = await bindings.read_buffer(mimeType, buffer);
-    }
+    const result = await bindings.read(asset);
     const manifestStore = JSON.parse(result.manifest_store) as ManifestStore;
     const resourceStore = result.resource_store as ResourceStore;
     const activeManifestLabel = manifestStore.active_manifest;
@@ -184,35 +185,23 @@ export async function read(
 }
 
 export interface SignOptions {
-  format?: string;
   embed?: boolean;
+  outputPath?: string;
   remoteManifestUrl?: string | null;
 }
 
-type BaseSignProps = {
+export type SignProps = {
   // The manifest to sign and optionally embed
   manifest: ManifestBuilder;
+  // The asset you want to sign
+  asset: Asset;
   // Allows you to pass in a thumbnail to be used instead of generating one, or `false` to prevent thumbnail generation
-  thumbnail?: Asset | false;
+  thumbnail?: BufferAsset | false;
   // Allows you to pass in a custom signer for this operation instead of using the global signer (if passed)
   signer?: Signer;
   // Options for this operation
   options?: SignOptions;
 };
-
-export type BufferSignProps = BaseSignProps & {
-  sourceType: 'memory';
-  // The asset to sign
-  asset: Asset;
-};
-
-export type FileSignProps = BaseSignProps & {
-  sourceType: 'file';
-  inputPath: string;
-  outputPath: string;
-};
-
-export type SignProps = BufferSignProps | FileSignProps;
 
 export interface SignClaimBytesProps {
   claim: Buffer;
@@ -221,107 +210,110 @@ export interface SignClaimBytesProps {
 }
 
 export interface SignOutput {
-  signedAsset: Asset | string;
+  signedAsset: Asset;
   signedManifest?: Buffer;
 }
 
 export const defaultSignOptions: SignOptions = {
-  format: 'application/octet-stream',
   embed: true,
 };
 
 export function createSign(globalOptions: C2paOptions) {
-  const sign = async (props: SignProps): Promise<SignOutput> => {
-    const {
-      sourceType,
-      manifest,
-      thumbnail,
-      signer: customSigner,
-      options,
-    } = props;
-
-    const signOptions = Object.assign({}, defaultSignOptions, options);
-    const signer = customSigner ?? globalOptions.signer;
-    const memoryFileTypes = ['image/jpeg', 'image/png'];
-
-    if (!signer) {
-      throw new MissingSignerError();
-    }
-    if (!signOptions.embed && !signOptions.remoteManifestUrl) {
-      throw new InvalidStorageOptionsError();
-    }
-    if (
-      sourceType === 'memory' &&
-      !memoryFileTypes.includes(props.asset.mimeType)
-    ) {
-      throw new Error(
-        `Only ${memoryFileTypes.join(
-          ', ',
-        )} files can be signed using the 'memory' source type.`,
-      );
-    }
-
-    try {
-      const signOpts = { ...signOptions, signer };
-      if (!manifest.definition.thumbnail) {
-        const thumbnailInput =
-          sourceType === 'memory' ? props.asset.buffer : props.inputPath;
-        const thumbnailAsset =
-          // Use thumbnail if provided
-          thumbnail ||
-          // Otherwise generate one if configured to do so
-          (globalOptions.thumbnail && thumbnail !== false
-            ? await createThumbnail(thumbnailInput, globalOptions.thumbnail)
-            : null);
-        if (thumbnailAsset) {
-          await manifest.addThumbnail(thumbnailAsset);
-        }
-      }
-
-      if (sourceType === 'memory') {
-        const { mimeType, buffer } = props.asset;
-        const assetSignOpts = { ...signOpts, format: mimeType };
-        const result = await bindings.sign_buffer(
-          manifest.asSendable(),
-          buffer,
-          assetSignOpts,
-        );
-        const { assetBuffer: signedAssetBuffer, manifest: signedManifest } =
-          result;
-        const signedAsset: Asset = {
-          mimeType,
-          buffer: Buffer.from(signedAssetBuffer),
-        };
-        return {
-          signedAsset,
-          signedManifest: signedManifest
-            ? Buffer.from(signedManifest)
-            : undefined,
-        };
-      } else {
-        const { inputPath, outputPath } = props;
-        const result = await bindings.sign_file(
-          manifest.asSendable(),
-          inputPath,
-          outputPath,
-          signOpts,
-        );
-        return {
-          signedAsset: result.outputPath,
-        };
-      }
-    } catch (err: unknown) {
-      throw new SigningError({ cause: err });
-    }
-  };
-
   return {
-    async signBuffer(props: Omit<BufferSignProps, 'sourceType'>) {
-      return sign({ ...props, sourceType: 'memory' });
+    /**
+     * Signs a C2PA manifest and optionally embeds it in the asset
+     * @param props
+     * @returns
+     */
+    async sign(props: SignProps): Promise<SignOutput> {
+      const {
+        asset,
+        manifest,
+        thumbnail,
+        signer: customSigner,
+        options,
+      } = props;
+
+      const signOptions = Object.assign({}, defaultSignOptions, options);
+      const signer = customSigner ?? globalOptions.signer;
+      const memoryFileTypes = ['image/jpeg', 'image/png'];
+
+      if (!signer) {
+        throw new MissingSignerError();
+      }
+      if (!signOptions.embed && !signOptions.remoteManifestUrl) {
+        throw new InvalidStorageOptionsError();
+      }
+      if ('buffer' in asset && !memoryFileTypes.includes(asset.mimeType)) {
+        throw new Error(
+          `Only ${memoryFileTypes.join(
+            ', ',
+          )} files can be signed using a memory buffer.`,
+        );
+      }
+
+      try {
+        const signOpts = { ...signOptions, signer };
+        if (!manifest.definition.thumbnail) {
+          const thumbnailInput = 'buffer' in asset ? asset.buffer : asset.path;
+          const thumbnailAsset =
+            // Use thumbnail if provided
+            thumbnail ||
+            // Otherwise generate one if configured to do so
+            (globalOptions.thumbnail && thumbnail !== false
+              ? await createThumbnail(thumbnailInput, globalOptions.thumbnail)
+              : null);
+          if (thumbnailAsset) {
+            await manifest.addThumbnail(thumbnailAsset);
+          }
+        }
+
+        if ('buffer' in asset) {
+          const { mimeType } = asset;
+          const assetSignOpts = { ...signOpts, format: mimeType };
+          const result = await bindings.sign(
+            manifest.asSendable(),
+            asset,
+            assetSignOpts,
+          );
+          const { assetBuffer: signedAssetBuffer, manifest: signedManifest } =
+            result;
+          const signedAsset: Asset = {
+            buffer: Buffer.from(signedAssetBuffer),
+            mimeType,
+          };
+
+          return {
+            signedAsset,
+            signedManifest: signedManifest
+              ? Buffer.from(signedManifest)
+              : undefined,
+          };
+        } else {
+          const { mimeType } = asset;
+          const { outputPath } = await bindings.sign(
+            manifest.asSendable(),
+            asset,
+            signOpts,
+          );
+
+          return {
+            signedAsset: {
+              path: outputPath,
+              mimeType,
+            },
+          };
+        }
+      } catch (err: unknown) {
+        throw new SigningError({ cause: err });
+      }
     },
-    async signFile(props: Omit<FileSignProps, 'sourceType'>) {
-      return sign({ ...props, sourceType: 'file' });
-    },
+
+    /**
+     * Signs the bytes of a C2PA claim
+     * @param props
+     * @returns The CBOR bytes of COSE_Sign1 (signature box of JUMBF)
+     */
     async signClaimBytes({
       claim,
       reserveSize,
@@ -352,12 +344,12 @@ export interface StorableIngredient {
 export interface CreateIngredientProps {
   // The ingredient data to create an ingredient from. This can be an `Asset` if you want to process data in memory, or
   // a string if you want to pass in a path to a file to be processed.
-  asset: Asset | string;
+  asset: Asset;
   // Title of the ingredient
   title: string;
-  // Pass an `Asset` if you would like to supply a thumbnail, or `false` to disable thumbnail generation
+  // Pass a `BufferAsset` if you would like to supply a thumbnail, or `false` to disable thumbnail generation
   // If no value is provided, a thumbnail will be generated if configured to do so globally
-  thumbnail?: Asset | false;
+  thumbnail?: BufferAsset | false;
 }
 
 export function createIngredientFunction(options: C2paOptions) {
@@ -377,16 +369,8 @@ export function createIngredientFunction(options: C2paOptions) {
       let existingResources: Record<string, Uint8Array>;
 
       const hash = await labeledSha(asset, options.ingredientHashAlgorithm);
-      if (typeof asset === 'string') {
-        ({ ingredient: serializedIngredient, resources: existingResources } =
-          await bindings.create_ingredient_from_file(asset));
-      } else {
-        ({ ingredient: serializedIngredient, resources: existingResources } =
-          await bindings.create_ingredient_from_buffer(
-            asset.mimeType,
-            asset.buffer,
-          ));
-      }
+      ({ ingredient: serializedIngredient, resources: existingResources } =
+        await bindings.create_ingredient(asset));
 
       const ingredient = JSON.parse(serializedIngredient) as Ingredient;
 
@@ -407,7 +391,7 @@ export function createIngredientFunction(options: C2paOptions) {
 
       // Generate a thumbnail if one doesn't exist on the ingredient's manifest
       if (!ingredient.thumbnail) {
-        const thumbnailInput = typeof asset === 'string' ? asset : asset.buffer;
+        const thumbnailInput = 'buffer' in asset ? asset.buffer : asset.path;
         const thumbnailAsset =
           // Use thumbnail if provided
           thumbnail ||

@@ -37,7 +37,7 @@ describe('sign()', () => {
 
     test('should sign an unsigned JPEG image with an embedded manifest from a buffer', async () => {
       const fixture = await readFile('tests/fixtures/A.jpg');
-      const asset: Asset = { mimeType: 'image/jpeg', buffer: fixture };
+      const asset: Asset = { buffer: fixture, mimeType: 'image/jpeg' };
       const manifest = new ManifestBuilder(
         {
           claim_generator: 'my-app/1.0.0',
@@ -65,7 +65,7 @@ describe('sign()', () => {
         },
         { vendor: 'cai' },
       );
-      const { signedAsset } = await c2pa.signBuffer({
+      const { signedAsset } = await c2pa.sign({
         asset,
         manifest,
       });
@@ -116,7 +116,7 @@ describe('sign()', () => {
     });
 
     test('should sign an unsigned JPEG image with an embedded manifest from a file', async () => {
-      const asset = resolve('tests/fixtures/A.jpg');
+      const asset = { path: resolve('tests/fixtures/A.jpg') };
       const outputPath = temporaryFile({ name: 'A-signed.jpg' });
       const manifest = new ManifestBuilder(
         {
@@ -145,10 +145,12 @@ describe('sign()', () => {
         },
         { vendor: 'cai' },
       );
-      const { signedAsset } = await c2pa.signFile({
-        inputPath: asset,
-        outputPath,
+      const { signedAsset } = await c2pa.sign({
+        asset: asset,
         manifest,
+        options: {
+          outputPath,
+        },
       });
 
       const result = await c2pa.read(signedAsset);
@@ -197,7 +199,7 @@ describe('sign()', () => {
     });
 
     test('should sign an unsigned MP4 video with an embedded manifest from a file', async () => {
-      const asset = resolve('tests/fixtures/earth.mp4');
+      const asset = { path: resolve('tests/fixtures/earth.mp4') };
       const outputPath = temporaryFile({ name: 'earth-signed.mp4' });
       const manifest = new ManifestBuilder(
         {
@@ -226,11 +228,13 @@ describe('sign()', () => {
         },
         { vendor: 'cai' },
       );
-      const { signedAsset } = await c2pa.signFile({
-        inputPath: asset,
-        outputPath,
+      const { signedAsset } = await c2pa.sign({
+        asset,
         manifest,
         thumbnail: false,
+        options: {
+          outputPath,
+        },
       });
 
       const result = await c2pa.read(signedAsset);
@@ -280,7 +284,7 @@ describe('sign()', () => {
 
     test('should throw an error if trying to sign an MP4 file from a buffer', async () => {
       const fixture = await readFile('tests/fixtures/earth.mp4');
-      const asset: Asset = { mimeType: 'video/mp4', buffer: fixture };
+      const asset: Asset = { buffer: fixture, mimeType: 'video/mp4' };
       const manifest = new ManifestBuilder(
         {
           claim_generator: 'my-app/1.0.0',
@@ -309,7 +313,7 @@ describe('sign()', () => {
         { vendor: 'cai' },
       );
       expect(
-        c2pa.signBuffer({
+        c2pa.sign({
           asset,
           manifest,
           thumbnail: false,
@@ -319,13 +323,13 @@ describe('sign()', () => {
 
     test('should append a claim to a JPEG image with an existing manifest', async () => {
       const fixture = await readFile('tests/fixtures/CAICAI.jpg');
-      const asset: Asset = { mimeType: 'image/jpeg', buffer: fixture };
+      const asset: Asset = { buffer: fixture, mimeType: 'image/jpeg' };
       const manifest = new ManifestBuilder({
         claim_generator: 'my-app/1.0.0',
         format: 'image/jpeg',
         title: 'node_test_local_signer.jpg',
       });
-      const { signedAsset } = await c2pa.signBuffer({
+      const { signedAsset } = await c2pa.sign({
         asset,
         manifest,
       });
@@ -362,10 +366,10 @@ describe('sign()', () => {
     test('should allow you to add an ingredient to a signed image', async () => {
       const fixture = await readFile('tests/fixtures/CAICAI.jpg');
       const ingredientFixture = await readFile('tests/fixtures/A.jpg');
-      const asset: Asset = { mimeType: 'image/jpeg', buffer: fixture };
+      const asset: Asset = { buffer: fixture, mimeType: 'image/jpeg' };
       const ingredientAsset = {
-        mimeType: 'image/jpeg',
         buffer: ingredientFixture,
+        mimeType: 'image/jpeg',
       };
       const manifest = new ManifestBuilder({
         claim_generator: 'my-app/1.0.0',
@@ -377,7 +381,7 @@ describe('sign()', () => {
         title: 'A-added.jpg',
       });
       manifest.addIngredient(ingredient);
-      const { signedAsset } = await c2pa.signBuffer({
+      const { signedAsset } = await c2pa.sign({
         asset,
         manifest,
       });
@@ -414,14 +418,14 @@ describe('sign()', () => {
     test.skip('should allow you to specify a remote manifest', async () => {
       // TODO: Create a function that gives back the remote manifest URL if it exists
       const fixture = await readFile('tests/fixtures/CAICAI.jpg');
-      const asset: Asset = { mimeType: 'image/jpeg', buffer: fixture };
+      const asset: Asset = { buffer: fixture, mimeType: 'image/jpeg' };
       const manifest = new ManifestBuilder({
         claim_generator: 'my-app/1.0.0',
         format: 'image/jpeg',
         title: 'node_test_local_signer.jpg',
       });
       const remoteManifestUrl = 'https://remote-manifest.storage/manifest.c2pa';
-      const { signedAsset } = await c2pa.signBuffer({
+      const { signedAsset } = await c2pa.sign({
         asset,
         manifest,
         options: { remoteManifestUrl },
@@ -473,13 +477,13 @@ describe('sign()', () => {
         signer,
       });
       const fixture = await readFile('tests/fixtures/A.jpg');
-      const asset: Asset = { mimeType: 'image/jpeg', buffer: fixture };
+      const asset: Asset = { buffer: fixture, mimeType: 'image/jpeg' };
       const manifest = new ManifestBuilder({
         claim_generator: 'my-app/1.0.0',
         format: 'image/jpeg',
         title: 'node_test_local_signer.jpg',
       });
-      const { signedAsset } = await c2pa.signBuffer({
+      const { signedAsset } = await c2pa.sign({
         asset,
         manifest,
       });
@@ -516,13 +520,13 @@ describe('sign()', () => {
         signer,
       });
       const fixture = await readFile('tests/fixtures/A.jpg');
-      const asset: Asset = { mimeType: 'image/jpeg', buffer: fixture };
+      const asset: Asset = { buffer: fixture, mimeType: 'image/jpeg' };
       const manifest = new ManifestBuilder({
         claim_generator: 'my-app/1.0.0',
         format: 'image/jpeg',
         title: 'node_test_local_signer.jpg',
       });
-      const { signedAsset } = await c2pa.signBuffer({
+      const { signedAsset } = await c2pa.sign({
         asset,
         manifest,
         signer: await createTestSigner(),
