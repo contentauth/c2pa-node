@@ -15,7 +15,7 @@ crate-type = ["cdylib"]
 [dependencies]
 async-trait = "0.1.68"
 # TODO: Update this to not use `add_thumbnails`
-c2pa = { git = "https://github.com/contentauth/c2pa-rs", branch = "dkozma/wasm-improvements", features = [
+c2pa = { git = "https://github.com/contentauth/c2pa-rs", features = [
 	"fetch_remote_manifests",
 	"file_io",
 	"xmp_write",
