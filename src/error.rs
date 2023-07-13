@@ -28,6 +28,9 @@ pub enum Error {
     #[error("Invalid signer passed: {0}")]
     InvalidSigner(String),
 
+    #[error("The outputPath key must be supplied in the options object when signing a file.")]
+    MissingOutputPath,
+
     #[error(transparent)]
     C2pa(#[from] c2pa::Error),
 

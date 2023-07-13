@@ -15,8 +15,9 @@ use std::collections::HashMap;
 mod local;
 mod remote;
 
+use crate::asset::{parse_asset, Asset};
 use crate::error::{as_js_error, Error, Result};
-use crate::ingredient::{add_source_ingredient, IngredientSource, StorableIngredient};
+use crate::ingredient::{add_source_ingredient, StorableIngredient};
 use crate::runtime::runtime;
 use crate::sign::remote::RemoteSigner;
 
@@ -122,11 +123,6 @@ fn parse_js_manifest_object(
     })
 }
 
-pub enum AssetSource<'a> {
-    Memory(&'a str, &'a [u8]),
-    File(&'a str, &'a str),
-}
-
 enum SignerType {
     Local(LocalSignerConfiguration),
     Remote(RemoteSignerConfiguration),
@@ -134,8 +130,8 @@ enum SignerType {
 
 struct SignOptions {
     pub signer: SignerType,
-    pub format: String,
     pub embed: bool,
+    pub output_path: Option<String>,
     pub remote_manifest_url: Option<String>,
 }
 
@@ -161,11 +157,11 @@ fn signer_config_from_opts(
 fn parse_options(cx: &mut FunctionContext, obj: Handle<JsObject>) -> NeonResult<SignOptions> {
     let signer_opts = obj.get::<JsObject, _, _>(cx, "signer")?;
     let signer = signer_config_from_opts(cx, &signer_opts)?;
-    let format = obj
-        .get::<JsString, _, _>(cx, "format")
-        .map(|val| val.value(cx))
-        .or_else(|_| cx.throw_error("No format provided"))?;
     let embed = obj.get::<JsBoolean, _, _>(cx, "embed")?.value(cx);
+    let output_path = obj
+        .get_opt::<JsString, _, _>(cx, "outputPath")?
+        .map(|val| val.value(cx))
+        .or(None);
     let remote_manifest_url = obj
         .get_opt::<JsString, _, _>(cx, "remoteManifestUrl")?
         .map(|val| val.value(cx))
@@ -173,8 +169,8 @@ fn parse_options(cx: &mut FunctionContext, obj: Handle<JsObject>) -> NeonResult<
 
     Ok(SignOptions {
         signer,
-        format,
         embed,
+        output_path,
         remote_manifest_url,
     })
 }
@@ -229,9 +225,15 @@ struct SignOutput {
 
 async fn sign_manifest(
     manifest: &mut Manifest,
-    asset: AssetSource<'_>,
+    asset: &Asset,
     options: SignOptions,
 ) -> Result<SignOutput> {
+    let output_path = options.output_path.to_owned();
+
+    if matches!(asset, Asset::File(_, _)) && output_path.is_none() {
+        return Err(Error::MissingOutputPath);
+    }
+
     if let Some(remote_url) = options.remote_manifest_url {
         if options.embed {
             manifest.set_embedded_manifest_with_remote_ref(remote_url);
@@ -248,11 +250,9 @@ async fn sign_manifest(
             config.tsa_url.to_owned(),
         )
         .map(|signer| match asset {
-            AssetSource::Memory(format, asset) => {
-                manifest.embed_from_memory(format, asset, &*signer)
-            }
-            AssetSource::File(source_path, dest_path) => {
-                manifest.embed(source_path, dest_path, &*signer)
+            Asset::Buffer(buffer, format) => manifest.embed_from_memory(format, buffer, &*signer),
+            Asset::File(source_path, format) => {
+                manifest.embed(source_path, &output_path.unwrap(), &*signer)
             }
         })?
         .map(|asset| SignOutput {
@@ -264,12 +264,12 @@ async fn sign_manifest(
         SignerType::Remote(config) => {
             let signer = RemoteSigner::from_config(config).await?;
             let (asset, manifest) = match asset {
-                AssetSource::Memory(format, asset) => manifest
-                    .embed_from_memory_remote_signed(format, asset, &signer)
+                Asset::Buffer(buffer, format) => manifest
+                    .embed_from_memory_remote_signed(format, buffer, &signer)
                     .await
                     .map(|(asset, manifest)| (asset, Some(manifest))),
-                AssetSource::File(source_path, dest_path) => manifest
-                    .embed_remote_signed(source_path, dest_path, &signer)
+                Asset::File(source_path, format) => manifest
+                    .embed_remote_signed(source_path, &output_path.unwrap(), &signer)
                     .await
                     .map(|asset| (asset, None)),
             }?;
@@ -297,7 +297,7 @@ fn create_sign_response(
     Ok(())
 }
 
-pub fn sign_buffer(mut cx: FunctionContext) -> JsResult<JsPromise> {
+pub fn sign(mut cx: FunctionContext) -> JsResult<JsPromise> {
     let rt = runtime(&mut cx)?;
     let channel = cx.channel();
     let (deferred, promise) = cx.promise();
@@ -305,25 +305,25 @@ pub fn sign_buffer(mut cx: FunctionContext) -> JsResult<JsPromise> {
     let manifest_repr = cx
         .argument::<JsObject>(0)
         .and_then(|data| parse_js_manifest_object(&mut cx, &data))?;
-    let asset = cx.argument::<JsBuffer>(1)?.as_slice(&cx).to_vec();
+    let input_asset = cx
+        .argument::<JsObject>(1)
+        .and_then(|obj| parse_asset(&mut cx, obj))?;
     let options = cx
         .argument::<JsObject>(2)
         .and_then(|opts| parse_options(&mut cx, opts))?;
 
     rt.spawn(async move {
-        let format = options.format.to_owned();
-        let asset = asset.as_slice();
-        let ingredient_source = IngredientSource::Memory(&format, asset);
-        let asset_source = AssetSource::Memory(&format, asset);
+        let is_buffer = matches!(&input_asset, Asset::Buffer(_, _));
+        let output_path = options.output_path.to_owned();
         let signed = future::ready(process_manifest(manifest_repr))
             .and_then(|mut manifest| async move {
-                add_source_ingredient(&mut manifest, ingredient_source)
+                add_source_ingredient(&mut manifest, &input_asset)
                     .await
-                    .map(|_| manifest)
+                    .map(|_| (manifest, input_asset))
                     .map_err(Error::from)
             })
-            .and_then(|mut manifest| async move {
-                sign_manifest(&mut manifest, asset_source, options).await
+            .and_then(|(mut manifest, input_asset)| async move {
+                sign_manifest(&mut manifest, &input_asset, options).await
             })
             .await;
 
@@ -331,57 +331,12 @@ pub fn sign_buffer(mut cx: FunctionContext) -> JsResult<JsPromise> {
             let response_obj = cx.empty_object();
             match signed {
                 Ok(signed) => {
-                    create_sign_response(&mut cx, &response_obj, &signed)?;
-                }
-                Err(err) => {
-                    return as_js_error(&mut cx, err).and_then(|err| cx.throw(err));
-                }
-            };
-
-            Ok(response_obj)
-        });
-    });
-
-    Ok(promise)
-}
-
-pub fn sign_file(mut cx: FunctionContext) -> JsResult<JsPromise> {
-    let rt = runtime(&mut cx)?;
-    let channel = cx.channel();
-    let (deferred, promise) = cx.promise();
-
-    let manifest_repr = cx
-        .argument::<JsObject>(0)
-        .and_then(|data| parse_js_manifest_object(&mut cx, &data))?;
-    let input_path = cx.argument::<JsString>(1)?.value(&mut cx);
-    let output_path = cx.argument::<JsString>(2)?.value(&mut cx);
-    let options = cx
-        .argument::<JsObject>(3)
-        .and_then(|opts| parse_options(&mut cx, opts))?;
-
-    rt.spawn(async move {
-        let format = options.format.to_owned();
-        let ingredient_source = IngredientSource::File(&input_path, Some(&format));
-        let asset_source = AssetSource::File(&input_path, &output_path);
-        let signed = future::ready(process_manifest(manifest_repr))
-            .and_then(|mut manifest| async move {
-                add_source_ingredient(&mut manifest, ingredient_source)
-                    .await
-                    .map(|_| manifest)
-                    .map_err(Error::from)
-            })
-            .and_then(|mut manifest| async move {
-                sign_manifest(&mut manifest, asset_source, options).await
-            })
-            .await;
-
-        deferred.settle_with(&channel, move |mut cx| {
-            let response_obj = cx.empty_object();
-
-            match signed {
-                Ok(_) => {
-                    let output_path_val = cx.string(&output_path);
-                    response_obj.set(&mut cx, "outputPath", output_path_val)?;
+                    if is_buffer {
+                        create_sign_response(&mut cx, &response_obj, &signed)?;
+                    } else if let Some(output_path) = output_path {
+                        let output_path_val = cx.string(&output_path);
+                        response_obj.set(&mut cx, "outputPath", output_path_val)?;
+                    }
                 }
                 Err(err) => {
                     return as_js_error(&mut cx, err).and_then(|err| cx.throw(err));

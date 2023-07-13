@@ -5,6 +5,7 @@
 // accordance with the terms of the Adobe license agreement accompanying
 // it.
 
+use asset::parse_asset;
 use c2pa::{Ingredient, ManifestStore};
 use neon::prelude::*;
 use neon::result::Throw;
@@ -12,13 +13,13 @@ use neon::types::buffer::TypedArray;
 use neon::types::{JsBuffer, JsUint8Array};
 use std::result::Result as StdResult;
 
+mod asset;
 mod error;
 mod ingredient;
 mod runtime;
 mod sign;
 
 use self::error::{as_js_error, Error};
-use self::ingredient::{create_ingredient, IngredientSource};
 use self::runtime::runtime;
 
 fn add_to_resource_object(
@@ -167,47 +168,17 @@ fn process_ingredient(
     Ok(response_obj)
 }
 
-fn create_ingredient_from_buffer(mut cx: FunctionContext) -> JsResult<JsPromise> {
+fn create_ingredient(mut cx: FunctionContext) -> JsResult<JsPromise> {
     let rt = runtime(&mut cx)?;
     let channel = cx.channel();
     let (deferred, promise) = cx.promise();
 
-    let format = cx.argument::<JsString>(0)?.value(&mut cx);
-    let buffer = cx.argument::<JsBuffer>(1)?.as_slice(&cx).to_vec();
+    let asset = cx
+        .argument::<JsObject>(0)
+        .and_then(|obj| parse_asset(&mut cx, obj))?;
 
     rt.spawn(async move {
-        let source = IngredientSource::Memory(&format, &buffer);
-        let ingredient = create_ingredient(source).await;
-
-        deferred.settle_with(&channel, move |mut cx| {
-            let ingredient = match ingredient {
-                Ok(ingredient) => ingredient,
-                Err(err) => {
-                    return as_js_error(&mut cx, err).and_then(|err| cx.throw(err));
-                }
-            };
-
-            cx.compute_scoped(move |cx| process_ingredient(cx, ingredient))
-        });
-    });
-
-    Ok(promise)
-}
-
-fn create_ingredient_from_file(mut cx: FunctionContext) -> JsResult<JsPromise> {
-    let rt = runtime(&mut cx)?;
-    let channel = cx.channel();
-    let (deferred, promise) = cx.promise();
-
-    let path = cx.argument::<JsString>(0)?.value(&mut cx);
-    let format = cx
-        .argument_opt(1)
-        .map(|arg| arg.downcast_or_throw::<JsString, _>(&mut cx))
-        .map_or(Ok(None), |x| x.map(|h| h.value(&mut cx)).map(Some))?;
-
-    rt.spawn(async move {
-        let source = IngredientSource::File(&path, format.as_deref());
-        let ingredient = create_ingredient(source).await;
+        let ingredient = self::ingredient::create_ingredient(&asset).await;
 
         deferred.settle_with(&channel, move |mut cx| {
             let ingredient = match ingredient {
@@ -226,15 +197,10 @@ fn create_ingredient_from_file(mut cx: FunctionContext) -> JsResult<JsPromise> {
 
 #[neon::main]
 fn main(mut cx: ModuleContext) -> NeonResult<()> {
-    cx.export_function(
-        "create_ingredient_from_buffer",
-        create_ingredient_from_buffer,
-    )?;
-    cx.export_function("create_ingredient_from_file", create_ingredient_from_file)?;
+    cx.export_function("create_ingredient", create_ingredient)?;
     cx.export_function("read_buffer", read_buffer)?;
     cx.export_function("read_file", read_file)?;
-    cx.export_function("sign_buffer", sign::sign_buffer)?;
-    cx.export_function("sign_file", sign::sign_file)?;
+    cx.export_function("sign", sign::sign)?;
     cx.export_function("sign_claim_bytes", sign::sign_claim_bytes)?;
     Ok(())
 }
