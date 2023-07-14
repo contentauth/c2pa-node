@@ -1,5 +1,11 @@
 # c2pa-node
 
+## 0.5.1
+
+### Patch Changes
+
+- 558c9a1: Update c2pa-rs to 0.25.0, add ability to provide an ingredient hash
+
 ## 0.5.0
 
 ### Minor Changes
