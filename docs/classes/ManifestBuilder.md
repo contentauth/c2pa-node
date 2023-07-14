@@ -42,7 +42,7 @@
 
 #### Defined in
 
-[lib/manifestBuilder.ts:41](https://github.com/contentauth/c2pa-node/blob/a776a47/js-src/lib/manifestBuilder.ts#L41)
+[lib/manifestBuilder.ts:41](https://github.com/contentauth/c2pa-node/blob/3684686/js-src/lib/manifestBuilder.ts#L41)
 
 ## Properties
 
@@ -52,7 +52,7 @@
 
 #### Defined in
 
-[lib/manifestBuilder.ts:35](https://github.com/contentauth/c2pa-node/blob/a776a47/js-src/lib/manifestBuilder.ts#L35)
+[lib/manifestBuilder.ts:35](https://github.com/contentauth/c2pa-node/blob/3684686/js-src/lib/manifestBuilder.ts#L35)
 
 ___
 
@@ -62,7 +62,7 @@ ___
 
 #### Defined in
 
-[lib/manifestBuilder.ts:39](https://github.com/contentauth/c2pa-node/blob/a776a47/js-src/lib/manifestBuilder.ts#L39)
+[lib/manifestBuilder.ts:39](https://github.com/contentauth/c2pa-node/blob/3684686/js-src/lib/manifestBuilder.ts#L39)
 
 ___
 
@@ -72,7 +72,7 @@ ___
 
 #### Defined in
 
-[lib/manifestBuilder.ts:37](https://github.com/contentauth/c2pa-node/blob/a776a47/js-src/lib/manifestBuilder.ts#L37)
+[lib/manifestBuilder.ts:37](https://github.com/contentauth/c2pa-node/blob/3684686/js-src/lib/manifestBuilder.ts#L37)
 
 ___
 
@@ -82,7 +82,7 @@ ___
 
 #### Defined in
 
-[lib/manifestBuilder.ts:33](https://github.com/contentauth/c2pa-node/blob/a776a47/js-src/lib/manifestBuilder.ts#L33)
+[lib/manifestBuilder.ts:33](https://github.com/contentauth/c2pa-node/blob/3684686/js-src/lib/manifestBuilder.ts#L33)
 
 ## Accessors
 
@@ -96,7 +96,7 @@ ___
 
 #### Defined in
 
-[lib/manifestBuilder.ts:104](https://github.com/contentauth/c2pa-node/blob/a776a47/js-src/lib/manifestBuilder.ts#L104)
+[lib/manifestBuilder.ts:104](https://github.com/contentauth/c2pa-node/blob/3684686/js-src/lib/manifestBuilder.ts#L104)
 
 ___
 
@@ -110,7 +110,7 @@ ___
 
 #### Defined in
 
-[lib/manifestBuilder.ts:108](https://github.com/contentauth/c2pa-node/blob/a776a47/js-src/lib/manifestBuilder.ts#L108)
+[lib/manifestBuilder.ts:108](https://github.com/contentauth/c2pa-node/blob/3684686/js-src/lib/manifestBuilder.ts#L108)
 
 ## Methods
 
@@ -130,7 +130,7 @@ ___
 
 #### Defined in
 
-[lib/manifestBuilder.ts:71](https://github.com/contentauth/c2pa-node/blob/a776a47/js-src/lib/manifestBuilder.ts#L71)
+[lib/manifestBuilder.ts:71](https://github.com/contentauth/c2pa-node/blob/3684686/js-src/lib/manifestBuilder.ts#L71)
 
 ___
 
@@ -150,7 +150,7 @@ ___
 
 #### Defined in
 
-[lib/manifestBuilder.ts:85](https://github.com/contentauth/c2pa-node/blob/a776a47/js-src/lib/manifestBuilder.ts#L85)
+[lib/manifestBuilder.ts:85](https://github.com/contentauth/c2pa-node/blob/3684686/js-src/lib/manifestBuilder.ts#L85)
 
 ___
 
@@ -170,7 +170,7 @@ ___
 
 #### Defined in
 
-[lib/manifestBuilder.ts:117](https://github.com/contentauth/c2pa-node/blob/a776a47/js-src/lib/manifestBuilder.ts#L117)
+[lib/manifestBuilder.ts:117](https://github.com/contentauth/c2pa-node/blob/3684686/js-src/lib/manifestBuilder.ts#L117)
 
 ___
 
@@ -190,4 +190,4 @@ ___
 
 #### Defined in
 
-[lib/manifestBuilder.ts:94](https://github.com/contentauth/c2pa-node/blob/a776a47/js-src/lib/manifestBuilder.ts#L94)
+[lib/manifestBuilder.ts:94](https://github.com/contentauth/c2pa-node/blob/3684686/js-src/lib/manifestBuilder.ts#L94)

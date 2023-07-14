@@ -60,7 +60,7 @@ An asset that can either be in memory or on disk
 
 #### Defined in
 
-[bindings.ts:153](https://github.com/contentauth/c2pa-node/blob/a776a47/js-src/bindings.ts#L153)
+[bindings.ts:153](https://github.com/contentauth/c2pa-node/blob/3684686/js-src/bindings.ts#L153)
 
 ___
 
@@ -70,7 +70,7 @@ ___
 
 #### Defined in
 
-[index.ts:28](https://github.com/contentauth/c2pa-node/blob/a776a47/js-src/index.ts#L28)
+[index.ts:28](https://github.com/contentauth/c2pa-node/blob/3684686/js-src/index.ts#L28)
 
 ___
 
@@ -88,7 +88,7 @@ ___
 
 #### Defined in
 
-[index.ts:18](https://github.com/contentauth/c2pa-node/blob/a776a47/js-src/index.ts#L18)
+[index.ts:18](https://github.com/contentauth/c2pa-node/blob/3684686/js-src/index.ts#L18)
 
 ___
 
@@ -98,7 +98,7 @@ ___
 
 #### Defined in
 
-[lib/hash.ts:17](https://github.com/contentauth/c2pa-node/blob/a776a47/js-src/lib/hash.ts#L17)
+[lib/hash.ts:17](https://github.com/contentauth/c2pa-node/blob/3684686/js-src/lib/hash.ts#L17)
 
 ___
 
@@ -108,7 +108,7 @@ ___
 
 #### Defined in
 
-[bindings.ts:344](https://github.com/contentauth/c2pa-node/blob/a776a47/js-src/bindings.ts#L344)
+[bindings.ts:344](https://github.com/contentauth/c2pa-node/blob/3684686/js-src/bindings.ts#L344)
 
 ___
 
@@ -128,7 +128,7 @@ ___
 
 #### Defined in
 
-[bindings.ts:200](https://github.com/contentauth/c2pa-node/blob/a776a47/js-src/bindings.ts#L200)
+[bindings.ts:200](https://github.com/contentauth/c2pa-node/blob/3684686/js-src/bindings.ts#L200)
 
 ___
 
@@ -138,7 +138,7 @@ ___
 
 #### Defined in
 
-[lib/signer.ts:48](https://github.com/contentauth/c2pa-node/blob/a776a47/js-src/lib/signer.ts#L48)
+[lib/signer.ts:48](https://github.com/contentauth/c2pa-node/blob/3684686/js-src/lib/signer.ts#L48)
 
 ## Functions
 
@@ -160,7 +160,7 @@ Creates an instance of the SDK that encompasses a set of global options
 
 #### Defined in
 
-[index.ts:38](https://github.com/contentauth/c2pa-node/blob/a776a47/js-src/index.ts#L38)
+[index.ts:38](https://github.com/contentauth/c2pa-node/blob/3684686/js-src/index.ts#L38)
 
 ___
 
@@ -174,4 +174,4 @@ ___
 
 #### Defined in
 
-[lib/signer.ts:50](https://github.com/contentauth/c2pa-node/blob/a776a47/js-src/lib/signer.ts#L50)
+[lib/signer.ts:50](https://github.com/contentauth/c2pa-node/blob/3684686/js-src/lib/signer.ts#L50)

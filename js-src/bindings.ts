@@ -357,6 +357,8 @@ export interface CreateIngredientProps {
   // Pass a `BufferAsset` if you would like to supply a thumbnail, or `false` to disable thumbnail generation
   // If no value is provided, a thumbnail will be generated if configured to do so globally
   thumbnail?: BufferAsset | false;
+  // Optionally pass in a hash to use for the ingredient if one is available. If not provided, one will be generated.
+  hash?: string;
 }
 
 export function createIngredientFunction(options: C2paOptions) {
@@ -370,12 +372,15 @@ export function createIngredientFunction(options: C2paOptions) {
     asset,
     title,
     thumbnail,
+    hash: suppliedHash,
   }: CreateIngredientProps): Promise<StorableIngredient> {
     try {
       let serializedIngredient: string;
       let existingResources: Record<string, Uint8Array>;
 
-      const hash = await labeledSha(asset, options.ingredientHashAlgorithm);
+      const hash =
+        suppliedHash ??
+        (await labeledSha(asset, options.ingredientHashAlgorithm));
       ({ ingredient: serializedIngredient, resources: existingResources } =
         await bindings.create_ingredient(asset));
 
