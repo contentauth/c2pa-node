@@ -10,7 +10,6 @@
 const chokidar = require('chokidar');
 const chalk = require('chalk');
 const { exec } = require('node:child_process');
-const path = require('node:path');
 
 const execCallback = (err, stdout, stderr) => {
   if (err) {

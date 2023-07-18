@@ -25,8 +25,9 @@ import type {
   SignatureInfo,
 } from './types';
 
-const bindings = require(process.env.C2PA_LIBRARY_PATH ??
-  '../generated/c2pa.node');
+const C2PA_LIBRARY_PATH = process.env.C2PA_LIBRARY_PATH;
+
+const bindings = require(C2PA_LIBRARY_PATH ?? '../generated/c2pa.node');
 
 const missingErrors = [
   // No embedded or remote provenance found in the asset
