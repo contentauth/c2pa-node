@@ -40,10 +40,11 @@ async function buildRust(root) {
   const generatedDir = resolve(root, 'generated');
   const bindingsPath = resolve(generatedDir, 'c2pa.node');
   const cargoPath = resolve(root, 'Cargo.toml');
+  console.log('cargoPath', cargoPath);
   await mkdirp(generatedDir);
   return new Promise((resolve, reject) => {
     const result = exec(
-      `npx cargo-cp-artifact -nc ${bindingsPath} -- cargo build --message-format=json-render-diagnostics --release --manifest-path=${cargoPath}`,
+      `npx cargo-cp-artifact -nc "${bindingsPath}" -- cargo build --message-format=json-render-diagnostics --release --manifest-path="${cargoPath}"`,
       execCallback,
     );
     result.on('exit', (code) => {
