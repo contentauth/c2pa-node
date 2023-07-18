@@ -1,5 +1,11 @@
 # c2pa-node
 
+## 0.5.2
+
+### Patch Changes
+
+- aa9d977: Update c2pa-rs to 0.25.1 and add support for `C2PA_LIBRARY_PATH`
+
 ## 0.5.1
 
 ### Patch Changes
