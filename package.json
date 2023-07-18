@@ -8,7 +8,8 @@
     "dist/js-src",
     "dist/src",
     "dist/Cargo.toml",
-    "dist/Cargo.lock"
+    "dist/Cargo.lock",
+    "scripts/postinstall.js"
   ],
   "engines": {
     "node": ">=16.20.0"
@@ -16,13 +17,11 @@
   "scripts": {
     "dev": "node ./scripts/dev-reload.js",
     "build:rust": "cargo-cp-artifact -nc generated/c2pa.node -- cargo build --message-format=json-render-diagnostics --release",
-    "build:rust:dist:pre": "mkdirp dist/generated",
-    "build:rust:dist": "cargo-cp-artifact -nc dist/generated/c2pa.node -- cargo build --message-format=json-render-diagnostics --release --manifest-path=dist/Cargo.toml",
     "build:ts": "tsc -b && cpy js-src/types.d.ts dist",
     "build:assets": "cpy src Cargo.* generated dist",
     "build:docs": "typedoc --plugin typedoc-plugin-markdown --out docs js-src/index.ts",
     "build": "run-s build:rust build:ts build:docs build:assets",
-    "postinstall": "if [ -f \"dist/Cargo.toml\" ]; then run-s build:rust:dist:pre build:rust:dist; fi",
+    "postinstall": "node ./scripts/postinstall.js",
     "ci": "cargo test --release && jest",
     "publish": "changeset publish",
     "release": "run-s build publish",
@@ -44,6 +43,7 @@
     "nock": "^13.3.1",
     "node-fetch": "^2.6.11",
     "pixelmatch": "^5.3.0",
+    "pkg-dir": "^5.0.0",
     "prettier": "2.8.8",
     "rimraf": "^5.0.1",
     "tempy": "^1.0.1",

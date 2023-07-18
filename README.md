@@ -23,6 +23,33 @@ This will pull down the latest Rust SDK and build it as a binding locally, hence
 
 **Note:** We will be working on creating binary releases so that you will not need Rust installed on your machine in the future.
 
+#### Building custom binaries
+
+You may need to build custom binaries for platforms or architectures that do not have Rust tooling installed. You can
+prebuild a binary on the platform or architecture you would like to run on. To do this, you can run the following
+on the system or VM you want to build the binary for (this needs to have the [Rust toolchain installed](https://www.rust-lang.org/tools/install)):
+
+```sh
+# in c2pa-node
+$ cd c2pa-node
+$ pnpm install
+$ pnpm build:rust
+```
+
+Then, you can copy the binary to a place that is accessible by your application (in this example, it is `/path/to/my/application/resources`) and set the path to the `c2pa.node` module via the `C2PA_LIBRARY_PATH` environment variable:
+
+```sh
+# in your application using c2pa-node
+$ cd /path/to/my/application
+$ mkdir resources
+$ cp /path/to/c2pa-node/generated/c2pa.node resources/c2pa.node
+$ export C2PA_LIBRARY_PATH=resources/c2pa.node
+$ npm install c2pa-node
+$ npm start
+```
+
+**Important:** `C2PA_LIBRARY_PATH` _must_ be set while both **installing** or **adding** c2pa-node to your app, and while **running** your app to avoid building the Rust code. You should see a message in the console saying "Using native C2PA module" when starting up your app.
+
 ### Installing for development / contributions
 
 You can install the project with npm. In the project directory, run:
@@ -55,15 +82,24 @@ const c2pa = createC2pa();
 You can read a manifest by using the `c2pa.read()` function:
 
 ```ts
-import { readFile } from 'node:fs/promises';
+import { createC2pa } from "c2pa-node";
+import { readFile } from "node:fs/promises";
 
-const buffer = await readFile('my-c2pa-file.jpg');
-const result = await c2pa.read({ buffer, mimeType: 'image/jpeg' });
+const c2pa = createC2pa();
 
-if (result) {
-  const { active_manifest, manifests, validation_status } = result;
-  console.log(active_manifest.claim_generator);
+async function read(path, mimeType) {
+  const buffer = await readFile(path);
+  const result = await c2pa.read({ buffer });
+
+  if (result) {
+    const { active_manifest, manifests, validation_status } = result;
+    console.log(active_manifest);
+  } else {
+    console.log("No claim found");
+  }
 }
+
+read("my-c2pa-file.jpg", "image/jpeg");
 ```
 
 ### Creating a manifest
