@@ -11,6 +11,7 @@ const { stat } = require('node:fs/promises');
 const { mkdirp } = require('mkdirp');
 const { resolve } = require('node:path');
 const { exec } = require('node:child_process');
+const pkgDir = require('pkg-dir');
 
 const execCallback = (err, stdout, stderr) => {
   if (err) {
@@ -52,7 +53,8 @@ async function buildRust(root) {
 }
 
 async function main() {
-  const distRoot = resolve('dist');
+  const appRoot = await pkgDir(__dirname);
+  const distRoot = resolve(appRoot, 'dist');
   const cargoDistPath = resolve(distRoot, 'Cargo.toml');
   const libraryOverridePath = process.env.C2PA_LIBRARY_PATH;
 
@@ -61,10 +63,12 @@ async function main() {
     process.exit(1);
   }
 
-  if (fileExists(cargoDistPath) && !libraryOverridePath) {
+  if (libraryOverridePath) {
+    console.log('Skipping Rust build');
+  } else if (fileExists(cargoDistPath)) {
     await buildRust(distRoot);
   } else {
-    console.log('Skipping Rust build');
+    await buildRust(appRoot);
   }
 }
 
