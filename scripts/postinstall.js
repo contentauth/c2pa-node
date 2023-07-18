@@ -11,7 +11,6 @@ const { stat } = require('node:fs/promises');
 const { mkdirp } = require('mkdirp');
 const { resolve } = require('node:path');
 const { exec } = require('node:child_process');
-const pkgDir = require('pkg-dir');
 
 const execCallback = (err, stdout, stderr) => {
   if (err) {
@@ -40,7 +39,6 @@ async function buildRust(root) {
   const generatedDir = resolve(root, 'generated');
   const bindingsPath = resolve(generatedDir, 'c2pa.node');
   const cargoPath = resolve(root, 'Cargo.toml');
-  console.log('cargoPath', cargoPath);
   await mkdirp(generatedDir);
   return new Promise((resolve, reject) => {
     const result = exec(
@@ -54,8 +52,7 @@ async function buildRust(root) {
 }
 
 async function main() {
-  const appRoot = await pkgDir(__dirname);
-  const distRoot = resolve(appRoot, 'dist');
+  const distRoot = resolve('dist');
   const cargoDistPath = resolve(distRoot, 'Cargo.toml');
   const libraryOverridePath = process.env.C2PA_LIBRARY_PATH;
 
