@@ -48,7 +48,7 @@ $ npm install c2pa-node
 $ npm start
 ```
 
-**Important:** `C2PA_LIBRARY_PATH` _must_ be set while both **installing** or **adding** c2pa-node to your app, and while **running** your app to avoid building the Rust code. You should see a message in the console saying "Using native C2PA module" when starting up your app.
+**Important:** `C2PA_LIBRARY_PATH` _must_ be set while both **installing** or **adding** c2pa-node to your app to avoid building the Rust code. It is _also_ required to be set while **running** your app so that it loads the bindings from the correct location.
 
 ### Installing for development / contributions
 
