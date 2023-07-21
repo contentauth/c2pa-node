@@ -25,7 +25,7 @@ const execCallback = (err, stdout, stderr) => {
 
 async function fileExists(path) {
   try {
-    const result = await stat(path);
+    await stat(path);
     return true;
   } catch (err) {
     if (err.code === 'ENOENT') {
@@ -57,17 +57,10 @@ async function main() {
   const distRoot = resolve(appRoot, 'dist');
   const cargoDistPath = resolve(distRoot, 'Cargo.toml');
   const libraryOverridePath = process.env.C2PA_LIBRARY_PATH;
-  const overridePathExists =
-    libraryOverridePath && (await fileExists(libraryOverridePath));
   const cargoDistPathExists = await fileExists(cargoDistPath);
 
-  if (libraryOverridePath && !overridePathExists) {
-    process.error(`C2PA_LIBRARY_PATH (${libraryOverridePath}) doesn't exist`);
-    process.exit(1);
-  }
-
   if (libraryOverridePath) {
-    console.log('Skipping Rust build');
+    console.log('Skipping Rust build since C2PA_LIBRARY_PATH is set');
   } else if (cargoDistPathExists) {
     await buildRust(distRoot);
   } else {
