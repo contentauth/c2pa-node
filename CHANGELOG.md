@@ -1,5 +1,11 @@
 # c2pa-node
 
+## 0.5.3
+
+### Patch Changes
+
+- 85d57f2: Don't check for presence of `C2PA_LIBRARY_PATH` on `postinstall`
+
 ## 0.5.2
 
 ### Patch Changes
