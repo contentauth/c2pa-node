@@ -1,5 +1,11 @@
 # c2pa-node
 
+## 0.5.4
+
+### Patch Changes
+
+- 029c03e: Add pkg-dir as a regular dependency for the postinstall script
+
 ## 0.5.3
 
 ### Patch Changes
