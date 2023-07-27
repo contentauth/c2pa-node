@@ -1,5 +1,12 @@
 # c2pa-node
 
+## 0.5.5
+
+### Patch Changes
+
+- 6270742: Update types
+  Download cert files for test signer automatically on postinstall
+
 ## 0.5.4
 
 ### Patch Changes
