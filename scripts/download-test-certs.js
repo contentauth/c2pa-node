@@ -7,42 +7,7 @@
  * it.
  */
 
-const chalk = require('chalk');
-const https = require('https');
-const fs = require('fs');
-const pkgDir = require('pkg-dir');
-const { resolve } = require('node:path');
-
-const pemUrl =
-  'https://raw.githubusercontent.com/contentauth/c2pa-rs/main/sdk/tests/fixtures/certs/es256.pem';
-const pubUrl =
-  'https://raw.githubusercontent.com/contentauth/c2pa-rs/main/sdk/tests/fixtures/certs/es256.pub';
-
-export async function downloadTestCerts() {
-  const appRoot = await pkgDir(__dirname);
-  const fixtureRoot = resolve(appRoot, 'tests/fixtures/certs');
-  const pemFile = fs.createWriteStream(resolve(fixtureRoot, 'es256.pem'));
-  const pubFile = fs.createWriteStream(resolve(fixtureRoot, 'es256.pub'));
-
-  console.log(chalk.yellow('Downloading test certificates...'));
-  https.get(pemUrl, (res) => {
-    res.pipe(pemFile);
-
-    pemFile.on('finish', () => {
-      pemFile.close();
-      console.log(chalk.yellow('Downloaded es256.pem'));
-    });
-  });
-
-  https.get(pubUrl, (res) => {
-    res.pipe(pubFile);
-
-    pubFile.on('finish', () => {
-      pubFile.close();
-      console.log(chalk.yellow('Downloaded es256.pub'));
-    });
-  });
-}
+const downloadTestCerts = require('./lib/download-test-certs');
 
 function main() {
   downloadTestCerts();

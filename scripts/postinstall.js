@@ -12,7 +12,7 @@ const { mkdirp } = require('mkdirp');
 const { resolve } = require('node:path');
 const { exec } = require('node:child_process');
 const pkgDir = require('pkg-dir');
-const { downloadTestCerts } = require('./download-test-certs');
+const downloadTestCerts = require('./lib/download-test-certs');
 
 const execCallback = (err, stdout, stderr) => {
   if (err) {
