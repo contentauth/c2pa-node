@@ -42,7 +42,8 @@ export class ManifestBuilder {
     baseDefinition: BaseManifestDefinition,
     options?: ManifestBuilderOptions,
   ) {
-    const providedFields = Object.keys(baseDefinition);
+    const localDefinition = Object.assign({}, baseDefinition);
+    const providedFields = Object.keys(localDefinition);
     const missingFields = ManifestBuilder.requiredFields.filter(
       (x) => !providedFields.includes(x),
     );
@@ -55,12 +56,12 @@ export class ManifestBuilder {
     }
 
     // Append Node library to claim generator
-    const claimGenerator = baseDefinition.claim_generator.split(/\s+/);
+    const claimGenerator = localDefinition.claim_generator.split(/\s+/);
     // FIXME: This should be the actual version
     claimGenerator.push(`c2pa-node/0.0.0`);
-    baseDefinition.claim_generator = claimGenerator.join(' ');
+    localDefinition.claim_generator = claimGenerator.join(' ');
 
-    this.#definition = baseDefinition as ManifestDefinition;
+    this.#definition = localDefinition as ManifestDefinition;
 
     // Create a label if not provided
     if (!this.definition.label) {

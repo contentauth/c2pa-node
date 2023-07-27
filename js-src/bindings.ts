@@ -198,11 +198,11 @@ export interface SignOptions {
   remoteManifestUrl?: string | null;
 }
 
-export type SignProps = {
+export type SignProps<AssetType extends Asset> = {
   // The manifest to sign and optionally embed
   manifest: ManifestBuilder;
   // The asset you want to sign
-  asset: Asset;
+  asset: AssetType;
   // Allows you to pass in a thumbnail to be used instead of generating one, or `false` to prevent thumbnail generation
   thumbnail?: BufferAsset | false;
   // Allows you to pass in a custom signer for this operation instead of using the global signer (if passed)
@@ -217,10 +217,16 @@ export interface SignClaimBytesProps {
   signer: Signer;
 }
 
-export interface SignOutput {
-  signedAsset: Asset;
+export interface SignOutputData<AssetType extends Asset = Asset> {
+  signedAsset: AssetType;
   signedManifest?: Buffer;
 }
+
+export type SignOutput<AssetType> = AssetType extends BufferAsset
+  ? SignOutputData<BufferAsset>
+  : AssetType extends FileAsset
+  ? SignOutputData<FileAsset>
+  : never;
 
 export const defaultSignOptions: SignOptions = {
   embed: true,
@@ -233,7 +239,9 @@ export function createSign(globalOptions: C2paOptions) {
      * @param props
      * @returns
      */
-    async sign(props: SignProps): Promise<SignOutput> {
+    async sign<AssetType extends Asset>(
+      props: SignProps<AssetType>,
+    ): Promise<SignOutput<AssetType>> {
       const {
         asset,
         manifest,
@@ -286,7 +294,7 @@ export function createSign(globalOptions: C2paOptions) {
           );
           const { assetBuffer: signedAssetBuffer, manifest: signedManifest } =
             result;
-          const signedAsset: Asset = {
+          const signedAsset = {
             buffer: Buffer.from(signedAssetBuffer),
             mimeType,
           };
@@ -296,7 +304,7 @@ export function createSign(globalOptions: C2paOptions) {
             signedManifest: signedManifest
               ? Buffer.from(signedManifest)
               : undefined,
-          };
+          } as SignOutput<AssetType>;
         } else {
           const { mimeType } = asset;
           const { outputPath } = await bindings.sign(
@@ -310,7 +318,7 @@ export function createSign(globalOptions: C2paOptions) {
               path: outputPath,
               mimeType,
             },
-          };
+          } as SignOutput<AssetType>;
         }
       } catch (err: unknown) {
         throw new SigningError({ cause: err });

@@ -4,7 +4,7 @@
 
 ## Installing c2pa-node
 
-Installing c2pa-node requires a [supported version of Node and Rust](https://github.com/neon-bindings/neon#platform-support). 
+Installing c2pa-node requires a [supported version of Node and Rust](https://github.com/neon-bindings/neon#platform-support).
 [nvm](https://github.com/nvm-sh/nvm) is a good tool for managing multiple versions of Node on your machine, and you can install
 Rust by [visiting this link](https://www.rust-lang.org/tools/install).
 
@@ -82,8 +82,8 @@ const c2pa = createC2pa();
 You can read a manifest by using the `c2pa.read()` function:
 
 ```ts
-import { createC2pa } from "c2pa-node";
-import { readFile } from "node:fs/promises";
+import { createC2pa } from 'c2pa-node';
+import { readFile } from 'node:fs/promises';
 
 const c2pa = createC2pa();
 
@@ -95,11 +95,11 @@ async function read(path, mimeType) {
     const { active_manifest, manifests, validation_status } = result;
     console.log(active_manifest);
   } else {
-    console.log("No claim found");
+    console.log('No claim found');
   }
 }
 
-read("my-c2pa-file.jpg", "image/jpeg");
+read('my-c2pa-file.jpg', 'image/jpeg');
 ```
 
 ### Creating a manifest
@@ -216,7 +216,7 @@ async function sign(asset, manifest) {
     manifest,
     asset,
     options: {
-      outputPath
+      outputPath,
     },
   });
 }
@@ -234,8 +234,8 @@ import { SigningAlgorithm } from 'c2pa-node';
 
 async function createLocalSigner() {
   const [certificate, privateKey] = await Promise.all([
-    readFile('tests/fixtures/es256_certs.pem'),
-    readFile('tests/fixtures/es256_private.key'),
+    readFile('tests/fixtures/certs/es256.pem'),
+    readFile('tests/fixtures/certs/es256.pub'),
   ]);
 
   return {

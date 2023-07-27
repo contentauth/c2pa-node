@@ -8,6 +8,7 @@
  */
 
 import { readFile } from 'node:fs/promises';
+import { resolve } from 'node:path';
 
 export enum SigningAlgorithm {
   // ECDSA with SHA-256
@@ -47,10 +48,23 @@ export interface RemoteSigner {
 
 export type Signer = LocalSigner | RemoteSigner;
 
-export async function createTestSigner(): Promise<Signer> {
+interface TestSignerOptions {
+  certificatePath: string;
+  privateKeyPath: string;
+}
+
+const defaultTestSignerOptions: TestSignerOptions = {
+  certificatePath: resolve(__dirname, 'es256.pub'),
+  privateKeyPath: resolve(__dirname, 'es256.pem'),
+};
+
+export async function createTestSigner({
+  certificatePath,
+  privateKeyPath,
+}: TestSignerOptions = defaultTestSignerOptions): Promise<LocalSigner> {
   const [certificate, privateKey] = await Promise.all([
-    readFile('tests/fixtures/es256_certs.pem'),
-    readFile('tests/fixtures/es256_private.key'),
+    readFile(resolve(process.cwd(), certificatePath)),
+    readFile(resolve(process.cwd(), privateKeyPath)),
   ]);
 
   return {

@@ -64,7 +64,7 @@ export type {
   StorableIngredient,
 } from './bindings';
 export type { Algorithm as HashAlgorithm } from './lib/hash';
-export { ManifestBuilder } from './lib/manifestBuilder';
+export { ManifestBuilder, BaseManifestDefinition } from './lib/manifestBuilder';
 export {
   LocalSigner,
   RemoteSigner,

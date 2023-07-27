@@ -27,7 +27,10 @@ export function createSuccessRemoteServiceMock(host = MOCK_HOST) {
         boxSize: BOX_SIZE,
       })
       .reply(200, async (_, requestBody) => {
-        const signer = await createTestSigner();
+        const signer = await createTestSigner({
+          certificatePath: 'tests/fixtures/certs/es256.pub',
+          privateKeyPath: 'tests/fixtures/certs/es256.pem',
+        });
         const c2pa = createC2pa({ signer });
         const claim = Buffer.from(requestBody.toString(), 'hex');
 
