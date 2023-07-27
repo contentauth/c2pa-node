@@ -29,7 +29,11 @@ describe('sign()', () => {
     let c2pa: C2pa;
 
     beforeEach(async () => {
-      const signer = await createTestSigner();
+      const signer = await createTestSigner({
+        certificatePath: 'tests/fixtures/certs/es256.pub',
+        privateKeyPath: 'tests/fixtures/certs/es256.pem',
+      });
+
       c2pa = createC2pa({
         signer,
       });
@@ -579,7 +583,10 @@ describe('sign()', () => {
       const { signedAsset } = await c2pa.sign({
         asset,
         manifest,
-        signer: await createTestSigner(),
+        signer: await createTestSigner({
+          certificatePath: 'tests/fixtures/certs/es256.pub',
+          privateKeyPath: 'tests/fixtures/certs/es256.pem',
+        }),
       });
 
       await c2pa.read(signedAsset);

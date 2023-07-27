@@ -31,17 +31,18 @@
 - [SignClaimBytesProps](interfaces/SignClaimBytesProps.md)
 - [SignInput](interfaces/SignInput.md)
 - [SignOptions](interfaces/SignOptions.md)
-- [SignOutput](interfaces/SignOutput.md)
 - [StorableIngredient](interfaces/StorableIngredient.md)
 - [ThumbnailOptions](interfaces/ThumbnailOptions.md)
 
 ### Type Aliases
 
 - [Asset](modules.md#asset)
+- [BaseManifestDefinition](modules.md#basemanifestdefinition)
 - [C2pa](modules.md#c2pa)
 - [C2paOptions](modules.md#c2paoptions)
 - [HashAlgorithm](modules.md#hashalgorithm)
 - [IngredientResourceStore](modules.md#ingredientresourcestore)
+- [SignOutput](modules.md#signoutput)
 - [SignProps](modules.md#signprops)
 - [Signer](modules.md#signer)
 
@@ -60,7 +61,17 @@ An asset that can either be in memory or on disk
 
 #### Defined in
 
-[bindings.ts:154](https://github.com/contentauth/c2pa-node/blob/e4a94c7/js-src/bindings.ts#L154)
+[bindings.ts:154](https://github.com/contentauth/c2pa-node/blob/2da25d3/js-src/bindings.ts#L154)
+
+___
+
+### BaseManifestDefinition
+
+Ƭ **BaseManifestDefinition**: `Omit`<`ManifestDefinition`, ``"thumbnail"`` \| ``"ingredients"``\> & `RequiredFields`
+
+#### Defined in
+
+[lib/manifestBuilder.ts:21](https://github.com/contentauth/c2pa-node/blob/2da25d3/js-src/lib/manifestBuilder.ts#L21)
 
 ___
 
@@ -70,7 +81,7 @@ ___
 
 #### Defined in
 
-[index.ts:28](https://github.com/contentauth/c2pa-node/blob/e4a94c7/js-src/index.ts#L28)
+[index.ts:28](https://github.com/contentauth/c2pa-node/blob/2da25d3/js-src/index.ts#L28)
 
 ___
 
@@ -88,7 +99,7 @@ ___
 
 #### Defined in
 
-[index.ts:18](https://github.com/contentauth/c2pa-node/blob/e4a94c7/js-src/index.ts#L18)
+[index.ts:18](https://github.com/contentauth/c2pa-node/blob/2da25d3/js-src/index.ts#L18)
 
 ___
 
@@ -98,7 +109,7 @@ ___
 
 #### Defined in
 
-[lib/hash.ts:17](https://github.com/contentauth/c2pa-node/blob/e4a94c7/js-src/lib/hash.ts#L17)
+[lib/hash.ts:17](https://github.com/contentauth/c2pa-node/blob/2da25d3/js-src/lib/hash.ts#L17)
 
 ___
 
@@ -108,19 +119,41 @@ ___
 
 #### Defined in
 
-[bindings.ts:345](https://github.com/contentauth/c2pa-node/blob/e4a94c7/js-src/bindings.ts#L345)
+[bindings.ts:355](https://github.com/contentauth/c2pa-node/blob/2da25d3/js-src/bindings.ts#L355)
+
+___
+
+### SignOutput
+
+Ƭ **SignOutput**<`AssetType`\>: `AssetType` extends [`BufferAsset`](interfaces/BufferAsset.md) ? `SignOutputData`<[`BufferAsset`](interfaces/BufferAsset.md)\> : `AssetType` extends [`FileAsset`](interfaces/FileAsset.md) ? `SignOutputData`<[`FileAsset`](interfaces/FileAsset.md)\> : `never`
+
+#### Type parameters
+
+| Name |
+| :------ |
+| `AssetType` |
+
+#### Defined in
+
+[bindings.ts:225](https://github.com/contentauth/c2pa-node/blob/2da25d3/js-src/bindings.ts#L225)
 
 ___
 
 ### SignProps
 
-Ƭ **SignProps**: `Object`
+Ƭ **SignProps**<`AssetType`\>: `Object`
+
+#### Type parameters
+
+| Name | Type |
+| :------ | :------ |
+| `AssetType` | extends [`Asset`](modules.md#asset) |
 
 #### Type declaration
 
 | Name | Type |
 | :------ | :------ |
-| `asset` | [`Asset`](modules.md#asset) |
+| `asset` | `AssetType` |
 | `manifest` | [`ManifestBuilder`](classes/ManifestBuilder.md) |
 | `options?` | [`SignOptions`](interfaces/SignOptions.md) |
 | `signer?` | [`Signer`](modules.md#signer) |
@@ -128,7 +161,7 @@ ___
 
 #### Defined in
 
-[bindings.ts:201](https://github.com/contentauth/c2pa-node/blob/e4a94c7/js-src/bindings.ts#L201)
+[bindings.ts:201](https://github.com/contentauth/c2pa-node/blob/2da25d3/js-src/bindings.ts#L201)
 
 ___
 
@@ -138,7 +171,7 @@ ___
 
 #### Defined in
 
-[lib/signer.ts:48](https://github.com/contentauth/c2pa-node/blob/e4a94c7/js-src/lib/signer.ts#L48)
+[lib/signer.ts:50](https://github.com/contentauth/c2pa-node/blob/2da25d3/js-src/lib/signer.ts#L50)
 
 ## Functions
 
@@ -160,18 +193,24 @@ Creates an instance of the SDK that encompasses a set of global options
 
 #### Defined in
 
-[index.ts:38](https://github.com/contentauth/c2pa-node/blob/e4a94c7/js-src/index.ts#L38)
+[index.ts:38](https://github.com/contentauth/c2pa-node/blob/2da25d3/js-src/index.ts#L38)
 
 ___
 
 ### createTestSigner
 
-▸ **createTestSigner**(): `Promise`<[`Signer`](modules.md#signer)\>
+▸ **createTestSigner**(`«destructured»?`): `Promise`<[`LocalSigner`](interfaces/LocalSigner.md)\>
+
+#### Parameters
+
+| Name | Type | Default value |
+| :------ | :------ | :------ |
+| `«destructured»` | `TestSignerOptions` | `defaultTestSignerOptions` |
 
 #### Returns
 
-`Promise`<[`Signer`](modules.md#signer)\>
+`Promise`<[`LocalSigner`](interfaces/LocalSigner.md)\>
 
 #### Defined in
 
-[lib/signer.ts:50](https://github.com/contentauth/c2pa-node/blob/e4a94c7/js-src/lib/signer.ts#L50)
+[lib/signer.ts:62](https://github.com/contentauth/c2pa-node/blob/2da25d3/js-src/lib/signer.ts#L62)
