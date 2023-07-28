@@ -9,7 +9,8 @@
     "dist/src",
     "dist/Cargo.toml",
     "dist/Cargo.lock",
-    "scripts/postinstall.js"
+    "scripts/postinstall.js",
+    "scripts/lib/download-test-certs.js"
   ],
   "engines": {
     "node": ">=16.20.0"
