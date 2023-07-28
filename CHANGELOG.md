@@ -1,5 +1,11 @@
 # c2pa-node
 
+## 0.5.6
+
+### Patch Changes
+
+- cfcef58: Fixed postinstall bug
+
 ## 0.5.5
 
 ### Patch Changes
