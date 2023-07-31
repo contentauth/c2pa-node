@@ -1,5 +1,11 @@
 # c2pa-node
 
+## 0.5.7
+
+### Patch Changes
+
+- 3ab537f: Fix bug when loading test certs
+
 ## 0.5.6
 
 ### Patch Changes
