@@ -9,6 +9,7 @@
 
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
+import pkgDir from 'pkg-dir';
 
 export enum SigningAlgorithm {
   // ECDSA with SHA-256
@@ -53,9 +54,11 @@ interface TestSignerOptions {
   privateKeyPath: string;
 }
 
+const packageRoot = pkgDir.sync(__dirname) ?? '';
+
 const defaultTestSignerOptions: TestSignerOptions = {
-  certificatePath: resolve(__dirname, 'es256.pub'),
-  privateKeyPath: resolve(__dirname, 'es256.pem'),
+  certificatePath: resolve(packageRoot, 'tests/fixtures/certs/es256.pub'),
+  privateKeyPath: resolve(packageRoot, 'tests/fixtures/certs/es256.pem'),
 };
 
 export async function createTestSigner({
