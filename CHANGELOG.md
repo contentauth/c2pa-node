@@ -1,5 +1,11 @@
 # c2pa-node
 
+## 0.5.9
+
+### Patch Changes
+
+- 5be4e7e: Move `chalk` to prod dependencies, update `semver`
+
 ## 0.5.8
 
 ### Patch Changes
