@@ -1,5 +1,11 @@
 # c2pa-node
 
+## 0.5.8
+
+### Patch Changes
+
+- a767ef5: Skip building Rust if Rust toolchain is not found
+
 ## 0.5.7
 
 ### Patch Changes
