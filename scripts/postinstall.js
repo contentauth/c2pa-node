@@ -13,6 +13,9 @@ const { resolve } = require('node:path');
 const { exec } = require('node:child_process');
 const pkgDir = require('pkg-dir');
 const downloadTestCerts = require('./lib/download-test-certs.js');
+const { promisify } = require('node:util');
+
+const pExec = promisify(exec);
 
 const execCallback = (err, stdout, stderr) => {
   if (err) {
@@ -33,6 +36,15 @@ async function fileExists(path) {
       return false;
     }
     throw err;
+  }
+}
+
+async function rustExists() {
+  try {
+    await Promise.all([pExec('rustc --version'), pExec('cargo --version')]);
+    return true;
+  } catch (err) {
+    return false;
   }
 }
 
@@ -59,9 +71,12 @@ async function main() {
   const cargoDistPath = resolve(distRoot, 'Cargo.toml');
   const libraryOverridePath = process.env.C2PA_LIBRARY_PATH;
   const cargoDistPathExists = await fileExists(cargoDistPath);
+  const rustToolchainExists = await rustExists();
 
   if (libraryOverridePath) {
     console.log('Skipping Rust build since C2PA_LIBRARY_PATH is set');
+  } else if (!rustToolchainExists) {
+    console.warn('Skipping Rust build since Rust and/or Cargo is not found');
   } else if (cargoDistPathExists) {
     await buildRust(distRoot);
   } else {
