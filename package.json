@@ -26,8 +26,8 @@
     "postinstall": "node ./scripts/postinstall.js",
     "download-test-certs": "node ./scripts/download-test-certs.js",
     "ci": "cargo test --release && jest",
-    "publish": "changeset publish",
-    "release": "run-s build publish",
+    "changeset:publish": "changeset publish",
+    "release": "run-s build changeset:publish",
     "test": "cargo test && jest",
     "test:watch": "cargo test && jest --watch --runInBand --detectOpenHandles --forceExit",
     "clean": "rimraf dist generated target"
