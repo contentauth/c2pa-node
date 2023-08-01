@@ -10,7 +10,7 @@
 const { stat } = require('node:fs/promises');
 const { mkdirp } = require('mkdirp');
 const { resolve } = require('node:path');
-const { exec } = require('node:child_process');
+const { exec, execSync } = require('node:child_process');
 const pkgDir = require('pkg-dir');
 const downloadTestCerts = require('./lib/download-test-certs.js');
 
@@ -33,6 +33,15 @@ async function fileExists(path) {
       return false;
     }
     throw err;
+  }
+}
+
+function rustcExists() {
+  try {
+    execSync('rustc --version', { encoding: 'utf8' });
+    return true;
+  } catch (error) {
+    return false;
   }
 }
 
@@ -62,6 +71,8 @@ async function main() {
 
   if (libraryOverridePath) {
     console.log('Skipping Rust build since C2PA_LIBRARY_PATH is set');
+  } else if (!rustcExists()) {
+    console.log('Skipping Rust build since rustc is not found');
   } else if (cargoDistPathExists) {
     await buildRust(distRoot);
   } else {
