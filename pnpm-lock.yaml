@@ -11,6 +11,9 @@ dependencies:
   cargo-cp-artifact:
     specifier: ^0.1
     version: 0.1.0
+  chalk:
+    specifier: ^4.1.2
+    version: 4.1.2
   mkdirp:
     specifier: ^3.0.1
     version: 3.0.1
@@ -37,9 +40,6 @@ devDependencies:
   '@types/pixelmatch':
     specifier: ^5.2.4
     version: 5.2.4
-  chalk:
-    specifier: ^4.1.2
-    version: 4.1.2
   chokidar:
     specifier: ^3.5.3
     version: 3.5.3
