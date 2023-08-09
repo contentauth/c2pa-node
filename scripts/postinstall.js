@@ -58,11 +58,11 @@ async function buildRust(root) {
       `--manifest-path=${cargoPath}`,
     ]);
     process.stdout.on('data', (data) => {
-      console.log(data);
+      console.log(data.toString('utf8'));
     });
 
     process.stderr.on('data', (data) => {
-      console.error(data);
+      console.error(data.toString('utf8'));
     });
     process.on('close', (code) => {
       code === 0 ? resolve() : reject();
