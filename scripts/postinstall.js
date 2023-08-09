@@ -10,22 +10,12 @@
 const { stat } = require('node:fs/promises');
 const { mkdirp } = require('mkdirp');
 const { resolve } = require('node:path');
-const { exec } = require('node:child_process');
+const { exec, spawn } = require('node:child_process');
 const pkgDir = require('pkg-dir');
 const downloadTestCerts = require('./lib/download-test-certs.js');
 const { promisify } = require('node:util');
 
 const pExec = promisify(exec);
-
-const execCallback = (err, stdout, stderr) => {
-  if (err) {
-    console.error(`ERROR: ${err}`);
-  } else if (stdout) {
-    console.log(stdout);
-  } else if (stderr) {
-    console.error(stderr);
-  }
-};
 
 async function fileExists(path) {
   try {
@@ -55,11 +45,26 @@ async function buildRust(root) {
   const cargoPath = resolve(root, 'Cargo.toml');
   await mkdirp(generatedDir);
   return new Promise((resolve, reject) => {
-    const result = exec(
-      `npx cargo-cp-artifact -nc "${bindingsPath}" -- cargo build --message-format=json-render-diagnostics --release --manifest-path="${cargoPath}"`,
-      execCallback,
-    );
-    result.on('exit', (code) => {
+    const process = spawn(`npx`, [
+      `cargo-cp-artifact`,
+      `-nc`,
+      `"${bindingsPath}"`,
+      `--`,
+      `cargo`,
+      `build`,
+      `--message-format=json-render-diagnostics`,
+      `--release`,
+      // TODO: Quotes here seem to break the argument - see if this can run properly if there are spaces in the path
+      `--manifest-path=${cargoPath}`,
+    ]);
+    process.stdout.on('data', (data) => {
+      console.log(data);
+    });
+
+    process.stderr.on('data', (data) => {
+      console.error(data);
+    });
+    process.on('close', (code) => {
       code === 0 ? resolve() : reject();
     });
   });
