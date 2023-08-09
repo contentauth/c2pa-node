@@ -54,15 +54,14 @@ async function buildRust(root) {
       `build`,
       `--message-format=json-render-diagnostics`,
       `--release`,
-      // TODO: Quotes here seem to break the argument - see if this can run properly if there are spaces in the path
       `--manifest-path=${cargoPath}`,
     ]);
     process.stdout.on('data', (data) => {
-      console.log(`${data}`);
+      console.log(data.toString('utf8').trim());
     });
 
     process.stderr.on('data', (data) => {
-      console.error(`${data}`);
+      console.error(data.toString('utf8').trim());
     });
     process.on('close', (code) => {
       code === 0 ? resolve() : reject();
