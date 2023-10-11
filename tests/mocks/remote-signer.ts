@@ -43,12 +43,31 @@ export function createSuccessRemoteServiceMock(host = MOCK_HOST) {
   );
 }
 
+export function createFailureRemoteServiceMock(host = MOCK_HOST) {
+  return (
+    nock(host)
+      // Reserve size
+      .get('/box-size')
+      .reply(403)
+
+      // Signer
+      .post('/sign')
+      .query({
+        boxSize: BOX_SIZE,
+      })
+      .reply(403)
+  );
+}
+
 export function createRemoteSigner(): Signer {
   return {
     type: 'remote',
     async reserveSize() {
       const url = `${MOCK_HOST}/box-size`;
       const res = await fetch(url);
+      if (!res.ok) {
+        throw new Error('Got invalid response code');
+      }
       const data = (await res.json()) as { boxSize: number };
       return data.boxSize;
     },
@@ -61,6 +80,9 @@ export function createRemoteSigner(): Signer {
         }),
         body: toBeSigned,
       });
+      if (!res.ok) {
+        throw new Error('Got invalid response code');
+      }
       return res.buffer();
     },
   };

@@ -20,6 +20,7 @@ import {
 } from '../dist/js-src/index';
 import { ManifestAssertion } from '../js-src/types';
 import {
+  createFailureRemoteServiceMock,
   createRemoteSigner,
   createSuccessRemoteServiceMock,
 } from './mocks/remote-signer';
@@ -593,6 +594,35 @@ describe('sign()', () => {
 
       // Calls should not be made to the mock service
       expect(mockRemoteService.isDone()).toBeFalsy();
+    });
+
+    test.only('should be to catch failures gracefully', async () => {
+      mockRemoteService = createFailureRemoteServiceMock();
+      let errorCaught = false;
+      try {
+        const signer = createRemoteSigner();
+        const c2pa = createC2pa({
+          signer,
+        });
+        const fixture = await readFile('tests/fixtures/A.jpg');
+        const asset: Asset = { buffer: fixture, mimeType: 'image/jpeg' };
+        const manifest = new ManifestBuilder({
+          claim_generator: 'my-app/1.0.0',
+          format: 'image/jpeg',
+          title: 'node_test_local_signer.jpg',
+        });
+        const { signedAsset } = await c2pa.sign({
+          asset,
+          manifest,
+        });
+
+        await c2pa.read(signedAsset);
+      } catch (err) {
+        console.error('Got error', err);
+        errorCaught = true;
+      }
+
+      expect(errorCaught).toBeTruthy();
     });
   });
 });
