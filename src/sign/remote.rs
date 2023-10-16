@@ -84,21 +84,26 @@ impl RemoteSigner {
             .try_send(move |mut cx| {
                 let reserve_size_fn = config.reserve_size_fn.to_inner(&mut cx);
 
-                let reserve_size_fut = reserve_size_fn
-                    .call_with(&cx)
-                    .apply::<JsPromise, _>(&mut cx)?
-                    .to_future(&mut cx, |mut cx, result| {
-                        let result = result
-                            .or_throw(&mut cx)?
-                            .downcast_or_throw::<JsNumber, _>(&mut cx)?
-                            .value(&mut cx);
+                match cx.try_catch(move |cx| {
+                    let reserve_size_fut = reserve_size_fn
+                        .call_with(cx)
+                        .apply::<JsPromise, _>(cx)?
+                        .to_future(cx, |mut cx, result| {
+                            let result = result
+                                .or_throw(&mut cx)?
+                                .downcast_or_throw::<JsNumber, _>(&mut cx)?
+                                .value(&mut cx);
 
-                        Ok(result)
-                    })?;
+                            Ok(result)
+                        })?;
 
-                let _ = tx.send(reserve_size_fut);
+                    let _ = tx.send(reserve_size_fut);
 
-                Ok(())
+                    Ok(())
+                }) {
+                    Ok(_) => Ok(()),
+                    Err(_) => cx.throw_error("Error running reserve_size fn"),
+                }
             })
             .map_err(|err| Error::RemoteReserveSize(err.to_string()))?;
 

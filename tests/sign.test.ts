@@ -489,8 +489,6 @@ describe('sign()', () => {
       const result = await c2pa.read(signedAsset);
       const { active_manifest, manifests, validation_status } = result!;
 
-      console.log('result', result);
-
       // Manifests
       expect(Object.keys(manifests).length).toEqual(3);
 
@@ -521,8 +519,15 @@ describe('sign()', () => {
   describe('remote signing', () => {
     let mockRemoteService: Scope;
 
+    beforeEach(() => {
+      jest.spyOn(process, 'on');
+    });
+
     afterEach(async () => {
+      expect(process.on).not.toHaveBeenCalled();
+
       nock.restore();
+      jest.resetAllMocks();
     });
 
     test('should sign an unsigned JPEG image with an embedded manifest', async () => {
@@ -598,8 +603,8 @@ describe('sign()', () => {
 
     test.only('should be to catch failures gracefully', async () => {
       mockRemoteService = createFailureRemoteServiceMock();
-      let errorCaught = false;
-      try {
+
+      await expect(async () => {
         const signer = createRemoteSigner();
         const c2pa = createC2pa({
           signer,
@@ -617,12 +622,7 @@ describe('sign()', () => {
         });
 
         await c2pa.read(signedAsset);
-      } catch (err) {
-        console.error('Got error', err);
-        errorCaught = true;
-      }
-
-      expect(errorCaught).toBeTruthy();
+      }).rejects.toThrow(/Signing error/);
     });
   });
 });

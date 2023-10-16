@@ -66,7 +66,7 @@ export function createRemoteSigner(): Signer {
       const url = `${MOCK_HOST}/box-size`;
       const res = await fetch(url);
       if (!res.ok) {
-        throw new Error('Got invalid response code');
+        throw new Error('Got invalid response code from box-size');
       }
       const data = (await res.json()) as { boxSize: number };
       return data.boxSize;
@@ -81,7 +81,7 @@ export function createRemoteSigner(): Signer {
         body: toBeSigned,
       });
       if (!res.ok) {
-        throw new Error('Got invalid response code');
+        throw new Error('Got invalid response code from sign');
       }
       return res.buffer();
     },
