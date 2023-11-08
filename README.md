@@ -1,36 +1,74 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [c2pa-node](#c2pa-node)
+  - [Installing c2pa-node](#installing-c2pa-node)
+    - [Installing for usage in a client app](#installing-for-usage-in-a-client-app)
+      - [Building custom binaries](#building-custom-binaries)
+    - [Installing for development / contributions](#installing-for-development--contributions)
+  - [Quick start](#quick-start)
+    - [Creating a `c2pa` object](#creating-a-c2pa-object)
+    - [Reading a manifest](#reading-a-manifest)
+    - [Creating a manifest](#creating-a-manifest)
+    - [Adding an ingredient](#adding-an-ingredient)
+    - [Signing a manifest](#signing-a-manifest)
+      - [Signing buffers](#signing-buffers)
+      - [Signing files](#signing-files)
+      - [Local signing](#local-signing)
+      - [Remote signing](#remote-signing)
+  - [API documentation](#api-documentation)
+  - [Testing](#testing)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # c2pa-node
 
-**c2pa-node:** Node.js bindings for C2PA
+This library implements a Node.js API that:
+- Read and validate C2PA data from media files in [supported formats](https://opensource.contentauthenticity.org/docs/rust-sdk/#supported-file-formats).
+- Add signed manifests to media files in [supported formats](https://opensource.contentauthenticity.org/docs/rust-sdk/#supported-file-formats).
 
-## Installing c2pa-node
+**WARNING**: This is an early prerelease version of this library.  There may be bugs and unimplemented features, and the API is subject to change.
 
-Installing c2pa-node requires a [supported version of Node and Rust](https://github.com/neon-bindings/neon#platform-support).
-[nvm](https://github.com/nvm-sh/nvm) is a good tool for managing multiple versions of Node on your machine, and you can install
-Rust by [visiting this link](https://www.rust-lang.org/tools/install).
+## Installation
+
+### Prerequisites
+
+You must install:
+- A [supported version of Node](https://github.com/neon-bindings/neon#platform-support).
+- [Rust](https://www.rust-lang.org/tools/install) 
+
+Use a tool such as [nvm](https://github.com/nvm-sh/nvm) if you need to manage multiple versions of Node on your machine.
 
 ### Installing for usage in a client app
 
+Using npm:
+
 ```sh
-# npm
 $ npm install c2pa-node
-# yarn
+```
+
+Using Yarn:
+
+```sh
 $ yarn add c2pa-node
-# pnpm
+```
+
+Using pnpm:
+
+```sh
 $ pnpm add c2pa-node
 ```
 
-This will pull down the latest Rust SDK and build it as a binding locally, hence the need for Rust to be locally installed.
+This downloads the latest Rust SDK and builds it as a binding locally (which is why Rust must be locally installed).
 
-**Note:** We will be working on creating binary releases so that you will not need Rust installed on your machine in the future.
+**Note**: In the future, CAI may create binary releases so you won't need to install Rust on your machine.
 
-#### Building custom binaries
+### Building custom binaries
 
-You may need to build custom binaries for platforms or architectures that do not have Rust tooling installed. You can
-prebuild a binary on the platform or architecture you would like to run on. To do this, you can run the following
-on the system or VM you want to build the binary for (this needs to have the [Rust toolchain installed](https://www.rust-lang.org/tools/install)):
+For platforms or architectures that do not have Rust tooling installed, you may need to build custom binaries. To pre-build a binary, [install the Rust toolchain](https://www.rust-lang.org/tools/install) and then run the following commands on the target system or VM:
 
 ```sh
-# in c2pa-node
 $ cd c2pa-node
 $ pnpm install
 $ pnpm build:rust
