@@ -7,7 +7,6 @@ This library implements a Node.js API that can:
 **WARNING**: This is an early prerelease version of this library.  There may be bugs and unimplemented features, and the API is subject to change.
 
 <div style={{display: 'none'}}>
-**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [Installation](#installation)
   - [Installing for use in a client app](#installing-for-use-in-a-client-app)
@@ -20,6 +19,7 @@ This library implements a Node.js API that can:
   - [Signing a manifest](#signing-a-manifest)
 - [API documentation](#api-documentation)
 - [Testing](#testing)
+
 </div>
 
 ## Installation
