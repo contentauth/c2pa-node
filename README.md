@@ -1,33 +1,26 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+# c2pa-node
+
+This library implements a Node.js API that can:
+- Read and validate C2PA data from media files in [supported formats](https://opensource.contentauthenticity.org/docs/rust-sdk/#supported-file-formats).
+- Add signed manifests to media files in [supported formats](https://opensource.contentauthenticity.org/docs/rust-sdk/#supported-file-formats).
+
+**WARNING**: This is an early prerelease version of this library.  There may be bugs and unimplemented features, and the API is subject to change.
+
+<div style={{display: 'none'}}>
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [Installing c2pa-node](#installing-c2pa-node)
-  - [Installing for usage in a client app](#installing-for-usage-in-a-client-app)
-    - [Building custom binaries](#building-custom-binaries)
-  - [Installing for development / contributions](#installing-for-development--contributions)
-- [Quick start](#quick-start)
+- [Installation](#installation)
+  - [Installing for use in a client app](#installing-for-use-in-a-client-app)
+  - [Installing for project contributions](#installing-for-project-contributions)
+- [Usage](#usage)
   - [Creating a `c2pa` object](#creating-a-c2pa-object)
   - [Reading a manifest](#reading-a-manifest)
   - [Creating a manifest](#creating-a-manifest)
   - [Adding an ingredient](#adding-an-ingredient)
   - [Signing a manifest](#signing-a-manifest)
-    - [Signing buffers](#signing-buffers)
-    - [Signing files](#signing-files)
-    - [Local signing](#local-signing)
-    - [Remote signing](#remote-signing)
 - [API documentation](#api-documentation)
 - [Testing](#testing)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
-# c2pa-node
-
-This library implements a Node.js API that:
-- Read and validate C2PA data from media files in [supported formats](https://opensource.contentauthenticity.org/docs/rust-sdk/#supported-file-formats).
-- Add signed manifests to media files in [supported formats](https://opensource.contentauthenticity.org/docs/rust-sdk/#supported-file-formats).
-
-**WARNING**: This is an early prerelease version of this library.  There may be bugs and unimplemented features, and the API is subject to change.
+</div>
 
 ## Installation
 
@@ -37,9 +30,9 @@ You must install:
 - A [supported version of Node](https://github.com/neon-bindings/neon#platform-support).
 - [Rust](https://www.rust-lang.org/tools/install) 
 
-Use a tool such as [nvm](https://github.com/nvm-sh/nvm) if you need to manage multiple versions of Node on your machine.
+If you need to manage multiple versions of Node on your machine, use a tool such as [nvm](https://github.com/nvm-sh/nvm).
 
-### Installing for usage in a client app
+### Installing for use in a client app
 
 Using npm:
 
@@ -76,7 +69,7 @@ $ pnpm build:rust
 Then, you can copy the binary to a place that is accessible by your application (in this example, it is `/path/to/my/application/resources`) and set the path to the `c2pa.node` module via the `C2PA_LIBRARY_PATH` environment variable:
 
 ```sh
-# in your application using c2pa-node
+# In your application that uses c2pa-node
 $ cd /path/to/my/application
 $ mkdir resources
 $ cp /path/to/c2pa-node/generated/c2pa.node resources/c2pa.node
@@ -85,11 +78,11 @@ $ npm install c2pa-node
 $ npm start
 ```
 
-**Important:** `C2PA_LIBRARY_PATH` _must_ be set while both **installing** or **adding** c2pa-node to your app to avoid building the Rust code. It is _also_ required to be set while **running** your app so that it loads the bindings from the correct location.
+**Important:** `C2PA_LIBRARY_PATH` _must_ be set while both **installing** or **adding** c2pa-node to your app to avoid building the Rust code. It must _also_ be set while **running** your app so that it loads the bindings from the correct location.
 
-### Installing for development / contributions
+### Installing for project contributions
 
-You can install the project with npm. In the project directory, run:
+If you want to contribute to this project, install the project with npm. In the project directory, run:
 
 ```sh
 # Switch to the supported version of Node.js for building
@@ -102,11 +95,11 @@ $ pnpm install
 $ pnpm run build
 ```
 
-## Quick start
+## Usage
 
 ### Creating a `c2pa` object
 
-You will need to instantiate a `c2pa` object by using [`createC2pa()`](docs/modules.md#createc2pa):
+Instantiate a `c2pa` object by using [`createC2pa()`](https://github.com/contentauth/c2pa-node/blob/main/docs/modules.md#createc2pa):
 
 ```ts
 import { createC2pa } from 'c2pa-node';
@@ -116,7 +109,7 @@ const c2pa = createC2pa();
 
 ### Reading a manifest
 
-You can read a manifest by using the `c2pa.read()` function:
+Read a manifest by using the `c2pa.read()` function; for example:
 
 ```ts
 import { createC2pa } from 'c2pa-node';
@@ -141,7 +134,7 @@ read('my-c2pa-file.jpg', 'image/jpeg');
 
 ### Creating a manifest
 
-To create a manifest, you can pass in the claim information to a [`ManifestBuilder`](docs/classes//ManifestBuilder.md).
+To create a manifest, pass the claim information to the [`ManifestBuilder`](https://github.com/contentauth/c2pa-node/blob/main/docs/classes/ManifestBuilder.md) object constructor; for example:
 
 ```ts
 import { ManifestBuilder } from 'c2pa-node';
@@ -174,8 +167,7 @@ const manifest = new ManifestBuilder({
 
 ### Adding an ingredient
 
-You can use `c2pa.createIngredient()` to load ingredient data for inclusion into a manifest. This can be stored on a backend
-if necessary and loaded in at signing time without the need for the original ingredient if it is no longer available.
+Use `c2pa.createIngredient()` to load ingredient data for inclusion into a manifest. This can be stored on a backend if necessary and loaded at signing time without the need for the original ingredient if it is no longer available.
 
 ```ts
 // Create the ingredient asset from a buffer
@@ -183,7 +175,7 @@ const ingredientAssetFromBuffer = {
   buffer: await readFile('my-ingredient.jpg'),
   mimeType: 'image/jpeg',
 };
-// or from a file
+// Or load from a file
 const ingredientAssetFromFile = {
   path: resolve('my-ingredient.jpg'),
 };
@@ -199,15 +191,13 @@ manifest.addIngredient(ingredient);
 
 ### Signing a manifest
 
-You can use the `c2pa.sign()` method to sign an ingredient, either locally if you have a signing certificate and key
-available, or by using a remote signing API.
+Use the `c2pa.sign()` method to sign an ingredient, either locally if you have a signing certificate and key available, or by using a remote signing API.
 
 #### Signing buffers
 
-If you have file data loaded into memory, you can sign them using a buffer.
+If you have an asset file's data loaded into memory, you can sign the the asset using a buffer.
 
-**Note:** This is currently only supported for `image/jpeg` and `image/png` data. All other file types should use
-the file-based approach below.
+**NOTE**: Signing using a buffer is currently supported only for `image/jpeg` and `image/png` data. For all other file types, use the file-based approach below.
 
 ```ts
 import { readFile } from 'node:fs/promises';
@@ -232,8 +222,7 @@ sign(asset, manifest);
 
 #### Signing files
 
-You can pass in a file path to be signed to avoid loading entire assets into memory, or if a certain file type doesn't
-have in-memory support.
+To avoid loading the entire asset into memory (or for file types other than JPEG and PNG that don't support in-memory signing), pass in the file path to the asset file to sign it; for example:
 
 ```ts
 import { resolve } from 'node:path';
@@ -263,7 +252,7 @@ sign(asset, manifest);
 
 #### Local signing
 
-If you have a signing certificate and key, you can sign locally using a local signer:
+If you have a signing certificate and key, you can sign locally using a local signer; for example:
 
 ```ts
 import { readFile } from 'node:fs/promises';
@@ -303,7 +292,7 @@ sign(asset, manifest);
 
 #### Remote signing
 
-If you have a service that you want to use for signing, you can use that to sign remotely:
+If you have access to a web service that performs signing, you can use it to sign remotely; for example:
 
 ```ts
 import { readFile } from 'node:fs/promises';
@@ -352,11 +341,11 @@ sign(asset, manifest);
 
 ## API documentation
 
-[Click here](docs/modules.md) to view the API documentation.
+For the API documentation, see [`/docs/` directory](https://github.com/contentauth/c2pa-node/blob/main/docs/README.md).
 
 ## Testing
 
-After installation, you can run the test suite by running:
+After installation, run the test suite by entering this command:
 
 ```sh
 $ pnpm test
