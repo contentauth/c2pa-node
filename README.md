@@ -12,7 +12,7 @@ This library implements a Node.js API that can:
   - [Installing for use in a client app](#installing-for-use-in-a-client-app)
   - [Installing for project contributions](#installing-for-project-contributions)
 - [Usage](#usage)
-  - [Creating a `c2pa` object](#creating-a-c2pa-object)
+  - [Creating a c2pa object](#creating-a-c2pa-object)
   - [Reading a manifest](#reading-a-manifest)
   - [Creating a manifest](#creating-a-manifest)
   - [Adding an ingredient](#adding-an-ingredient)
@@ -97,7 +97,7 @@ $ pnpm run build
 
 ## Usage
 
-### Creating a `c2pa` object
+### Creating a c2pa object
 
 Instantiate a `c2pa` object by using [`createC2pa()`](https://github.com/contentauth/c2pa-node/blob/main/docs/modules.md#createc2pa):
 
@@ -109,7 +109,7 @@ const c2pa = createC2pa();
 
 ### Reading a manifest
 
-Read a manifest by using the `c2pa.read()` function; for example:
+Use the `c2pa.read()` function to read a manifest; for example:
 
 ```ts
 import { createC2pa } from 'c2pa-node';
@@ -167,7 +167,7 @@ const manifest = new ManifestBuilder({
 
 ### Adding an ingredient
 
-Use `c2pa.createIngredient()` to load ingredient data for inclusion into a manifest. This can be stored on a backend if necessary and loaded at signing time without the need for the original ingredient if it is no longer available.
+Use `c2pa.createIngredient()` to load ingredient data for inclusion into a manifest. You can store the ingredient data on the backend and load it at signing time if necessary (for example if the original ingredient is no longer available); for example:
 
 ```ts
 // Create the ingredient asset from a buffer
@@ -341,7 +341,7 @@ sign(asset, manifest);
 
 ## API documentation
 
-For the API documentation, see [`/docs/` directory](https://github.com/contentauth/c2pa-node/blob/main/docs/README.md).
+For the API documentation, see the [`/docs/` directory](https://github.com/contentauth/c2pa-node/blob/main/docs/README.md).
 
 ## Testing
 
