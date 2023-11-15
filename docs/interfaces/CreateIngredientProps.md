@@ -1,4 +1,4 @@
-[c2pa-node](../README.md) / [Exports](../modules.md) / CreateIngredientProps
+[c2pa-node](../README.md) / CreateIngredientProps
 
 # Interface: CreateIngredientProps
 
@@ -15,11 +15,11 @@
 
 ### asset
 
-• **asset**: [`Asset`](../modules.md#asset)
+• **asset**: [`Asset`](../README.md#asset)
 
 #### Defined in
 
-[bindings.ts:363](https://github.com/contentauth/c2pa-node/blob/fb1d732/js-src/bindings.ts#L363)
+[bindings.ts:363](https://github.com/crandmck/c2pa-node/blob/34230bb/js-src/bindings.ts#L363)
 
 ___
 
@@ -29,7 +29,7 @@ ___
 
 #### Defined in
 
-[bindings.ts:370](https://github.com/contentauth/c2pa-node/blob/fb1d732/js-src/bindings.ts#L370)
+[bindings.ts:370](https://github.com/crandmck/c2pa-node/blob/34230bb/js-src/bindings.ts#L370)
 
 ___
 
@@ -39,7 +39,7 @@ ___
 
 #### Defined in
 
-[bindings.ts:368](https://github.com/contentauth/c2pa-node/blob/fb1d732/js-src/bindings.ts#L368)
+[bindings.ts:368](https://github.com/crandmck/c2pa-node/blob/34230bb/js-src/bindings.ts#L368)
 
 ___
 
@@ -49,4 +49,4 @@ ___
 
 #### Defined in
 
-[bindings.ts:365](https://github.com/contentauth/c2pa-node/blob/fb1d732/js-src/bindings.ts#L365)
+[bindings.ts:365](https://github.com/crandmck/c2pa-node/blob/34230bb/js-src/bindings.ts#L365)

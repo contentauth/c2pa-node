@@ -1,4 +1,4 @@
-[c2pa-node](../README.md) / [Exports](../modules.md) / [types](../modules/types.md) / ValidationStatus
+[c2pa-node](../README.md) / [types](../modules/types.md) / ValidationStatus
 
 # Interface: ValidationStatus
 
@@ -30,7 +30,7 @@ See
 
 #### Defined in
 
-[types.d.ts:295](https://github.com/contentauth/c2pa-node/blob/fb1d732/js-src/types.d.ts#L295)
+[types.d.ts:295](https://github.com/crandmck/c2pa-node/blob/34230bb/js-src/types.d.ts#L295)
 
 ___
 
@@ -40,7 +40,7 @@ ___
 
 #### Defined in
 
-[types.d.ts:296](https://github.com/contentauth/c2pa-node/blob/fb1d732/js-src/types.d.ts#L296)
+[types.d.ts:296](https://github.com/crandmck/c2pa-node/blob/34230bb/js-src/types.d.ts#L296)
 
 ___
 
@@ -50,4 +50,4 @@ ___
 
 #### Defined in
 
-[types.d.ts:297](https://github.com/contentauth/c2pa-node/blob/fb1d732/js-src/types.d.ts#L297)
+[types.d.ts:297](https://github.com/crandmck/c2pa-node/blob/34230bb/js-src/types.d.ts#L297)

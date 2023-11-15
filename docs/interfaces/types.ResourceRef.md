@@ -1,4 +1,4 @@
-[c2pa-node](../README.md) / [Exports](../modules.md) / [types](../modules/types.md) / ResourceRef
+[c2pa-node](../README.md) / [types](../modules/types.md) / ResourceRef
 
 # Interface: ResourceRef
 
@@ -25,7 +25,7 @@ A reference to a resource to be used in JSON serialization
 
 #### Defined in
 
-[types.d.ts:191](https://github.com/contentauth/c2pa-node/blob/fb1d732/js-src/types.d.ts#L191)
+[types.d.ts:191](https://github.com/crandmck/c2pa-node/blob/34230bb/js-src/types.d.ts#L191)
 
 ___
 
@@ -35,4 +35,4 @@ ___
 
 #### Defined in
 
-[types.d.ts:192](https://github.com/contentauth/c2pa-node/blob/fb1d732/js-src/types.d.ts#L192)
+[types.d.ts:192](https://github.com/crandmck/c2pa-node/blob/34230bb/js-src/types.d.ts#L192)

@@ -2,19 +2,19 @@
 
 For installation and usage information, see the main [README](../README.md).
 
-**Namespaces**:
+### Namespaces
 
 - [types](modules/types.md)
 
-**Enumerations**:
+### Enumerations
 
 - [SigningAlgorithm](enums/SigningAlgorithm.md)
 
-**Classes**:
+### Classes
 
 - [ManifestBuilder](classes/ManifestBuilder.md)
 
-**Interfaces**:
+### Interfaces
 
 - [BufferAsset](interfaces/BufferAsset.md)
 - [CreateIngredientProps](interfaces/CreateIngredientProps.md)
@@ -32,22 +32,22 @@ For installation and usage information, see the main [README](../README.md).
 - [StorableIngredient](interfaces/StorableIngredient.md)
 - [ThumbnailOptions](interfaces/ThumbnailOptions.md)
 
-**Type Aliases**:
+### Type Aliases
 
-- [Asset](modules.md#asset)
-- [BaseManifestDefinition](modules.md#basemanifestdefinition)
-- [C2pa](modules.md#c2pa)
-- [C2paOptions](modules.md#c2paoptions)
-- [HashAlgorithm](modules.md#hashalgorithm)
-- [IngredientResourceStore](modules.md#ingredientresourcestore)
-- [SignOutput](modules.md#signoutput)
-- [SignProps](modules.md#signprops)
-- [Signer](modules.md#signer)
+- [Asset](README.md#asset)
+- [BaseManifestDefinition](README.md#basemanifestdefinition)
+- [C2pa](README.md#c2pa)
+- [C2paOptions](README.md#c2paoptions)
+- [HashAlgorithm](README.md#hashalgorithm)
+- [IngredientResourceStore](README.md#ingredientresourcestore)
+- [SignOutput](README.md#signoutput)
+- [SignProps](README.md#signprops)
+- [Signer](README.md#signer)
 
-**Functions**:
+### Functions
 
-- [createC2pa](modules.md#createc2pa)
-- [createTestSigner](modules.md#createtestsigner)
+- [createC2pa](README.md#createc2pa)
+- [createTestSigner](README.md#createtestsigner)
 
 ## Type Aliases
 
@@ -59,7 +59,7 @@ An asset that can either be in memory or on disk
 
 #### Defined in
 
-[bindings.ts:154](https://github.com/contentauth/c2pa-node/blob/fb1d732/js-src/bindings.ts#L154)
+[bindings.ts:154](https://github.com/crandmck/c2pa-node/blob/34230bb/js-src/bindings.ts#L154)
 
 ___
 
@@ -69,7 +69,7 @@ ___
 
 #### Defined in
 
-[lib/manifestBuilder.ts:21](https://github.com/contentauth/c2pa-node/blob/fb1d732/js-src/lib/manifestBuilder.ts#L21)
+[lib/manifestBuilder.ts:21](https://github.com/crandmck/c2pa-node/blob/34230bb/js-src/lib/manifestBuilder.ts#L21)
 
 ___
 
@@ -79,7 +79,7 @@ ___
 
 #### Defined in
 
-[index.ts:28](https://github.com/contentauth/c2pa-node/blob/fb1d732/js-src/index.ts#L28)
+[index.ts:28](https://github.com/crandmck/c2pa-node/blob/34230bb/js-src/index.ts#L28)
 
 ___
 
@@ -91,13 +91,13 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `ingredientHashAlgorithm?` | [`HashAlgorithm`](modules.md#hashalgorithm) |
-| `signer?` | [`Signer`](modules.md#signer) |
+| `ingredientHashAlgorithm?` | [`HashAlgorithm`](README.md#hashalgorithm) |
+| `signer?` | [`Signer`](README.md#signer) |
 | `thumbnail?` | [`ThumbnailOptions`](interfaces/ThumbnailOptions.md) \| ``false`` \| ``null`` |
 
 #### Defined in
 
-[index.ts:18](https://github.com/contentauth/c2pa-node/blob/fb1d732/js-src/index.ts#L18)
+[index.ts:18](https://github.com/crandmck/c2pa-node/blob/34230bb/js-src/index.ts#L18)
 
 ___
 
@@ -107,7 +107,7 @@ ___
 
 #### Defined in
 
-[lib/hash.ts:17](https://github.com/contentauth/c2pa-node/blob/fb1d732/js-src/lib/hash.ts#L17)
+[lib/hash.ts:17](https://github.com/crandmck/c2pa-node/blob/34230bb/js-src/lib/hash.ts#L17)
 
 ___
 
@@ -117,7 +117,7 @@ ___
 
 #### Defined in
 
-[bindings.ts:353](https://github.com/contentauth/c2pa-node/blob/fb1d732/js-src/bindings.ts#L353)
+[bindings.ts:353](https://github.com/crandmck/c2pa-node/blob/34230bb/js-src/bindings.ts#L353)
 
 ___
 
@@ -133,7 +133,7 @@ ___
 
 #### Defined in
 
-[bindings.ts:225](https://github.com/contentauth/c2pa-node/blob/fb1d732/js-src/bindings.ts#L225)
+[bindings.ts:225](https://github.com/crandmck/c2pa-node/blob/34230bb/js-src/bindings.ts#L225)
 
 ___
 
@@ -145,7 +145,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `AssetType` | extends [`Asset`](modules.md#asset) |
+| `AssetType` | extends [`Asset`](README.md#asset) |
 
 #### Type declaration
 
@@ -154,12 +154,12 @@ ___
 | `asset` | `AssetType` |
 | `manifest` | [`ManifestBuilder`](classes/ManifestBuilder.md) |
 | `options?` | [`SignOptions`](interfaces/SignOptions.md) |
-| `signer?` | [`Signer`](modules.md#signer) |
+| `signer?` | [`Signer`](README.md#signer) |
 | `thumbnail?` | [`BufferAsset`](interfaces/BufferAsset.md) \| ``false`` |
 
 #### Defined in
 
-[bindings.ts:201](https://github.com/contentauth/c2pa-node/blob/fb1d732/js-src/bindings.ts#L201)
+[bindings.ts:201](https://github.com/crandmck/c2pa-node/blob/34230bb/js-src/bindings.ts#L201)
 
 ___
 
@@ -169,13 +169,13 @@ ___
 
 #### Defined in
 
-[lib/signer.ts:50](https://github.com/contentauth/c2pa-node/blob/fb1d732/js-src/lib/signer.ts#L50)
+[lib/signer.ts:50](https://github.com/crandmck/c2pa-node/blob/34230bb/js-src/lib/signer.ts#L50)
 
 ## Functions
 
 ### createC2pa
 
-▸ **createC2pa**(`options?`): [`C2pa`](modules.md#c2pa)
+▸ **createC2pa**(`options?`): [`C2pa`](README.md#c2pa)
 
 Creates an instance of the SDK that encompasses a set of global options
 
@@ -183,15 +183,15 @@ Creates an instance of the SDK that encompasses a set of global options
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `options?` | [`C2paOptions`](modules.md#c2paoptions) | Global options for the C2PA instance |
+| `options?` | [`C2paOptions`](README.md#c2paoptions) | Global options for the C2PA instance |
 
 #### Returns
 
-[`C2pa`](modules.md#c2pa)
+[`C2pa`](README.md#c2pa)
 
 #### Defined in
 
-[index.ts:38](https://github.com/contentauth/c2pa-node/blob/fb1d732/js-src/index.ts#L38)
+[index.ts:38](https://github.com/crandmck/c2pa-node/blob/34230bb/js-src/index.ts#L38)
 
 ___
 
@@ -211,4 +211,4 @@ ___
 
 #### Defined in
 
-[lib/signer.ts:64](https://github.com/contentauth/c2pa-node/blob/fb1d732/js-src/lib/signer.ts#L64)
+[lib/signer.ts:64](https://github.com/crandmck/c2pa-node/blob/34230bb/js-src/lib/signer.ts#L64)

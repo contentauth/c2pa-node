@@ -1,4 +1,4 @@
-[c2pa-node](../README.md) / [Exports](../modules.md) / [types](../modules/types.md) / Relationship
+[c2pa-node](../README.md) / [types](../modules/types.md) / Relationship
 
 # Enumeration: Relationship
 
@@ -23,7 +23,7 @@ There can only be one parent ingredient in the ingredients.
 
 #### Defined in
 
-[types.d.ts:272](https://github.com/contentauth/c2pa-node/blob/fb1d732/js-src/types.d.ts#L272)
+[types.d.ts:272](https://github.com/crandmck/c2pa-node/blob/34230bb/js-src/types.d.ts#L272)
 
 ___
 
@@ -33,4 +33,4 @@ ___
 
 #### Defined in
 
-[types.d.ts:273](https://github.com/contentauth/c2pa-node/blob/fb1d732/js-src/types.d.ts#L273)
+[types.d.ts:273](https://github.com/crandmck/c2pa-node/blob/34230bb/js-src/types.d.ts#L273)

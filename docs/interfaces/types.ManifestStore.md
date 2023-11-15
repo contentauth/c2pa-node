@@ -1,4 +1,4 @@
-[c2pa-node](../README.md) / [Exports](../modules.md) / [types](../modules/types.md) / ManifestStore
+[c2pa-node](../README.md) / [types](../modules/types.md) / ManifestStore
 
 # Interface: ManifestStore
 
@@ -28,7 +28,7 @@ A label for the active (most recent) manifest in the store
 
 #### Defined in
 
-[types.d.ts:17](https://github.com/contentauth/c2pa-node/blob/fb1d732/js-src/types.d.ts#L17)
+[types.d.ts:17](https://github.com/crandmck/c2pa-node/blob/34230bb/js-src/types.d.ts#L17)
 
 ___
 
@@ -44,7 +44,7 @@ A HashMap of Manifests
 
 #### Defined in
 
-[types.d.ts:21](https://github.com/contentauth/c2pa-node/blob/fb1d732/js-src/types.d.ts#L21)
+[types.d.ts:21](https://github.com/crandmck/c2pa-node/blob/34230bb/js-src/types.d.ts#L21)
 
 ___
 
@@ -56,4 +56,4 @@ ValidationStatus generated when loading the ManifestStore from an asset
 
 #### Defined in
 
-[types.d.ts:25](https://github.com/contentauth/c2pa-node/blob/fb1d732/js-src/types.d.ts#L25)
+[types.d.ts:25](https://github.com/crandmck/c2pa-node/blob/34230bb/js-src/types.d.ts#L25)
