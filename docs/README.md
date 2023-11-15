@@ -1,10 +1,6 @@
 # API documentation for c2pa-node
 
-<div style={{display: 'none'}}>
-
 For installation and usage information, see the main [README](../README.md).
-  
-</div>
 
 **Namespaces**:
 
