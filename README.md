@@ -1,6 +1,6 @@
 # C2PA Node.js
 
-The [c2pa-node(https://github.com/contentauth/c2pa-node) repository implements a Node.js API that can:
+The [c2pa-node](https://github.com/contentauth/c2pa-node) repository implements a Node.js API that can:
 - Read and validate C2PA data from media files in [supported formats](https://opensource.contentauthenticity.org/docs/rust-sdk/#supported-file-formats).
 - Add signed manifests to media files in [supported formats](https://opensource.contentauthenticity.org/docs/rust-sdk/#supported-file-formats).
 
