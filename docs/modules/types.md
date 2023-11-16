@@ -1,4 +1,4 @@
-[c2pa-node](../README.md) / [Exports](../modules.md) / types
+[c2pa-node](../README.md) / types
 
 # Namespace: types
 

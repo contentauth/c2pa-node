@@ -21,7 +21,7 @@
     "build:rust": "cargo-cp-artifact -nc generated/c2pa.node -- cargo build --message-format=json-render-diagnostics --release",
     "build:ts": "tsc -b && cpy js-src/types.d.ts dist",
     "build:assets": "cpy src Cargo.* generated dist",
-    "build:docs": "typedoc --plugin typedoc-plugin-markdown --out docs js-src/index.ts",
+    "build:docs": "typedoc --plugin typedoc-plugin-markdown --readme none --out docs js-src/index.ts",
     "build": "run-s build:rust build:ts build:docs build:assets",
     "postinstall": "node ./scripts/postinstall.js",
     "download-test-certs": "node ./scripts/download-test-certs.js",
