@@ -1,4 +1,4 @@
-[c2pa-node](../README.md) / [Exports](../modules.md) / ResolvedIngredient
+[c2pa-node](../README.md) / ResolvedIngredient
 
 # Interface: ResolvedIngredient
 
@@ -23,7 +23,7 @@
 
 #### Defined in
 
-[bindings.ts:79](https://github.com/contentauth/c2pa-node/blob/fb1d732/js-src/bindings.ts#L79)
+[bindings.ts:79](https://github.com/contentauth/c2pa-node/blob/c515225/js-src/bindings.ts#L79)
 
 ___
 
@@ -33,4 +33,4 @@ ___
 
 #### Defined in
 
-[bindings.ts:80](https://github.com/contentauth/c2pa-node/blob/fb1d732/js-src/bindings.ts#L80)
+[bindings.ts:80](https://github.com/contentauth/c2pa-node/blob/c515225/js-src/bindings.ts#L80)

@@ -1,4 +1,4 @@
-[c2pa-node](../README.md) / [Exports](../modules.md) / StorableIngredient
+[c2pa-node](../README.md) / StorableIngredient
 
 # Interface: StorableIngredient
 
@@ -17,14 +17,14 @@
 
 #### Defined in
 
-[bindings.ts:356](https://github.com/contentauth/c2pa-node/blob/fb1d732/js-src/bindings.ts#L356)
+[bindings.ts:356](https://github.com/contentauth/c2pa-node/blob/c515225/js-src/bindings.ts#L356)
 
 ___
 
 ### resources
 
-• **resources**: [`IngredientResourceStore`](../modules.md#ingredientresourcestore)
+• **resources**: [`IngredientResourceStore`](../README.md#ingredientresourcestore)
 
 #### Defined in
 
-[bindings.ts:357](https://github.com/contentauth/c2pa-node/blob/fb1d732/js-src/bindings.ts#L357)
+[bindings.ts:357](https://github.com/contentauth/c2pa-node/blob/c515225/js-src/bindings.ts#L357)
