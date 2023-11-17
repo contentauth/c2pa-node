@@ -1,4 +1,4 @@
-[c2pa-node](../README.md) / [Exports](../modules.md) / ResolvedResource
+[c2pa-node](../README.md) / ResolvedResource
 
 # Interface: ResolvedResource
 
@@ -17,7 +17,7 @@
 
 #### Defined in
 
-[bindings.ts:43](https://github.com/contentauth/c2pa-node/blob/afc5077/js-src/bindings.ts#L43)
+[bindings.ts:43](https://github.com/contentauth/c2pa-node/blob/ba516c3/js-src/bindings.ts#L43)
 
 ___
 
@@ -27,4 +27,4 @@ ___
 
 #### Defined in
 
-[bindings.ts:42](https://github.com/contentauth/c2pa-node/blob/afc5077/js-src/bindings.ts#L42)
+[bindings.ts:42](https://github.com/contentauth/c2pa-node/blob/ba516c3/js-src/bindings.ts#L42)

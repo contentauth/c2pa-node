@@ -1,4 +1,4 @@
-[c2pa-node](../README.md) / [Exports](../modules.md) / ThumbnailOptions
+[c2pa-node](../README.md) / ThumbnailOptions
 
 # Interface: ThumbnailOptions
 
@@ -17,7 +17,7 @@
 
 #### Defined in
 
-[lib/thumbnail.ts:15](https://github.com/contentauth/c2pa-node/blob/afc5077/js-src/lib/thumbnail.ts#L15)
+[lib/thumbnail.ts:15](https://github.com/contentauth/c2pa-node/blob/ba516c3/js-src/lib/thumbnail.ts#L15)
 
 ___
 
@@ -27,4 +27,4 @@ ___
 
 #### Defined in
 
-[lib/thumbnail.ts:16](https://github.com/contentauth/c2pa-node/blob/afc5077/js-src/lib/thumbnail.ts#L16)
+[lib/thumbnail.ts:16](https://github.com/contentauth/c2pa-node/blob/ba516c3/js-src/lib/thumbnail.ts#L16)

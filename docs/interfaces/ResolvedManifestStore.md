@@ -1,4 +1,4 @@
-[c2pa-node](../README.md) / [Exports](../modules.md) / ResolvedManifestStore
+[c2pa-node](../README.md) / ResolvedManifestStore
 
 # Interface: ResolvedManifestStore
 
@@ -23,7 +23,7 @@
 
 #### Defined in
 
-[bindings.ts:59](https://github.com/contentauth/c2pa-node/blob/afc5077/js-src/bindings.ts#L59)
+[bindings.ts:59](https://github.com/contentauth/c2pa-node/blob/ba516c3/js-src/bindings.ts#L59)
 
 ___
 
@@ -33,4 +33,4 @@ ___
 
 #### Defined in
 
-[bindings.ts:60](https://github.com/contentauth/c2pa-node/blob/afc5077/js-src/bindings.ts#L60)
+[bindings.ts:60](https://github.com/contentauth/c2pa-node/blob/ba516c3/js-src/bindings.ts#L60)

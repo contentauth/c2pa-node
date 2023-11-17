@@ -1,4 +1,4 @@
-[c2pa-node](../README.md) / [Exports](../modules.md) / SignClaimBytesProps
+[c2pa-node](../README.md) / SignClaimBytesProps
 
 # Interface: SignClaimBytesProps
 
@@ -18,7 +18,7 @@
 
 #### Defined in
 
-[bindings.ts:215](https://github.com/contentauth/c2pa-node/blob/afc5077/js-src/bindings.ts#L215)
+[bindings.ts:215](https://github.com/contentauth/c2pa-node/blob/ba516c3/js-src/bindings.ts#L215)
 
 ___
 
@@ -28,14 +28,14 @@ ___
 
 #### Defined in
 
-[bindings.ts:216](https://github.com/contentauth/c2pa-node/blob/afc5077/js-src/bindings.ts#L216)
+[bindings.ts:216](https://github.com/contentauth/c2pa-node/blob/ba516c3/js-src/bindings.ts#L216)
 
 ___
 
 ### signer
 
-• **signer**: [`Signer`](../modules.md#signer)
+• **signer**: [`Signer`](../README.md#signer)
 
 #### Defined in
 
-[bindings.ts:217](https://github.com/contentauth/c2pa-node/blob/afc5077/js-src/bindings.ts#L217)
+[bindings.ts:217](https://github.com/contentauth/c2pa-node/blob/ba516c3/js-src/bindings.ts#L217)

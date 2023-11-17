@@ -1,4 +1,4 @@
-[c2pa-node](../README.md) / [Exports](../modules.md) / [types](../modules/types.md) / ReviewRating
+[c2pa-node](../README.md) / [types](../modules/types.md) / ReviewRating
 
 # Interface: ReviewRating
 
@@ -29,7 +29,7 @@ See
 
 #### Defined in
 
-[types.d.ts:260](https://github.com/contentauth/c2pa-node/blob/afc5077/js-src/types.d.ts#L260)
+[types.d.ts:260](https://github.com/contentauth/c2pa-node/blob/ba516c3/js-src/types.d.ts#L260)
 
 ___
 
@@ -39,7 +39,7 @@ ___
 
 #### Defined in
 
-[types.d.ts:261](https://github.com/contentauth/c2pa-node/blob/afc5077/js-src/types.d.ts#L261)
+[types.d.ts:261](https://github.com/contentauth/c2pa-node/blob/ba516c3/js-src/types.d.ts#L261)
 
 ___
 
@@ -49,4 +49,4 @@ ___
 
 #### Defined in
 
-[types.d.ts:262](https://github.com/contentauth/c2pa-node/blob/afc5077/js-src/types.d.ts#L262)
+[types.d.ts:262](https://github.com/contentauth/c2pa-node/blob/ba516c3/js-src/types.d.ts#L262)

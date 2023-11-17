@@ -1,4 +1,4 @@
-[c2pa-node](../README.md) / [Exports](../modules.md) / FileAsset
+[c2pa-node](../README.md) / FileAsset
 
 # Interface: FileAsset
 
@@ -17,7 +17,7 @@
 
 #### Defined in
 
-[bindings.ts:148](https://github.com/contentauth/c2pa-node/blob/afc5077/js-src/bindings.ts#L148)
+[bindings.ts:148](https://github.com/contentauth/c2pa-node/blob/ba516c3/js-src/bindings.ts#L148)
 
 ___
 
@@ -27,4 +27,4 @@ ___
 
 #### Defined in
 
-[bindings.ts:145](https://github.com/contentauth/c2pa-node/blob/afc5077/js-src/bindings.ts#L145)
+[bindings.ts:145](https://github.com/contentauth/c2pa-node/blob/ba516c3/js-src/bindings.ts#L145)

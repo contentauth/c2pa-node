@@ -1,4 +1,4 @@
-[c2pa-node](../README.md) / [Exports](../modules.md) / [types](../modules/types.md) / Actor
+[c2pa-node](../README.md) / [types](../modules/types.md) / Actor
 
 # Interface: Actor
 
@@ -27,7 +27,7 @@ List of references to W3C Verifiable Credentials.
 
 #### Defined in
 
-[types.d.ts:234](https://github.com/contentauth/c2pa-node/blob/afc5077/js-src/types.d.ts#L234)
+[types.d.ts:234](https://github.com/contentauth/c2pa-node/blob/ba516c3/js-src/types.d.ts#L234)
 
 ___
 
@@ -39,4 +39,4 @@ An identifier for a human actor, used when the "type" is `humanEntry.identified`
 
 #### Defined in
 
-[types.d.ts:238](https://github.com/contentauth/c2pa-node/blob/afc5077/js-src/types.d.ts#L238)
+[types.d.ts:238](https://github.com/contentauth/c2pa-node/blob/ba516c3/js-src/types.d.ts#L238)

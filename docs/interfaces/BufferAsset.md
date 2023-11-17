@@ -1,4 +1,4 @@
-[c2pa-node](../README.md) / [Exports](../modules.md) / BufferAsset
+[c2pa-node](../README.md) / BufferAsset
 
 # Interface: BufferAsset
 
@@ -17,7 +17,7 @@
 
 #### Defined in
 
-[bindings.ts:138](https://github.com/contentauth/c2pa-node/blob/afc5077/js-src/bindings.ts#L138)
+[bindings.ts:138](https://github.com/contentauth/c2pa-node/blob/ba516c3/js-src/bindings.ts#L138)
 
 ___
 
@@ -27,4 +27,4 @@ ___
 
 #### Defined in
 
-[bindings.ts:140](https://github.com/contentauth/c2pa-node/blob/afc5077/js-src/bindings.ts#L140)
+[bindings.ts:140](https://github.com/contentauth/c2pa-node/blob/ba516c3/js-src/bindings.ts#L140)

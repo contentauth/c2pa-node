@@ -1,4 +1,4 @@
-[c2pa-node](../README.md) / [Exports](../modules.md) / RemoteSigner
+[c2pa-node](../README.md) / RemoteSigner
 
 # Interface: RemoteSigner
 
@@ -26,7 +26,7 @@
 
 #### Defined in
 
-[lib/signer.ts:46](https://github.com/contentauth/c2pa-node/blob/afc5077/js-src/lib/signer.ts#L46)
+[lib/signer.ts:46](https://github.com/contentauth/c2pa-node/blob/ba516c3/js-src/lib/signer.ts#L46)
 
 ___
 
@@ -50,7 +50,7 @@ ___
 
 #### Defined in
 
-[lib/signer.ts:47](https://github.com/contentauth/c2pa-node/blob/afc5077/js-src/lib/signer.ts#L47)
+[lib/signer.ts:47](https://github.com/contentauth/c2pa-node/blob/ba516c3/js-src/lib/signer.ts#L47)
 
 ___
 
@@ -60,4 +60,4 @@ ___
 
 #### Defined in
 
-[lib/signer.ts:45](https://github.com/contentauth/c2pa-node/blob/afc5077/js-src/lib/signer.ts#L45)
+[lib/signer.ts:45](https://github.com/contentauth/c2pa-node/blob/ba516c3/js-src/lib/signer.ts#L45)
