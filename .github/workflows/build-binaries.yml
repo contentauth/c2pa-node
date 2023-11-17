@@ -1,0 +1,48 @@
+name: Build binaries
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  build:
+    name: Build ${{matrix.target}}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        target:
+          - aarch64-unknown-linux-gnu
+          - x86_64-unknown-linux-gnu
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Get short SHA
+        id: sha
+        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@1.70.0
+        with:
+          components: llvm-tools-preview
+          target: ${{matrix.target}}
+
+      - name: Cache Rust dependencies
+        uses: Swatinem/rust-cache@v2
+        with:
+          shared-key: ${{matrix.target}}
+
+      - name: Build library
+        run: |
+          mkdir -p generated/${{matrix.target}}
+          cargo-cp-artifact -nc generated/${{matrix.target}}/c2pa.node -- cargo build --message-format=json-render-diagnostics --release --target=${{matrix.target}}
+
+      - name: Add built files to archive
+        uses: actions/upload-artifact@v3
+        with:
+          name: c2pa-node_${{matrix.target}}-${{ steps.sha.outputs.sha_short }}.zip
+          path: |
+            generated/${{matrix.target}}/c2pa.node
+          retention-days: 7
