@@ -33,6 +33,7 @@ thiserror = "1.0.40"
 tokio = { version = "1.28.1", features = ["rt-multi-thread", "sync"] }
 
 [dependencies.neon]
-version = "1.0.0-alpha.4"
+git = "https://github.com/neon-bindings/neon"
+branch = "kv/to-future-fix"
 default-features = false
 features = ["futures", "napi-6"]

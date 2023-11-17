@@ -20,10 +20,10 @@ import {
 } from '../dist/js-src/index';
 import { ManifestAssertion } from '../js-src/types';
 import {
-  createFailureRemoteServiceMock,
   createRemoteSigner,
   createSuccessRemoteServiceMock,
 } from './mocks/remote-signer';
+import { RemoteSigner, SignInput } from '../js-src';
 
 describe('sign()', () => {
   describe('local signing', () => {
@@ -601,11 +601,18 @@ describe('sign()', () => {
       expect(mockRemoteService.isDone()).toBeFalsy();
     });
 
-    test.only('should be to catch failures gracefully', async () => {
-      mockRemoteService = createFailureRemoteServiceMock();
-
+    test('should catch reserveSize failures gracefully', async () => {
       await expect(async () => {
-        const signer = createRemoteSigner();
+        const signer: RemoteSigner = {
+          reserveSize(): Promise<number> {
+            return Promise.reject(new Error('reserveSize'));
+          },
+          sign(input: SignInput): Promise<Buffer> {
+            return Promise.reject(new Error('sign failed'));
+          },
+          type: 'remote',
+        };
+
         const c2pa = createC2pa({
           signer,
         });
@@ -616,13 +623,40 @@ describe('sign()', () => {
           format: 'image/jpeg',
           title: 'node_test_local_signer.jpg',
         });
-        const { signedAsset } = await c2pa.sign({
+        await c2pa.sign({
           asset,
           manifest,
         });
-
-        await c2pa.read(signedAsset);
       }).rejects.toThrow(/Signing error/);
     });
+  });
+
+  test('should catch remote sign failures gracefully', async () => {
+    await expect(async () => {
+      const signer: RemoteSigner = {
+        reserveSize(): Promise<number> {
+          return Promise.resolve(10248);
+        },
+        sign(input: SignInput): Promise<Buffer> {
+          return Promise.reject(new Error('sign failed'));
+        },
+        type: 'remote',
+      };
+
+      const c2pa = createC2pa({
+        signer,
+      });
+      const fixture = await readFile('tests/fixtures/A.jpg');
+      const asset: Asset = { buffer: fixture, mimeType: 'image/jpeg' };
+      const manifest = new ManifestBuilder({
+        claim_generator: 'my-app/1.0.0',
+        format: 'image/jpeg',
+        title: 'node_test_local_signer.jpg',
+      });
+      await c2pa.sign({
+        asset,
+        manifest,
+      });
+    }).rejects.toThrow(/Signing error/);
   });
 });
