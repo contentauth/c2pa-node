@@ -25,6 +25,9 @@ pub enum Error {
     #[error("Fetching reserve size failed: {0}")]
     RemoteReserveSize(String),
 
+    #[error("An error was thrown by RemoteSigner#sign")]
+    RemoteSign,
+
     #[error("Invalid signer passed: {0}")]
     InvalidSigner(String),
 

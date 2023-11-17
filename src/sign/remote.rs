@@ -13,6 +13,7 @@ use neon::types::JsBuffer;
 use std::sync::Arc;
 use tokio::sync::oneshot;
 
+use crate::error::Error::RemoteSign;
 use crate::error::{Error, Result};
 
 pub(crate) struct RemoteSignerConfiguration {
@@ -42,14 +43,12 @@ impl c2pa::RemoteSigner for RemoteSigner {
                     .call_with(&cx)
                     .arg(args)
                     .apply::<JsPromise, _>(&mut cx)?
-                    .to_future(&mut cx, |mut cx, result| {
-                        let result = result
-                            .or_throw(&mut cx)?
+                    .to_future(&mut cx, |mut cx, result| match result {
+                        Ok(value) => Ok(Ok(value
                             .downcast_or_throw::<JsBuffer, _>(&mut cx)?
                             .as_slice(&cx)
-                            .to_vec();
-
-                        Ok(result)
+                            .to_vec())),
+                        Err(_) => Ok(Err(OtherError(Box::new(RemoteSign)))),
                     })?;
 
                 let _ = tx.send(sign_fut);
@@ -59,7 +58,7 @@ impl c2pa::RemoteSigner for RemoteSigner {
             .map_err(|err| OtherError(Box::new(err)))?;
 
         let sign_fut = rx.await.map_err(|err| OtherError(Box::new(err)))?;
-        let sign_result = sign_fut.await.map_err(|err| OtherError(Box::new(err)))?;
+        let sign_result = sign_fut.await.map_err(|err| OtherError(Box::new(err)))??;
 
         Ok(sign_result)
     }
@@ -87,13 +86,15 @@ impl RemoteSigner {
                 let reserve_size_fut = reserve_size_fn
                     .call_with(&cx)
                     .apply::<JsPromise, _>(&mut cx)?
-                    .to_future(&mut cx, |mut cx, result| {
-                        let result = result
-                            .or_throw(&mut cx)?
+                    .to_future(&mut cx, |mut cx, result| match result {
+                        Ok(value) => Ok(Ok(value
                             .downcast_or_throw::<JsNumber, _>(&mut cx)?
-                            .value(&mut cx);
-
-                        Ok(result)
+                            .value(&mut cx))),
+                        // call to JS provided `reserveSize` fn threw an error.
+                        // we catch the neon `Throw` error and map it to a cp2a_node::Error.
+                        Err(_) => Ok(Err(Error::RemoteReserveSize(
+                            "error thrown during reserveSize fn".to_string(),
+                        ))),
                     })?;
 
                 let _ = tx.send(reserve_size_fut);
@@ -105,9 +106,10 @@ impl RemoteSigner {
         let reserve_size_fut = rx
             .await
             .map_err(|err| Error::RemoteReserveSize(err.to_string()))?;
+
         let reserve_size = reserve_size_fut
             .await
-            .map_err(|err| Error::RemoteReserveSize(err.to_string()))?;
+            .map_err(|err| Error::RemoteReserveSize(err.to_string()))??;
 
         Ok(RemoteSigner {
             channel: config.channel,
