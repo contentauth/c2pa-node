@@ -15,9 +15,10 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Use Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '16.x'
+          cache: pnpm
 
       - uses: pnpm/action-setup@v2
         name: Install pnpm
@@ -53,7 +54,7 @@ jobs:
           target: ${{matrix.target}}
 
       - name: Use Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '16.x'
 
@@ -62,6 +63,7 @@ jobs:
         id: pnpm-install
         with:
           version: 8
+          run_install: false
 
       - name: Cache Rust dependencies
         uses: Swatinem/rust-cache@v2
@@ -71,7 +73,7 @@ jobs:
       - name: Build library
         run: |
           mkdir -p generated/${{matrix.target}}
-          pnpm cargo-cp-artifact -nc generated/${{matrix.target}}/c2pa.node -- cargo build --message-format=json-render-diagnostics --release --target=${{matrix.target}}
+          pnpx cargo-cp-artifact -nc generated/${{matrix.target}}/c2pa.node -- cargo build --message-format=json-render-diagnostics --release --target=${{matrix.target}}
 
       - name: Add built files to archive
         uses: actions/upload-artifact@v3
