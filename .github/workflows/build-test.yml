@@ -74,7 +74,8 @@ jobs:
       - name: Build library
         run: |
           mkdir -p generated/${{matrix.target}}
-          pnpm cargo-cp-artifact -nc generated/${{matrix.target}}/c2pa.node -- cargo build --message-format=json-render-diagnostics --release --target=${{matrix.target}}
+          pnpm run build:rust --target=${{matrix.target}}
+          mv generated/c2pa.node generated/${{matrix.target}}/c2pa.node
 
       - name: Add built files to archive
         uses: actions/upload-artifact@v3
