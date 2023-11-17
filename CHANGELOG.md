@@ -1,5 +1,11 @@
 # c2pa-node
 
+## 0.5.10
+
+### Patch Changes
+
+- 6b6dbe3: handles RemoteSigner function exceptions gracefully
+
 ## 0.5.9
 
 ### Patch Changes
