@@ -2,4 +2,4 @@
 'c2pa-node': patch
 ---
 
-handles RemoteSigner function errors exceptions gracefully
+handles RemoteSigner function exceptions gracefully
