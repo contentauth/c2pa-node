@@ -14,17 +14,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Use Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '16.x'
-          cache: pnpm
+      - name: Install pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@latest --activate
 
-      - uses: pnpm/action-setup@v2
-        name: Install pnpm
-        id: pnpm-install
+      - name: Install Node.js
+        uses: actions/setup-node@v3
         with:
-          version: 8
+          node-version: 16
+          cache: pnpm
 
       - run: pnpm install
       - run: pnpm run build
@@ -53,17 +52,16 @@ jobs:
           components: llvm-tools-preview
           target: ${{matrix.target}}
 
-      - name: Use Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '16.x'
+      - name: Install pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@latest --activate
 
-      - uses: pnpm/action-setup@v2
-        name: Install pnpm
-        id: pnpm-install
+      - name: Install Node.js
+        uses: actions/setup-node@v3
         with:
-          version: 8
-          run_install: false
+          node-version: 16
+          cache: pnpm
 
       - name: Cache Rust dependencies
         uses: Swatinem/rust-cache@v2
