@@ -31,10 +31,19 @@ jobs:
   build-binaries:
     name: Build binaries for ${{matrix.target}}
     needs: build-test
-    runs-on: ubuntu-latest
+    runs-on: ${{matrix.runner}}
     strategy:
       fail-fast: false
       matrix:
+        include:
+          - runner: ubuntu-latest
+            target: aarch64-unknown-linux-gnu
+          - runner: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+          - runner: macos-latest
+            target: aarch64-apple-darwin
+          - runner: macos-latest
+            target: x86_64-apple-darwin
         target:
           - aarch64-unknown-linux-gnu
           - x86_64-unknown-linux-gnu
@@ -88,7 +97,7 @@ jobs:
           pnpm run build:rust --target=${{matrix.target}}
           mv generated/c2pa.node generated/${{matrix.target}}/c2pa.node
 
-      - name: Build library for x86_64-unknown-linux-gnu
+      - name: Build library
         if: ${{matrix.target == 'x86_64-unknown-linux-gnu'}}
         run: |
           mkdir -p generated/${{matrix.target}}
