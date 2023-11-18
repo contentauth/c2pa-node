@@ -8,29 +8,29 @@ on:
     types: [opened, synchronize]
 
 jobs:
-  # build-test:
-  #   name: Build and test
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v4
+  build-test:
+    name: Build and test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
 
-  #     - name: Install pnpm
-  #       run: |
-  #         corepack enable
-  #         corepack prepare pnpm@latest --activate
+      - name: Install pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@latest --activate
 
-  #     - name: Install Node.js
-  #       uses: actions/setup-node@v3
-  #       with:
-  #         node-version: 16
-  #         cache: pnpm
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: pnpm
 
-  #     - run: pnpm install
-  #     - run: pnpm run build
-  #     - run: pnpm run ci
+      - run: pnpm install
+      - run: pnpm run build
+      - run: pnpm run ci
   build-binaries:
     name: Build binaries for ${{matrix.target}}
-    # needs: build-test
+    needs: build-test
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
