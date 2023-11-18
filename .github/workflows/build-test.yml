@@ -37,6 +37,7 @@ jobs:
       matrix:
         target:
           - aarch64-unknown-linux-gnu
+          - x86_64-unknown-linux-gnu
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -45,7 +46,8 @@ jobs:
         id: sha
         run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
-      - name: Install system deps
+      - name: Install system deps (aarch64-unknown-linux-gnu)
+        if: ${{matrix.target == 'aarch64-unknown-linux-gnu'}}
         run: |
           sudo apt-get update
           sudo apt-get install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu libc6-dev-arm64-cross
@@ -75,11 +77,19 @@ jobs:
         with:
           shared-key: ${{matrix.target}}
 
-      - name: Build library
+      - name: Build library for aarch64-unknown-linux-gnu
+        if: ${{matrix.target == 'aarch64-unknown-linux-gnu'}}
         env:
           CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-gcc
           CC_aarch64_unknown_linux_gnu: aarch64-linux-gnu-gcc
           CXX_aarch64_unknown_linux_gnu: aarch64-linux-gnu-g++
+        run: |
+          mkdir -p generated/${{matrix.target}}
+          pnpm run build:rust --target=${{matrix.target}}
+          mv generated/c2pa.node generated/${{matrix.target}}/c2pa.node
+
+      - name: Build library for x86_64-unknown-linux-gnu
+        if: ${{matrix.target == 'x86_64-unknown-linux-gnu'}}
         run: |
           mkdir -p generated/${{matrix.target}}
           pnpm run build:rust --target=${{matrix.target}}
