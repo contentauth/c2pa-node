@@ -44,9 +44,8 @@ jobs:
             target: aarch64-apple-darwin
           - runner: macos-latest
             target: x86_64-apple-darwin
-        target:
-          - aarch64-unknown-linux-gnu
-          - x86_64-unknown-linux-gnu
+          - runner: windows-latest
+          - target: x86_64-pc-windows-gnu
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -54,6 +53,18 @@ jobs:
       - name: Get short SHA
         id: sha
         run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+      - name: Install system deps (aarch64-unknown-linux-gnu)
+        if: ${{matrix.target == 'aarch64-unknown-linux-gnu'}}
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu libc6-dev-arm64-cross
+
+      - name: Install system deps (x86_64-pc-windows-gnu)
+        if: ${{matrix.target == 'x86_64-pc-windows-gnu'}}
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libz-mingw-w64-dev g++-mingw-w64-x86-64
 
       - name: Install system deps (aarch64-unknown-linux-gnu)
         if: ${{matrix.target == 'aarch64-unknown-linux-gnu'}}
@@ -97,8 +108,19 @@ jobs:
           pnpm run build:rust --target=${{matrix.target}}
           mv generated/c2pa.node generated/${{matrix.target}}/c2pa.node
 
+      - name: Build library for x86_64-pc-windows-gnu
+        if: ${{matrix.target == 'x86_64-pc-windows-gnu'}}
+        env:
+          CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: x86_64-w64-mingw32-gcc-posix
+          CC_aarch64_unknown_linux_gnu: x86_64-w64-mingw32-gcc
+          CXX_aarch64_unknown_linux_gnu: x86_64-w64-mingw32-g++
+        run: |
+          mkdir -p generated/${{matrix.target}}
+          pnpm run build:rust --target=${{matrix.target}}
+          mv generated/c2pa.node generated/${{matrix.target}}/c2pa.node
+
       - name: Build library
-        if: ${{matrix.target != 'aarch64-unknown-linux-gnu'}}
+        if: ${{!contains(fromJSON('["aarch64-unknown-linux-gnu", "x86_64-pc-windows-gnu"]'), matrix.target)}}
         run: |
           mkdir -p generated/${{matrix.target}}
           pnpm run build:rust --target=${{matrix.target}}
