@@ -45,7 +45,7 @@ jobs:
           - runner: macos-latest
             target: x86_64-apple-darwin
           - runner: windows-latest
-          - target: x86_64-pc-windows-gnu
+            target: x86_64-pc-windows-gnu
     steps:
       - name: Checkout
         uses: actions/checkout@v4
