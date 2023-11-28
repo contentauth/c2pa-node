@@ -1,5 +1,11 @@
 # c2pa-node
 
+## 0.5.11
+
+### Patch Changes
+
+- 38a239d: updates neon dependency from feature branch to commit hash
+
 ## 0.5.10
 
 ### Patch Changes
