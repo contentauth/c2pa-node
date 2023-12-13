@@ -217,7 +217,7 @@ import { createC2pa, createTestSigner } from 'c2pa-node';
 async function sign(asset, manifest) {
   const buffer = await readFile('to-be-signed.jpg');
   const asset: Asset = { buffer, mimeType: 'image/jpeg' };
-  const signer = createTestSigner();
+  const signer = await createTestSigner();
   const c2pa = createC2pa({
     signer,
   });
@@ -244,7 +244,7 @@ async function sign(asset, manifest) {
     path: resolve('to-be-signed.jpg'),
   };
   const outputPath = resolve('signed.jpg');
-  const signer = createTestSigner();
+  const signer = await createTestSigner();
   const c2pa = createC2pa({
     signer,
   });
