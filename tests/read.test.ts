@@ -10,12 +10,21 @@
 import { readFile } from 'node:fs/promises';
 import { C2pa, createC2pa } from '../dist/js-src/index';
 import type { ManifestAssertion } from '../dist/js-src/types';
+import { RemoteSigner, SignInput } from '../js-src';
 
 describe('read()', () => {
   let c2pa: C2pa;
 
   beforeEach(() => {
     c2pa = createC2pa();
+  });
+
+  // CAI-4527
+  test('should handle incorrect argument types and not leave unsettled `Deferred` types', async () => {
+    await expect(async () => {
+      // @ts-ignore - doing this on purpose to simulate environment without types
+      return await c2pa.read(null);
+    }).rejects.toThrow(/failed to downcast any to object/);
   });
 
   test('should read a JPEG image with an embedded manifest', async () => {
