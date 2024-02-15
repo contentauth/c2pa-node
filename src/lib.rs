@@ -87,11 +87,12 @@ fn process_store(
 fn read(mut cx: FunctionContext) -> JsResult<JsPromise> {
     let rt = runtime(&mut cx)?;
     let channel = cx.channel();
-    let (deferred, promise) = cx.promise();
 
     let asset = cx
         .argument::<JsObject>(0)
         .and_then(|obj| parse_asset(&mut cx, obj))?;
+
+    let (deferred, promise) = cx.promise();
 
     rt.spawn(async move {
         let store = match &asset {
@@ -147,11 +148,12 @@ fn process_ingredient(
 fn create_ingredient(mut cx: FunctionContext) -> JsResult<JsPromise> {
     let rt = runtime(&mut cx)?;
     let channel = cx.channel();
-    let (deferred, promise) = cx.promise();
 
     let asset = cx
         .argument::<JsObject>(0)
         .and_then(|obj| parse_asset(&mut cx, obj))?;
+
+    let (deferred, promise) = cx.promise();
 
     rt.spawn(async move {
         let ingredient = self::ingredient::create_ingredient(&asset).await;

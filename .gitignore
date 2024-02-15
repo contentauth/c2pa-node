@@ -3,6 +3,7 @@ target
 **/.DS_Store
 npm-debug.log*
 generated
+package-lock.json
 dist
 .vscode
 .idea
