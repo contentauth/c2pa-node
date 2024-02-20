@@ -300,7 +300,6 @@ fn create_sign_response(
 pub fn sign(mut cx: FunctionContext) -> JsResult<JsPromise> {
     let rt = runtime(&mut cx)?;
     let channel = cx.channel();
-    let (deferred, promise) = cx.promise();
 
     let manifest_repr = cx
         .argument::<JsObject>(0)
@@ -311,6 +310,8 @@ pub fn sign(mut cx: FunctionContext) -> JsResult<JsPromise> {
     let options = cx
         .argument::<JsObject>(2)
         .and_then(|opts| parse_options(&mut cx, opts))?;
+
+    let (deferred, promise) = cx.promise();
 
     rt.spawn(async move {
         let is_buffer = matches!(&input_asset, Asset::Buffer(_, _));
@@ -353,13 +354,14 @@ pub fn sign(mut cx: FunctionContext) -> JsResult<JsPromise> {
 pub fn sign_claim_bytes(mut cx: FunctionContext) -> JsResult<JsPromise> {
     let rt = runtime(&mut cx)?;
     let channel = cx.channel();
-    let (deferred, promise) = cx.promise();
 
     let claim = cx.argument::<JsBuffer>(0)?.as_slice(&cx).to_vec();
     let reserve_size = cx.argument::<JsNumber>(1)?.value(&mut cx) as usize;
     let signer_config = cx
         .argument::<JsObject>(2)
         .and_then(|opts| signer_config_from_opts(&mut cx, &opts))?;
+
+    let (deferred, promise) = cx.promise();
 
     rt.spawn(async move {
         let signer = match signer_config {

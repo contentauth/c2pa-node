@@ -34,6 +34,8 @@ tokio = { version = "1.28.1", features = ["rt-multi-thread", "sync"] }
 
 [dependencies.neon]
 git = "https://github.com/neon-bindings/neon"
-branch = "kv/to-future-fix"
+# TODO: update to a proper crate version when the next version of neon is released
+# We use this ref because of https://github.com/neon-bindings/neon/pull/1008
+ref = "a6b4d13"
 default-features = false
 features = ["futures", "napi-6"]
