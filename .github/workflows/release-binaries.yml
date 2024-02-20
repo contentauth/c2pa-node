@@ -4,7 +4,6 @@ on:
   release:
     types: ['created']
   pull_request:
-    branches: ['build-binaries']
     types: [synchronize]
 
 jobs:
@@ -19,9 +18,9 @@ jobs:
             target: aarch64-unknown-linux-gnu
           - runner: ubuntu-latest
             target: x86_64-unknown-linux-gnu
-          - runner: macos-latest
+          - runner: macos-14
             target: aarch64-apple-darwin
-          - runner: macos-latest
+          - runner: macos-13
             target: x86_64-apple-darwin
           # - runner: ubuntu-latest
           #   target: x86_64-pc-windows-gnu
