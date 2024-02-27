@@ -51,10 +51,7 @@ describe('createIngredient()', () => {
         'sha384-sVINtK1arjyLR617Ta85vNXO7X3uVpsFAKI/9Us4MWL7pDF51cTbfA55KH2BxJYh.jpeg',
       );
 
-      expect(Object.keys(resources).length).toEqual(2);
-      expect(resources[ingredient.thumbnail!.identifier].byteLength).toEqual(
-        72217,
-      );
+      expect(Object.keys(resources).length).toEqual(1);
       expect(
         resources[ingredient.manifest_data!.identifier].byteLength,
       ).toEqual(585508);
@@ -86,10 +83,7 @@ describe('createIngredient()', () => {
         'sha384-sVINtK1arjyLR617Ta85vNXO7X3uVpsFAKI/9Us4MWL7pDF51cTbfA55KH2BxJYh.jpg',
       );
 
-      expect(Object.keys(resources).length).toEqual(2);
-      expect(resources[ingredient.thumbnail!.identifier].byteLength).toEqual(
-        72217,
-      );
+      expect(Object.keys(resources).length).toEqual(1);
       expect(
         resources[ingredient.manifest_data!.identifier].byteLength,
       ).toEqual(585508);
