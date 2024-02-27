@@ -1,5 +1,11 @@
 # c2pa-node
 
+## 0.5.14
+
+### Patch Changes
+
+- 6031ec7: Update release trigger
+
 ## 0.5.13
 
 ### Patch Changes
