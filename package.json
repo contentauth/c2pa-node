@@ -29,7 +29,7 @@
     "build": "run-s build:rust build:ts build:docs build:assets",
     "postinstall": "node ./scripts/postinstall.js",
     "download-test-certs": "node ./scripts/download-test-certs.js",
-    "ci": "cargo test --release && jest",
+    "ci": "pnpm build && cargo test --release && jest",
     "changeset:publish": "changeset publish",
     "release": "run-s build changeset:publish",
     "test": "cargo test && jest",

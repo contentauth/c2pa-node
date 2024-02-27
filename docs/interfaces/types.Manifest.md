@@ -39,7 +39,7 @@ A list of assertions
 
 #### Defined in
 
-[types.d.ts:36](https://github.com/contentauth/c2pa-node/blob/17fd396/js-src/types.d.ts#L36)
+[types.d.ts:36](https://github.com/dkozma/c2pa-node/blob/297f458/js-src/types.d.ts#L36)
 
 ___
 
@@ -52,7 +52,7 @@ claim Spaces are not allowed in names, versions can be specified with product/1.
 
 #### Defined in
 
-[types.d.ts:41](https://github.com/contentauth/c2pa-node/blob/17fd396/js-src/types.d.ts#L41)
+[types.d.ts:41](https://github.com/dkozma/c2pa-node/blob/297f458/js-src/types.d.ts#L41)
 
 ___
 
@@ -62,7 +62,7 @@ ___
 
 #### Defined in
 
-[types.d.ts:42](https://github.com/contentauth/c2pa-node/blob/17fd396/js-src/types.d.ts#L42)
+[types.d.ts:42](https://github.com/dkozma/c2pa-node/blob/297f458/js-src/types.d.ts#L42)
 
 ___
 
@@ -74,7 +74,7 @@ A List of verified credentials
 
 #### Defined in
 
-[types.d.ts:46](https://github.com/contentauth/c2pa-node/blob/17fd396/js-src/types.d.ts#L46)
+[types.d.ts:46](https://github.com/dkozma/c2pa-node/blob/297f458/js-src/types.d.ts#L46)
 
 ___
 
@@ -86,7 +86,7 @@ The format of the source file as a MIME type.
 
 #### Defined in
 
-[types.d.ts:50](https://github.com/contentauth/c2pa-node/blob/17fd396/js-src/types.d.ts#L50)
+[types.d.ts:50](https://github.com/dkozma/c2pa-node/blob/297f458/js-src/types.d.ts#L50)
 
 ___
 
@@ -98,7 +98,7 @@ A List of ingredients
 
 #### Defined in
 
-[types.d.ts:54](https://github.com/contentauth/c2pa-node/blob/17fd396/js-src/types.d.ts#L54)
+[types.d.ts:54](https://github.com/dkozma/c2pa-node/blob/297f458/js-src/types.d.ts#L54)
 
 ___
 
@@ -110,7 +110,7 @@ Instance ID from `xmpMM:InstanceID` in XMP metadata.
 
 #### Defined in
 
-[types.d.ts:58](https://github.com/contentauth/c2pa-node/blob/17fd396/js-src/types.d.ts#L58)
+[types.d.ts:58](https://github.com/dkozma/c2pa-node/blob/297f458/js-src/types.d.ts#L58)
 
 ___
 
@@ -120,7 +120,7 @@ ___
 
 #### Defined in
 
-[types.d.ts:59](https://github.com/contentauth/c2pa-node/blob/17fd396/js-src/types.d.ts#L59)
+[types.d.ts:59](https://github.com/dkozma/c2pa-node/blob/297f458/js-src/types.d.ts#L59)
 
 ___
 
@@ -132,7 +132,7 @@ A list of redactions - URIs to a redacted assertions
 
 #### Defined in
 
-[types.d.ts:63](https://github.com/contentauth/c2pa-node/blob/17fd396/js-src/types.d.ts#L63)
+[types.d.ts:63](https://github.com/dkozma/c2pa-node/blob/297f458/js-src/types.d.ts#L63)
 
 ___
 
@@ -144,7 +144,7 @@ container for binary assets (like thumbnails)
 
 #### Defined in
 
-[types.d.ts:67](https://github.com/contentauth/c2pa-node/blob/17fd396/js-src/types.d.ts#L67)
+[types.d.ts:67](https://github.com/dkozma/c2pa-node/blob/297f458/js-src/types.d.ts#L67)
 
 ___
 
@@ -156,7 +156,7 @@ Signature data (only used for reporting)
 
 #### Defined in
 
-[types.d.ts:71](https://github.com/contentauth/c2pa-node/blob/17fd396/js-src/types.d.ts#L71)
+[types.d.ts:71](https://github.com/dkozma/c2pa-node/blob/297f458/js-src/types.d.ts#L71)
 
 ___
 
@@ -166,7 +166,7 @@ ___
 
 #### Defined in
 
-[types.d.ts:72](https://github.com/contentauth/c2pa-node/blob/17fd396/js-src/types.d.ts#L72)
+[types.d.ts:72](https://github.com/dkozma/c2pa-node/blob/297f458/js-src/types.d.ts#L72)
 
 ___
 
@@ -178,7 +178,7 @@ A human-readable title, generally source filename.
 
 #### Defined in
 
-[types.d.ts:76](https://github.com/contentauth/c2pa-node/blob/17fd396/js-src/types.d.ts#L76)
+[types.d.ts:76](https://github.com/dkozma/c2pa-node/blob/297f458/js-src/types.d.ts#L76)
 
 ___
 
@@ -191,4 +191,4 @@ name for the vendor (i.e. `adobe`)
 
 #### Defined in
 
-[types.d.ts:81](https://github.com/contentauth/c2pa-node/blob/17fd396/js-src/types.d.ts#L81)
+[types.d.ts:81](https://github.com/dkozma/c2pa-node/blob/297f458/js-src/types.d.ts#L81)

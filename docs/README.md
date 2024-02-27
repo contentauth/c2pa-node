@@ -61,7 +61,7 @@ An asset that can either be in memory or on disk
 
 #### Defined in
 
-[bindings.ts:154](https://github.com/contentauth/c2pa-node/blob/17fd396/js-src/bindings.ts#L154)
+[bindings.ts:154](https://github.com/dkozma/c2pa-node/blob/297f458/js-src/bindings.ts#L154)
 
 ___
 
@@ -71,7 +71,7 @@ ___
 
 #### Defined in
 
-[lib/manifestBuilder.ts:21](https://github.com/contentauth/c2pa-node/blob/17fd396/js-src/lib/manifestBuilder.ts#L21)
+[lib/manifestBuilder.ts:21](https://github.com/dkozma/c2pa-node/blob/297f458/js-src/lib/manifestBuilder.ts#L21)
 
 ___
 
@@ -81,7 +81,7 @@ ___
 
 #### Defined in
 
-[index.ts:28](https://github.com/contentauth/c2pa-node/blob/17fd396/js-src/index.ts#L28)
+[index.ts:28](https://github.com/dkozma/c2pa-node/blob/297f458/js-src/index.ts#L28)
 
 ___
 
@@ -91,15 +91,15 @@ ___
 
 #### Type declaration
 
-| Name                       | Type                                                                          |
-| :------------------------- | :---------------------------------------------------------------------------- |
-| `ingredientHashAlgorithm?` | [`HashAlgorithm`](README.md#hashalgorithm)                                    |
-| `signer?`                  | [`Signer`](README.md#signer)                                                  |
-| `thumbnail?`               | [`ThumbnailOptions`](interfaces/ThumbnailOptions.md) \| ``false`` \| ``null`` |
+| Name | Type |
+| :------ | :------ |
+| `ingredientHashAlgorithm?` | [`HashAlgorithm`](README.md#hashalgorithm) |
+| `signer?` | [`Signer`](README.md#signer) |
+| `thumbnail?` | [`ThumbnailOptions`](interfaces/ThumbnailOptions.md) \| ``false`` \| ``null`` |
 
 #### Defined in
 
-[index.ts:18](https://github.com/contentauth/c2pa-node/blob/17fd396/js-src/index.ts#L18)
+[index.ts:18](https://github.com/dkozma/c2pa-node/blob/297f458/js-src/index.ts#L18)
 
 ___
 
@@ -109,7 +109,7 @@ ___
 
 #### Defined in
 
-[lib/hash.ts:17](https://github.com/contentauth/c2pa-node/blob/17fd396/js-src/lib/hash.ts#L17)
+[lib/hash.ts:17](https://github.com/dkozma/c2pa-node/blob/297f458/js-src/lib/hash.ts#L17)
 
 ___
 
@@ -119,7 +119,7 @@ ___
 
 #### Defined in
 
-[bindings.ts:353](https://github.com/contentauth/c2pa-node/blob/17fd396/js-src/bindings.ts#L353)
+[bindings.ts:353](https://github.com/dkozma/c2pa-node/blob/297f458/js-src/bindings.ts#L353)
 
 ___
 
@@ -129,13 +129,13 @@ ___
 
 #### Type parameters
 
-| Name        |
-| :---------- |
+| Name |
+| :------ |
 | `AssetType` |
 
 #### Defined in
 
-[bindings.ts:225](https://github.com/contentauth/c2pa-node/blob/17fd396/js-src/bindings.ts#L225)
+[bindings.ts:225](https://github.com/dkozma/c2pa-node/blob/297f458/js-src/bindings.ts#L225)
 
 ___
 
@@ -145,23 +145,23 @@ ___
 
 #### Type parameters
 
-| Name        | Type                               |
-| :---------- | :--------------------------------- |
+| Name | Type |
+| :------ | :------ |
 | `AssetType` | extends [`Asset`](README.md#asset) |
 
 #### Type declaration
 
-| Name         | Type                                                    |
-| :----------- | :------------------------------------------------------ |
-| `asset`      | `AssetType`                                             |
-| `manifest`   | [`ManifestBuilder`](classes/ManifestBuilder.md)         |
-| `options?`   | [`SignOptions`](interfaces/SignOptions.md)              |
-| `signer?`    | [`Signer`](README.md#signer)                            |
+| Name | Type |
+| :------ | :------ |
+| `asset` | `AssetType` |
+| `manifest` | [`ManifestBuilder`](classes/ManifestBuilder.md) |
+| `options?` | [`SignOptions`](interfaces/SignOptions.md) |
+| `signer?` | [`Signer`](README.md#signer) |
 | `thumbnail?` | [`BufferAsset`](interfaces/BufferAsset.md) \| ``false`` |
 
 #### Defined in
 
-[bindings.ts:201](https://github.com/contentauth/c2pa-node/blob/17fd396/js-src/bindings.ts#L201)
+[bindings.ts:201](https://github.com/dkozma/c2pa-node/blob/297f458/js-src/bindings.ts#L201)
 
 ___
 
@@ -171,7 +171,7 @@ ___
 
 #### Defined in
 
-[lib/signer.ts:50](https://github.com/contentauth/c2pa-node/blob/17fd396/js-src/lib/signer.ts#L50)
+[lib/signer.ts:50](https://github.com/dkozma/c2pa-node/blob/297f458/js-src/lib/signer.ts#L50)
 
 ## Functions
 
@@ -183,8 +183,8 @@ Creates an instance of the SDK that encompasses a set of global options
 
 #### Parameters
 
-| Name       | Type                                   | Description                          |
-| :--------- | :------------------------------------- | :----------------------------------- |
+| Name | Type | Description |
+| :------ | :------ | :------ |
 | `options?` | [`C2paOptions`](README.md#c2paoptions) | Global options for the C2PA instance |
 
 #### Returns
@@ -193,7 +193,7 @@ Creates an instance of the SDK that encompasses a set of global options
 
 #### Defined in
 
-[index.ts:38](https://github.com/contentauth/c2pa-node/blob/17fd396/js-src/index.ts#L38)
+[index.ts:38](https://github.com/dkozma/c2pa-node/blob/297f458/js-src/index.ts#L38)
 
 ___
 
@@ -203,8 +203,8 @@ ___
 
 #### Parameters
 
-| Name             | Type                | Default value              |
-| :--------------- | :------------------ | :------------------------- |
+| Name | Type | Default value |
+| :------ | :------ | :------ |
 | `«destructured»` | `TestSignerOptions` | `defaultTestSignerOptions` |
 
 #### Returns
@@ -213,4 +213,4 @@ ___
 
 #### Defined in
 
-[lib/signer.ts:64](https://github.com/contentauth/c2pa-node/blob/17fd396/js-src/lib/signer.ts#L64)
+[lib/signer.ts:64](https://github.com/dkozma/c2pa-node/blob/297f458/js-src/lib/signer.ts#L64)

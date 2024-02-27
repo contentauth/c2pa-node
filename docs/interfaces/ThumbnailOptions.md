@@ -17,7 +17,7 @@
 
 #### Defined in
 
-[lib/thumbnail.ts:15](https://github.com/contentauth/c2pa-node/blob/17fd396/js-src/lib/thumbnail.ts#L15)
+[lib/thumbnail.ts:15](https://github.com/dkozma/c2pa-node/blob/297f458/js-src/lib/thumbnail.ts#L15)
 
 ___
 
@@ -27,4 +27,4 @@ ___
 
 #### Defined in
 
-[lib/thumbnail.ts:16](https://github.com/contentauth/c2pa-node/blob/17fd396/js-src/lib/thumbnail.ts#L16)
+[lib/thumbnail.ts:16](https://github.com/dkozma/c2pa-node/blob/297f458/js-src/lib/thumbnail.ts#L16)
