@@ -1308,7 +1308,8 @@ dependencies = [
 [[package]]
 name = "neon"
 version = "1.0.0"
-source = "git+https://github.com/neon-bindings/neon?rev=50c74c0#50c74c0554fc90495157879a5b32c78bd1676016"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7d75440242411c87dc39847b0e33e961ec1f10326a9d8ecf9c1ea64a3b3c13dc"
 dependencies = [
  "libloading",
  "neon-macros",
@@ -1322,7 +1323,8 @@ dependencies = [
 [[package]]
 name = "neon-macros"
 version = "1.0.0"
-source = "git+https://github.com/neon-bindings/neon?rev=50c74c0#50c74c0554fc90495157879a5b32c78bd1676016"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c6813fde79b646e47e7ad75f480aa80ef76a5d9599e2717407961531169ee38b"
 dependencies = [
  "quote",
  "syn 2.0.50",
