@@ -91,11 +91,11 @@ ___
 
 #### Type declaration
 
-| Name | Type |
-| :------ | :------ |
-| `ingredientHashAlgorithm?` | [`HashAlgorithm`](README.md#hashalgorithm) |
-| `signer?` | [`Signer`](README.md#signer) |
-| `thumbnail?` | [`ThumbnailOptions`](interfaces/ThumbnailOptions.md) \| ``false`` \| ``null`` |
+| Name                       | Type                                                                          |
+| :------------------------- | :---------------------------------------------------------------------------- |
+| `ingredientHashAlgorithm?` | [`HashAlgorithm`](README.md#hashalgorithm)                                    |
+| `signer?`                  | [`Signer`](README.md#signer)                                                  |
+| `thumbnail?`               | [`ThumbnailOptions`](interfaces/ThumbnailOptions.md) \| ``false`` \| ``null`` |
 
 #### Defined in
 
@@ -129,8 +129,8 @@ ___
 
 #### Type parameters
 
-| Name |
-| :------ |
+| Name        |
+| :---------- |
 | `AssetType` |
 
 #### Defined in
@@ -145,18 +145,18 @@ ___
 
 #### Type parameters
 
-| Name | Type |
-| :------ | :------ |
+| Name        | Type                               |
+| :---------- | :--------------------------------- |
 | `AssetType` | extends [`Asset`](README.md#asset) |
 
 #### Type declaration
 
-| Name | Type |
-| :------ | :------ |
-| `asset` | `AssetType` |
-| `manifest` | [`ManifestBuilder`](classes/ManifestBuilder.md) |
-| `options?` | [`SignOptions`](interfaces/SignOptions.md) |
-| `signer?` | [`Signer`](README.md#signer) |
+| Name         | Type                                                    |
+| :----------- | :------------------------------------------------------ |
+| `asset`      | `AssetType`                                             |
+| `manifest`   | [`ManifestBuilder`](classes/ManifestBuilder.md)         |
+| `options?`   | [`SignOptions`](interfaces/SignOptions.md)              |
+| `signer?`    | [`Signer`](README.md#signer)                            |
 | `thumbnail?` | [`BufferAsset`](interfaces/BufferAsset.md) \| ``false`` |
 
 #### Defined in
@@ -183,8 +183,8 @@ Creates an instance of the SDK that encompasses a set of global options
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
+| Name       | Type                                   | Description                          |
+| :--------- | :------------------------------------- | :----------------------------------- |
 | `options?` | [`C2paOptions`](README.md#c2paoptions) | Global options for the C2PA instance |
 
 #### Returns
@@ -203,8 +203,8 @@ ___
 
 #### Parameters
 
-| Name | Type | Default value |
-| :------ | :------ | :------ |
+| Name             | Type                | Default value              |
+| :--------------- | :------------------ | :------------------------- |
 | `«destructured»` | `TestSignerOptions` | `defaultTestSignerOptions` |
 
 #### Returns

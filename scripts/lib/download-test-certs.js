@@ -8,8 +8,9 @@
  */
 
 const chalk = require('chalk');
-const https = require('https');
-const fs = require('fs');
+const fetch = require('node-fetch');
+const { pipeline } = require('node:stream/promises');
+const fs = require('node:fs');
 const pkgDir = require('pkg-dir');
 const { resolve } = require('node:path');
 
@@ -25,23 +26,14 @@ async function downloadTestCerts() {
   const pubFile = fs.createWriteStream(resolve(fixtureRoot, 'es256.pub'));
 
   console.log(chalk.yellow('Downloading test certificates...'));
-  https.get(pemUrl, (res) => {
-    res.pipe(pemFile);
 
-    pemFile.on('finish', () => {
-      pemFile.close();
-      console.log(chalk.yellow('Downloaded es256.pem'));
-    });
-  });
+  const pemRes = await fetch(pemUrl);
+  await pipeline(pemRes.body, pemFile);
+  console.log(chalk.yellow('Downloaded es256.pem'));
 
-  https.get(pubUrl, (res) => {
-    res.pipe(pubFile);
-
-    pubFile.on('finish', () => {
-      pubFile.close();
-      console.log(chalk.yellow('Downloaded es256.pub'));
-    });
-  });
+  const pubRes = await fetch(pubUrl);
+  await pipeline(pubRes.body, pubFile);
+  console.log(chalk.yellow('Downloaded es256.pub'));
 }
 
 module.exports = downloadTestCerts;

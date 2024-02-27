@@ -40,8 +40,8 @@ ___
 
 ##### Parameters
 
-| Name | Type |
-| :------ | :------ |
+| Name    | Type                        |
+| :------ | :-------------------------- |
 | `input` | [`SignInput`](SignInput.md) |
 
 ##### Returns

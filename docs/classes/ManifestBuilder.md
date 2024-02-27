@@ -35,10 +35,10 @@
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
+| Name             | Type                                                            |
+| :--------------- | :-------------------------------------------------------------- |
 | `baseDefinition` | [`BaseManifestDefinition`](../README.md#basemanifestdefinition) |
-| `options?` | `ManifestBuilderOptions` |
+| `options?`       | `ManifestBuilderOptions`                                        |
 
 #### Defined in
 
@@ -120,8 +120,8 @@ ___
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
+| Name    | Type                                                        |
+| :------ | :---------------------------------------------------------- |
 | `input` | [`StorableIngredient`](../interfaces/StorableIngredient.md) |
 
 #### Returns
@@ -140,8 +140,8 @@ ___
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
+| Name        | Type                                          |
+| :---------- | :-------------------------------------------- |
 | `thumbnail` | [`BufferAsset`](../interfaces/BufferAsset.md) |
 
 #### Returns
@@ -162,11 +162,11 @@ ___
 
 `Object`
 
-| Name | Type |
-| :------ | :------ |
-| `ingredients` | { `ingredient`: `string` ; `resources`: [`IngredientResourceStore`](../README.md#ingredientresourcestore)  }[] |
-| `manifest` | `string` |
-| `resourceStore` | `Record`<`string`, `Buffer`\> |
+| Name            | Type                                                                                                           |
+| :-------------- | :------------------------------------------------------------------------------------------------------------- |
+| `ingredients`   | { `ingredient`: `string` ; `resources`: [`IngredientResourceStore`](../README.md#ingredientresourcestore)  }[] |
+| `manifest`      | `string`                                                                                                       |
+| `resourceStore` | `Record`<`string`, `Buffer`\>                                                                                  |
 
 #### Defined in
 
@@ -180,8 +180,8 @@ ___
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
+| Name      | Type     |
+| :-------- | :------- |
 | `vendor?` | `string` |
 
 #### Returns

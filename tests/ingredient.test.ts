@@ -14,6 +14,8 @@ import { C2pa, createC2pa } from '../dist/js-src/index';
 const instanceIdMatcher = /xmp(?:\:|\.)iid:\w{8}\-\w{4}-4\w{3}-\w{4}-\w{12}/i;
 const identifierMatcher =
   /xmp-iid-\w{8}\-\w{4}-4\w{3}-\w{4}-\w{12}(\.\w{3,4})/i;
+const thumbnailJumbfMatcher =
+  /^self#jumbf=\/c2pa\/contentauth:urn:uuid:\w{8}\-\w{4}-4\w{3}-\w{4}-\w{12}\/c2pa\.assertions\/c2pa\.thumbnail\.claim\.jpeg$/;
 
 describe('createIngredient()', () => {
   let c2pa: C2pa;
@@ -38,7 +40,7 @@ describe('createIngredient()', () => {
       expect(ingredient.format).toEqual('image/jpeg');
       expect(ingredient.instance_id).toMatch(instanceIdMatcher);
       expect(ingredient.thumbnail?.format).toEqual('image/jpeg');
-      expect(ingredient.thumbnail?.identifier).toMatch(identifierMatcher);
+      expect(ingredient.thumbnail?.identifier).toMatch(thumbnailJumbfMatcher);
       expect(ingredient.relationship).toEqual('componentOf');
       expect(ingredient.active_manifest).toEqual(
         'contentauth:urn:uuid:699750af-e07b-4c45-9d24-a131442111b8',
@@ -73,7 +75,7 @@ describe('createIngredient()', () => {
       expect(ingredient.format).toEqual('image/jpeg');
       expect(ingredient.instance_id).toMatch(instanceIdMatcher);
       expect(ingredient.thumbnail?.format).toEqual('image/jpeg');
-      expect(ingredient.thumbnail?.identifier).toMatch(identifierMatcher);
+      expect(ingredient.thumbnail?.identifier).toMatch(thumbnailJumbfMatcher);
       expect(ingredient.relationship).toEqual('componentOf');
       expect(ingredient.active_manifest).toEqual(
         'contentauth:urn:uuid:699750af-e07b-4c45-9d24-a131442111b8',
