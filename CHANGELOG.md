@@ -1,5 +1,12 @@
 # c2pa-node
 
+## 0.5.13
+
+### Patch Changes
+
+- 8526410: - Add precompiled binary support for Linux, macOS, and Windows
+  - Update c2pa-rs to 0.27.1
+
 ## 0.5.12
 
 ### Patch Changes
