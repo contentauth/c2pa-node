@@ -7,7 +7,14 @@
  * it.
  */
 
-const { stat } = require('node:fs/promises');
+const { stat, readFile } = require('node:fs/promises');
+const { createWriteStream } = require('node:fs');
+const { PassThrough } = require('node:stream');
+const cliProgress = require('cli-progress');
+const prettyBytes = require('pretty-bytes');
+const fetch = require('node-fetch');
+const unzipper = require('unzipper');
+const os = require('node:os');
 const { mkdirp } = require('mkdirp');
 const { resolve } = require('node:path');
 const { exec } = require('node:child_process');
@@ -37,6 +44,106 @@ async function fileExists(path) {
     }
     throw err;
   }
+}
+
+function getPlatform() {
+  const arch = os.arch();
+  const platform = os.platform();
+
+  console.debug('Detected', { arch, platform });
+
+  if (arch === 'arm64' && platform === 'linux') {
+    return 'aarch64-unknown-linux-gnu';
+  } else if (arch === 'x64' && platform === 'linux') {
+    return 'x86_64-unknown-linux-gnu';
+  } else if (arch === 'arm64' && platform === 'darwin') {
+    // TODO: Support macOS once we have signed builds
+    // return 'aarch64-apple-darwin';
+  } else if (arch === 'x64' && platform === 'darwin') {
+    // TODO: Support macOS once we have signed builds
+    // return 'x86_64-apple-darwin';
+  } else if (platform === 'win32') {
+    return 'x86_64-pc-windows-msvc';
+  }
+
+  console.log(
+    `Can not find binary for architecture: ${arch} and platform: ${platform}, attempting to build Rust`,
+  );
+
+  return null;
+}
+
+async function downloadFromUrl(appRoot, url) {
+  console.log(`Checking for a release at: ${url}`);
+  const res = await fetch(url);
+
+  if (res.ok) {
+    const destDir = resolve(appRoot, 'dist', 'generated');
+    const totalSize = parseInt(res.headers.get('Content-Length'), 10);
+    await mkdirp(destDir);
+    const destPath = resolve(destDir, 'c2pa.node');
+    const destStream = createWriteStream(destPath);
+    const progress = new PassThrough();
+    const bar = new cliProgress.SingleBar(
+      {
+        format:
+          'Downloading | {bar} | {value_formatted} / {total_formatted} ({percentage}%) | ETA: {eta}s',
+      },
+      cliProgress.Presets.shades_classic,
+    );
+    let downloaded = 0;
+
+    bar.start(totalSize, 0, {
+      value_formatted: prettyBytes(0),
+      total_formatted: prettyBytes(totalSize),
+    });
+
+    progress.on('data', (chunk) => {
+      downloaded += chunk.length;
+      bar.update(downloaded, {
+        value_formatted: prettyBytes(downloaded),
+        total_formatted: prettyBytes(totalSize),
+      });
+    });
+
+    return new Promise((resolve, reject) => {
+      res.body
+        .pipe(progress)
+        .pipe(unzipper.ParseOne())
+        .pipe(destStream)
+        .on('finish', () => {
+          bar.stop();
+          console.log(`Downloaded to ${destPath}`);
+          resolve(true);
+        })
+        .on('error', reject);
+    });
+  }
+
+  return false;
+}
+
+async function downloadBinary(appRoot) {
+  const pkgPath = resolve(appRoot, 'package.json');
+  const pkg = JSON.parse(await readFile(pkgPath));
+  const repo = pkg.repository?.url ?? pkg.repository;
+  const repoBase = (repo ?? '').replace(/\.git$/i, '');
+  const version = pkg.version;
+  const platform = getPlatform();
+
+  if (repoBase && version && platform) {
+    const fileName = `c2pa-node_${platform}-v${version}.zip`;
+    const downloadUrl = [
+      repoBase,
+      'releases',
+      'download',
+      `v${version}`,
+      fileName,
+    ].join('/');
+    return downloadFromUrl(appRoot, downloadUrl);
+  }
+
+  return false;
 }
 
 async function rustExists() {
@@ -73,17 +180,28 @@ async function main() {
   const cargoDistPathExists = await fileExists(cargoDistPath);
   const rustToolchainExists = await rustExists();
 
+  await downloadTestCerts();
+
   if (libraryOverridePath) {
     console.log('Skipping Rust build since C2PA_LIBRARY_PATH is set');
-  } else if (!rustToolchainExists) {
+    return;
+  }
+
+  if (await downloadBinary(appRoot)) {
+    return;
+  }
+
+  if (!rustToolchainExists) {
     console.warn('Skipping Rust build since Rust and/or Cargo is not found');
   } else if (cargoDistPathExists) {
     await buildRust(distRoot);
   } else {
     await buildRust(appRoot);
   }
-
-  downloadTestCerts();
 }
 
-main();
+if (!process.env.SKIP_RUST_BUILD) {
+  main();
+} else {
+  console.log('Skipping Rust build since SKIP_RUST_BUILD is set');
+}

@@ -19,7 +19,7 @@
 
 #### Defined in
 
-[bindings.ts:363](https://github.com/contentauth/c2pa-node/blob/17fd396/js-src/bindings.ts#L363)
+[bindings.ts:363](https://github.com/dkozma/c2pa-node/blob/297f458/js-src/bindings.ts#L363)
 
 ___
 
@@ -29,7 +29,7 @@ ___
 
 #### Defined in
 
-[bindings.ts:370](https://github.com/contentauth/c2pa-node/blob/17fd396/js-src/bindings.ts#L370)
+[bindings.ts:370](https://github.com/dkozma/c2pa-node/blob/297f458/js-src/bindings.ts#L370)
 
 ___
 
@@ -39,7 +39,7 @@ ___
 
 #### Defined in
 
-[bindings.ts:368](https://github.com/contentauth/c2pa-node/blob/17fd396/js-src/bindings.ts#L368)
+[bindings.ts:368](https://github.com/dkozma/c2pa-node/blob/297f458/js-src/bindings.ts#L368)
 
 ___
 
@@ -49,4 +49,4 @@ ___
 
 #### Defined in
 
-[bindings.ts:365](https://github.com/contentauth/c2pa-node/blob/17fd396/js-src/bindings.ts#L365)
+[bindings.ts:365](https://github.com/dkozma/c2pa-node/blob/297f458/js-src/bindings.ts#L365)

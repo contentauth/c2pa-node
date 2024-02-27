@@ -28,7 +28,7 @@ others
 
 #### Defined in
 
-[types.d.ts:201](https://github.com/contentauth/c2pa-node/blob/17fd396/js-src/types.d.ts#L201)
+[types.d.ts:201](https://github.com/dkozma/c2pa-node/blob/297f458/js-src/types.d.ts#L201)
 
 ___
 
@@ -38,7 +38,7 @@ ___
 
 #### Defined in
 
-[types.d.ts:202](https://github.com/contentauth/c2pa-node/blob/17fd396/js-src/types.d.ts#L202)
+[types.d.ts:202](https://github.com/dkozma/c2pa-node/blob/297f458/js-src/types.d.ts#L202)
 
 ___
 
@@ -48,7 +48,7 @@ ___
 
 #### Defined in
 
-[types.d.ts:203](https://github.com/contentauth/c2pa-node/blob/17fd396/js-src/types.d.ts#L203)
+[types.d.ts:203](https://github.com/dkozma/c2pa-node/blob/297f458/js-src/types.d.ts#L203)
 
 ___
 
@@ -58,4 +58,4 @@ ___
 
 #### Defined in
 
-[types.d.ts:204](https://github.com/contentauth/c2pa-node/blob/17fd396/js-src/types.d.ts#L204)
+[types.d.ts:204](https://github.com/dkozma/c2pa-node/blob/297f458/js-src/types.d.ts#L204)

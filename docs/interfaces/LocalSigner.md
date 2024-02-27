@@ -20,7 +20,7 @@
 
 #### Defined in
 
-[lib/signer.ts:35](https://github.com/contentauth/c2pa-node/blob/17fd396/js-src/lib/signer.ts#L35)
+[lib/signer.ts:35](https://github.com/dkozma/c2pa-node/blob/297f458/js-src/lib/signer.ts#L35)
 
 ___
 
@@ -30,7 +30,7 @@ ___
 
 #### Defined in
 
-[lib/signer.ts:33](https://github.com/contentauth/c2pa-node/blob/17fd396/js-src/lib/signer.ts#L33)
+[lib/signer.ts:33](https://github.com/dkozma/c2pa-node/blob/297f458/js-src/lib/signer.ts#L33)
 
 ___
 
@@ -40,7 +40,7 @@ ___
 
 #### Defined in
 
-[lib/signer.ts:34](https://github.com/contentauth/c2pa-node/blob/17fd396/js-src/lib/signer.ts#L34)
+[lib/signer.ts:34](https://github.com/dkozma/c2pa-node/blob/297f458/js-src/lib/signer.ts#L34)
 
 ___
 
@@ -50,7 +50,7 @@ ___
 
 #### Defined in
 
-[lib/signer.ts:36](https://github.com/contentauth/c2pa-node/blob/17fd396/js-src/lib/signer.ts#L36)
+[lib/signer.ts:36](https://github.com/dkozma/c2pa-node/blob/297f458/js-src/lib/signer.ts#L36)
 
 ___
 
@@ -60,4 +60,4 @@ ___
 
 #### Defined in
 
-[lib/signer.ts:32](https://github.com/contentauth/c2pa-node/blob/17fd396/js-src/lib/signer.ts#L32)
+[lib/signer.ts:32](https://github.com/dkozma/c2pa-node/blob/297f458/js-src/lib/signer.ts#L32)

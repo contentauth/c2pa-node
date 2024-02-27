@@ -13,29 +13,25 @@ crate-type = ["cdylib"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-async-trait = "0.1.68"
-c2pa = { version = "0.25.1", features = [
+async-trait = "0.1.77"
+c2pa = { version = "0.27.1", features = [
 	"fetch_remote_manifests",
 	"file_io",
 	"xmp_write",
 ] }
 futures = "0.3"
-once_cell = "1.17.1"
+neon = { version = "1.0.0", default-features = false, features = [
+	"futures",
+	"napi-6",
+] }
+once_cell = "1.19.0"
 reqwest = { version = "0.11.18", features = [
 	"blocking",
 	"brotli",
 	"deflate",
 	"gzip",
 ] }
-serde = "1.0.163"
-serde_json = "1.0.96"
-thiserror = "1.0.40"
-tokio = { version = "1.28.1", features = ["rt-multi-thread", "sync"] }
-
-[dependencies.neon]
-git = "https://github.com/neon-bindings/neon"
-# TODO: update to a proper crate version when the next version of neon is released
-# We use this ref because of https://github.com/neon-bindings/neon/pull/1008
-ref = "a6b4d13"
-default-features = false
-features = ["futures", "napi-6"]
+serde = "1.0.197"
+serde_json = "1.0.114"
+thiserror = "1.0.57"
+tokio = { version = "1.36.0", features = ["rt-multi-thread", "sync"] }
