@@ -10,19 +10,24 @@ The [c2pa-node](https://github.com/contentauth/c2pa-node) repository implements 
 
 Contents:
 
-- [Installation](#installation)
-  - [Prerequisites](#prerequisites)
-  - [Installing for use in a client app](#installing-for-use-in-a-client-app)
-  - [Building custom binaries](#building-custom-binaries)
-  - [Installing for project contributions](#installing-for-project-contributions)
-  - [Testing](#testing)
-- [Usage](#usage)
-  - [Creating a c2pa object](#creating-a-c2pa-object)
-  - [Reading a manifest](#reading-a-manifest)
-  - [Creating a manifest](#creating-a-manifest)
-  - [Adding an ingredient](#adding-an-ingredient)
-  - [Signing a manifest](#signing-a-manifest)
-- [API documentation](#api-documentation)
+- [C2PA Node.js](#c2pa-nodejs)
+  - [Installation](#installation)
+    - [Prerequisites](#prerequisites)
+    - [Installing for use in a client app](#installing-for-use-in-a-client-app)
+    - [Building custom binaries](#building-custom-binaries)
+    - [Installing for project contributions](#installing-for-project-contributions)
+    - [Testing](#testing)
+  - [Usage](#usage)
+    - [Creating a c2pa object](#creating-a-c2pa-object)
+    - [Reading a manifest](#reading-a-manifest)
+    - [Creating a manifest](#creating-a-manifest)
+    - [Adding an ingredient](#adding-an-ingredient)
+    - [Signing a manifest](#signing-a-manifest)
+      - [Signing buffers](#signing-buffers)
+      - [Signing files](#signing-files)
+      - [Local signing](#local-signing)
+      - [Remote signing](#remote-signing)
+  - [API documentation](#api-documentation)
 
 </div>
 
@@ -56,13 +61,19 @@ Using pnpm:
 $ pnpm add c2pa-node
 ```
 
-This command downloads the latest Rust SDK and builds it as a binding locally (which is why Rust must be locally installed).
+This command will download precompiled binaries for the following systems:
+- Linux x86_64
+- Linux aarch64 (ARM)
+- Windows x86
+- Windows ARM
 
-**Note**: In the future, CAI may create binary releases so you won't need to install Rust on your machine.
+**Note**: macOS will be coming as soon as we add signed builds.
+
+For all other platforms, you will need Rust installed on your system, as the `postinstall` step will attempt to build our Rust SDK into a native Node.js module on your machine.
 
 ### Building custom binaries
 
-For platforms or architectures that do not have Rust tooling installed, you may need to build custom binaries. To pre-build a binary, [install the Rust toolchain](https://www.rust-lang.org/tools/install) and then run the following commands on the target system or VM:
+For platforms or architectures that do not have a precompiled binaries or Rust tooling installed, you may need to build custom binaries. To pre-build a binary, [install the Rust toolchain](https://www.rust-lang.org/tools/install) and then run the following commands on the target system or VM:
 
 ```sh
 $ cd c2pa-node
