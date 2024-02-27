@@ -45,7 +45,7 @@ describe('createIngredient()', () => {
       expect(ingredient.active_manifest).toEqual(
         'contentauth:urn:uuid:699750af-e07b-4c45-9d24-a131442111b8',
       );
-      expect(ingredient.manifest_data?.format).toEqual('c2pa');
+      expect(ingredient.manifest_data?.format).toEqual('application/c2pa');
       expect(ingredient.manifest_data?.identifier).toMatch(identifierMatcher);
       expect(ingredient.hash).toEqual(
         'sha384-sVINtK1arjyLR617Ta85vNXO7X3uVpsFAKI/9Us4MWL7pDF51cTbfA55KH2BxJYh.jpeg',
@@ -80,7 +80,7 @@ describe('createIngredient()', () => {
       expect(ingredient.active_manifest).toEqual(
         'contentauth:urn:uuid:699750af-e07b-4c45-9d24-a131442111b8',
       );
-      expect(ingredient.manifest_data?.format).toEqual('c2pa');
+      expect(ingredient.manifest_data?.format).toEqual('application/c2pa');
       expect(ingredient.manifest_data?.identifier).toMatch(identifierMatcher);
       expect(ingredient.hash).toEqual(
         'sha384-sVINtK1arjyLR617Ta85vNXO7X3uVpsFAKI/9Us4MWL7pDF51cTbfA55KH2BxJYh.jpg',
