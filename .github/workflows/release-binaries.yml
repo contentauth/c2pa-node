@@ -1,11 +1,9 @@
 name: Build release binaries
 
 on:
-  push:
-    branches:
-      - build-binaries
   release:
-    types: ['created']
+    types:
+      - published
 
 jobs:
   build-binaries:
