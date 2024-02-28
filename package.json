@@ -4,7 +4,7 @@
     "type": "git",
     "url": "https://github.com/contentauth/c2pa-node.git"
   },
-  "version": "0.5.14",
+  "version": "0.5.15",
   "description": "Node.js bindings for C2PA",
   "main": "dist/js-src/index.js",
   "types": "dist/js-src/index.d.ts",
