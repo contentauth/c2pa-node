@@ -1,5 +1,11 @@
 # c2pa-node
 
+## 0.5.15
+
+### Patch Changes
+
+- 66d27a0: Update publish workflow since release trigger wasn't getting called
+
 ## 0.5.14
 
 ### Patch Changes
