@@ -58,8 +58,6 @@ jobs:
     name: Build binaries for ${{matrix.target}}
     runs-on: ${{matrix.runner}}
     env:
-      OWNER: dkozma
-      REPO: c2pa-node
       PUBLISHED_VERSION: ${{ fromJson(needs.release.outputs.publishedPackages)[0].version }}
     strategy:
       fail-fast: false
@@ -157,12 +155,12 @@ jobs:
       - uses: octokit/request-action@v2.x
         id: get-release-info
         with:
-          route: GET /repos/{owner}/{repo}/releases/tag/${tag}
-          owner: ${{ env.OWNER }}
-          repo: ${{ env.REPO }}
-          tag: ${{ env.PUBLISHED_VERSION }}
+          route: GET /repos/:owner/:repo/releases/tag/:tag
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          INPUT_OWNER: ${{ github.repository_owner }}
+          INPUT_REPO: ${{ github.repository }}
+          INPUT_TAG: ${{ env.PUBLISHED_VERSION }}
 
       - run: |
           echo '${{ steps.get-release-info.outputs.data }}'
@@ -186,5 +184,5 @@ jobs:
             -H "Authorization: Bearer ${{ env.GITHUB_TOKEN }}" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
             -H "Content-Type: application/zip" \
-            "https://uploads.github.com/repos/${{ env.OWNER }}/${{ env.REPO }}/releases/${{ env.PUBLISHED_VERSION }}/assets?name=${{ steps.package-artifact.outputs.archive }}" \
+            "https://uploads.github.com/repos/${{ github.repository_owner }}/${{ github.repository }}/releases/${{ env.PUBLISHED_VERSION }}/assets?name=${{ steps.package-artifact.outputs.archive }}" \
             --data-binary "@generated/${{ steps.package-artifact.outputs.archive }}"
