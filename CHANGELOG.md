@@ -1,5 +1,11 @@
 # c2pa-node
 
+## 0.5.16
+
+### Patch Changes
+
+- 3ec22a2: Fix release action
+
 ## 0.5.15
 
 ### Patch Changes
