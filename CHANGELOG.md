@@ -1,5 +1,11 @@
 # c2pa-node
 
+## 0.5.17
+
+### Patch Changes
+
+- 638d6ff: Move packages out of devDependencies to fix postinstall
+
 ## 0.5.16
 
 ### Patch Changes
