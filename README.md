@@ -64,10 +64,10 @@ $ pnpm add c2pa-node
 This command will download precompiled binaries for the following systems:
 - Linux x86_64
 - Linux aarch64 (ARM)
+- macOS aarch64 (Apple Silicon)
+- macOS x86_64 (Intel Mac)
 - Windows x86
 - Windows ARM
-
-**Note**: macOS will be coming as soon as we add signed builds.
 
 For all other platforms, you will need Rust installed on your system, as the `postinstall` step will attempt to build our Rust SDK into a native Node.js module on your machine.
 
