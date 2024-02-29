@@ -56,14 +56,17 @@ function getPlatform() {
     return 'aarch64-unknown-linux-gnu';
   } else if (arch === 'x64' && platform === 'linux') {
     return 'x86_64-unknown-linux-gnu';
-  } else if (arch === 'arm64' && platform === 'darwin') {
-    // TODO: Support macOS once we have signed builds
-    // return 'aarch64-apple-darwin';
-  } else if (arch === 'x64' && platform === 'darwin') {
-    // TODO: Support macOS once we have signed builds
-    // return 'x86_64-apple-darwin';
   } else if (platform === 'win32') {
     return 'x86_64-pc-windows-msvc';
+  }
+
+  // TODO: Support macOS by default once we have signed builds
+  if (process.env.ENABLE_MAC_BUILDS) {
+    if (arch === 'arm64' && platform === 'darwin') {
+      return 'aarch64-apple-darwin';
+    } else if (arch === 'x64' && platform === 'darwin') {
+      return 'x86_64-apple-darwin';
+    }
   }
 
   console.log(
@@ -187,7 +190,11 @@ async function main() {
     return;
   }
 
-  if (await downloadBinary(appRoot)) {
+  if (process.env.SKIP_BINARY_DOWNLOAD) {
+    console.log(
+      'Skipping prebuilt binary download since SKIP_BINARY_DOWNLOAD is set',
+    );
+  } else if (await downloadBinary(appRoot)) {
     return;
   }
 

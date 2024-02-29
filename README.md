@@ -141,7 +141,7 @@ const c2pa = createC2pa();
 
 async function read(path, mimeType) {
   const buffer = await readFile(path);
-  const result = await c2pa.read({ buffer });
+  const result = await c2pa.read({ buffer, mimeType });
 
   if (result) {
     const { active_manifest, manifests, validation_status } = result;
@@ -151,7 +151,7 @@ async function read(path, mimeType) {
   }
 }
 
-read('my-c2pa-file.jpg', 'image/jpeg');
+await read('my-c2pa-file.jpg', 'image/jpeg');
 ```
 
 ### Creating a manifest
