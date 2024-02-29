@@ -1,5 +1,11 @@
 # c2pa-node
 
+## 0.5.18
+
+### Patch Changes
+
+- 0decbdc: Update archive filename
+
 ## 0.5.17
 
 ### Patch Changes
