@@ -31,7 +31,8 @@
     "download-test-certs": "node ./scripts/download-test-certs.js",
     "ci": "pnpm build && cargo test --release && jest",
     "changeset:publish": "changeset publish",
-    "release": "run-s build changeset:publish",
+    // "release": "run-s build changeset:publish",
+    "release": "echo 'running release'",
     "test": "cargo test && jest",
     "test:watch": "cargo test && jest --watch --runInBand --detectOpenHandles --forceExit",
     "clean": "rimraf dist generated target"
