@@ -1,5 +1,11 @@
 # c2pa-node
 
+## 0.5.19
+
+### Patch Changes
+
+- 5b4f3fd: Add macOS build support
+
 ## 0.5.18
 
 ### Patch Changes
