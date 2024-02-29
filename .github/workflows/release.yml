@@ -134,7 +134,7 @@ jobs:
         # This needs to be set so that this works on a Windows runner
         shell: bash
         env:
-          ARCHIVE_FILENAME: c2pa-node_${{matrix.target}}-${{ env.PUBLISHED_VERSION || 'dev' }}.zip
+          ARCHIVE_FILENAME: c2pa-node_${{matrix.target}}-v${{ env.PUBLISHED_VERSION || '-dev' }}.zip
         run: |
           cd generated
           7z a -tzip "${{ env.ARCHIVE_FILENAME }}" c2pa.node
