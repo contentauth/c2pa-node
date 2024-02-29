@@ -158,25 +158,21 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          {
-            echo "OUT<<RESPONSE_DATA"
-            curl -s -L \
-              -H 'Accept: application/vnd.github+json' \
-              -H 'Authorization: Bearer ${{ env.GITHUB_TOKEN }}' \
-              -H 'X-GitHub-Api-Version: 2022-11-28' \
-              https://api.github.com/repos/${{ github.repository }}/releases/tags/v${{ env.PUBLISHED_VERSION }}
-            echo "RESPONSE_DATA"
-          } >> "$GITHUB_OUTPUT"
+          echo "data=$(curl -s -L \
+            -H 'Accept: application/vnd.github+json' \
+            -H 'Authorization: Bearer ${{ env.GITHUB_TOKEN }}' \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            https://api.github.com/repos/${{ github.repository }}/releases/tags/v${{ env.PUBLISHED_VERSION }})"
 
-      - run: |
-          echo '${{ steps.get-release-info.outputs.data }}'
+      # - run: |
+      #     echo '${{ steps.get-release-info.outputs.data }}'
 
-      - id: release-id
-        run: |
-          echo 'id=${{ fromJson(steps.get-release-info.outputs.data).id }}' >> "$GITHUB_OUTPUT"
+      # - id: release-id
+      #   run: |
+      #     echo 'id=${{ fromJson(steps.get-release-info.outputs.data).id }}' >> "$GITHUB_OUTPUT"
 
-      - run: |
-          echo '${{steps.release-id.outputs.id}}'
+      # - run: |
+      #     echo '${{steps.release-id.outputs.id}}'
 
       - name: Upload release asset
         if: needs.release.outputs.published == 'true'
