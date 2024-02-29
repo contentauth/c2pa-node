@@ -176,5 +176,5 @@ jobs:
             -H "Authorization: Bearer ${{ env.GITHUB_TOKEN }}" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
             -H "Content-Type: application/zip" \
-            "https://uploads.github.com/repos/${{ github.repository }}/releases/${{ env.PUBLISHED_VERSION }}/assets?name=${{ steps.get-release-id.outputs.id }}" \
+            "https://uploads.github.com/repos/${{ github.repository }}/releases/${{ steps.get-release-id.outputs.id }}/assets?name=${{ steps.package-artifact.outputs.archive }}" \
             --data-binary "@generated/${{ steps.package-artifact.outputs.archive }}"
