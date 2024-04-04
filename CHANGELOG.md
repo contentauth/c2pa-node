@@ -1,5 +1,11 @@
 # c2pa-node
 
+## 0.5.20
+
+### Patch Changes
+
+- c64c520: Update Rust dependencies (c2pa-rs v0.31.2)
+
 ## 0.5.19
 
 ### Patch Changes
