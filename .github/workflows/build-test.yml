@@ -11,6 +11,8 @@ jobs:
   build-test:
     name: Build and test
     runs-on: ubuntu-latest
+    env:
+      COREPACK_ENABLE_STRICT: 0
     steps:
       - uses: actions/checkout@v4
 
