@@ -27,7 +27,7 @@ container for binary assets (like thumbnails)
 
 #### Defined in
 
-[types.d.ts:282](https://github.com/contentauth/c2pa-node/blob/bb7ea1e/js-src/types.d.ts#L282)
+[types.d.ts:282](https://github.com/contentauth/c2pa-node/blob/83ab39f/js-src/types.d.ts#L282)
 
 ___
 
@@ -41,4 +41,4 @@ ___
 
 #### Defined in
 
-[types.d.ts:283](https://github.com/contentauth/c2pa-node/blob/bb7ea1e/js-src/types.d.ts#L283)
+[types.d.ts:283](https://github.com/contentauth/c2pa-node/blob/83ab39f/js-src/types.d.ts#L283)
