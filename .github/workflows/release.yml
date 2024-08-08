@@ -14,6 +14,8 @@ jobs:
     outputs:
       published: ${{ steps.changesets.outputs.published }}
       publishedPackages: ${{ steps.changesets.outputs.publishedPackages }}
+    env:
+      COREPACK_ENABLE_STRICT: 0
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
@@ -56,6 +58,7 @@ jobs:
     runs-on: ${{matrix.runner}}
     env:
       PUBLISHED_VERSION: ${{ fromJson(needs.release.outputs.publishedPackages)[0].version }}
+      COREPACK_ENABLE_STRICT: 0
     strategy:
       fail-fast: false
       matrix:
