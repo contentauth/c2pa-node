@@ -274,7 +274,7 @@ sign(asset, manifest);
 
 #### Local signing
 
-If you have a signing certificate and key, you can sign locally using a local signer.  This is fine during development, but don't do it production because it exposes these sensitive files to potential attackers. Instead use a hardware security module (HSM) and optionally a Key Management Service (KMS) to access them; for example as show in the [C2PA Python Example](https://github.com/contentauth/c2pa-python-example).
+If you have a signing certificate and key, you can sign locally using a local signer.  This is fine during development, but doing it in production may be insecure. Instead use a Key Management Service (KMS) or a hardware security module (HSM) to access them; for example as show in the [C2PA Python Example](https://github.com/contentauth/c2pa-python-example).
 
 For example:
 
