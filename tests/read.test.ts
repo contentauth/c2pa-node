@@ -12,13 +12,6 @@ import { C2pa, createC2pa } from '../dist/js-src/index';
 import type { ManifestAssertion } from '../dist/js-src/types';
 import { RemoteSigner, SignInput } from '../js-src';
 
-/**
- * To run the tests locally with latest code for Rust and JS/TS, run:
- * `pnpm build`
- *
- *  To run the tests locally with latest code for JS/TS only, run:
- * `pnpm jest`
- */
 describe('read()', () => {
   let c2pa: C2pa;
 
