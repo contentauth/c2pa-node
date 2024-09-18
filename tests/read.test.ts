@@ -211,4 +211,8 @@ describe('read()', () => {
         'asset hash error, name: jumbf manifest, error: hash verification( Hashes do not match )',
     });
   });
+
+  test('extract custom model fields from manifest for a JPG image', async () => {
+    expect(0).toEqual(1); // fail
+  });
 });
