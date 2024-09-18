@@ -220,7 +220,7 @@ describe('read()', () => {
   });
 
   // CAI-6506
-  test.only('extract custom model fields from manifest for a JPG image', async () => {
+  test('extract custom model fields from manifest for a JPG image', async () => {
     const fixture = await readFile('tests/fixtures/ingredient-with-data-types.jpg');
     const result = await c2pa.read({ buffer: fixture, mimeType: 'image/jpeg' });
     expect(result?.active_manifest?.ingredients[0].data_types).toEqual([{ type:'c2pa.types.model'}]);
