@@ -4,7 +4,7 @@
 
 ## Hierarchy
 
-- `Omit`<[`ManifestStore`](types.ManifestStore.md), ``"active_manifest"``\>
+- `Omit`\<[`ManifestStore`](types.ManifestStore.md), ``"active_manifest"``\>
 
   ↳ **`ResolvedManifestStore`**
 
@@ -23,14 +23,14 @@
 
 #### Defined in
 
-[bindings.ts:59](https://github.com/contentauth/c2pa-node/blob/bb7ea1e/js-src/bindings.ts#L59)
+[bindings.ts:59](https://github.com/contentauth/c2pa-node/blob/c6d104c/js-src/bindings.ts#L59)
 
 ___
 
 ### manifests
 
-• **manifests**: `Record`<`string`, [`ResolvedManifest`](ResolvedManifest.md)\>
+• **manifests**: `Record`\<`string`, [`ResolvedManifest`](ResolvedManifest.md)\>
 
 #### Defined in
 
-[bindings.ts:60](https://github.com/contentauth/c2pa-node/blob/bb7ea1e/js-src/bindings.ts#L60)
+[bindings.ts:60](https://github.com/contentauth/c2pa-node/blob/c6d104c/js-src/bindings.ts#L60)

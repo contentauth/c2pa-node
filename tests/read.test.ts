@@ -12,6 +12,13 @@ import { C2pa, createC2pa } from '../dist/js-src/index';
 import type { ManifestAssertion } from '../dist/js-src/types';
 import { RemoteSigner, SignInput } from '../js-src';
 
+/**
+ * To run the tests locally with latest code for Rust and JS/TS, run:
+ * `pnpm build`
+ *
+ *  To run the tests locally with latest code for JS/TS only, run:
+ * `pnpm jest`
+ */
 describe('read()', () => {
   let c2pa: C2pa;
 
@@ -212,7 +219,10 @@ describe('read()', () => {
     });
   });
 
-  test('extract custom model fields from manifest for a JPG image', async () => {
-    expect(0).toEqual(1); // fail
+  // CAI-6506
+  test.only('extract custom model fields from manifest for a JPG image', async () => {
+    const fixture = await readFile('tests/fixtures/ingredient-with-data-types.jpg');
+    const result = await c2pa.read({ buffer: fixture, mimeType: 'image/jpeg' });
+    expect(result?.active_manifest?.ingredients[0].data_types).toEqual([{ type:'c2pa.types.model'}]);
   });
 });
