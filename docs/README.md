@@ -61,27 +61,27 @@ An asset that can either be in memory or on disk
 
 #### Defined in
 
-[bindings.ts:154](https://github.com/contentauth/c2pa-node/blob/83ab39f/js-src/bindings.ts#L154)
+[bindings.ts:154](https://github.com/contentauth/c2pa-node/blob/0f9f00a/js-src/bindings.ts#L154)
 
 ___
 
 ### BaseManifestDefinition
 
-Ƭ **BaseManifestDefinition**: `Omit`<`ManifestDefinition`, ``"thumbnail"`` \| ``"ingredients"``\> & `RequiredFields`
+Ƭ **BaseManifestDefinition**: `Omit`\<`ManifestDefinition`, ``"thumbnail"`` \| ``"ingredients"``\> & `RequiredFields`
 
 #### Defined in
 
-[lib/manifestBuilder.ts:21](https://github.com/contentauth/c2pa-node/blob/83ab39f/js-src/lib/manifestBuilder.ts#L21)
+[lib/manifestBuilder.ts:21](https://github.com/contentauth/c2pa-node/blob/0f9f00a/js-src/lib/manifestBuilder.ts#L21)
 
 ___
 
 ### C2pa
 
-Ƭ **C2pa**: `ReturnType`<typeof `createSign`\> & { `createIngredient`: `ReturnType`<typeof `createIngredientFunction`\> ; `read`: typeof `read`  }
+Ƭ **C2pa**: `ReturnType`\<typeof `createSign`\> & \{ `createIngredient`: `ReturnType`\<typeof `createIngredientFunction`\> ; `read`: typeof `read`  }
 
 #### Defined in
 
-[index.ts:28](https://github.com/contentauth/c2pa-node/blob/83ab39f/js-src/index.ts#L28)
+[index.ts:28](https://github.com/contentauth/c2pa-node/blob/0f9f00a/js-src/index.ts#L28)
 
 ___
 
@@ -99,7 +99,7 @@ ___
 
 #### Defined in
 
-[index.ts:18](https://github.com/contentauth/c2pa-node/blob/83ab39f/js-src/index.ts#L18)
+[index.ts:18](https://github.com/contentauth/c2pa-node/blob/0f9f00a/js-src/index.ts#L18)
 
 ___
 
@@ -109,23 +109,23 @@ ___
 
 #### Defined in
 
-[lib/hash.ts:17](https://github.com/contentauth/c2pa-node/blob/83ab39f/js-src/lib/hash.ts#L17)
+[lib/hash.ts:17](https://github.com/contentauth/c2pa-node/blob/0f9f00a/js-src/lib/hash.ts#L17)
 
 ___
 
 ### IngredientResourceStore
 
-Ƭ **IngredientResourceStore**: `Record`<`string`, `Buffer`\>
+Ƭ **IngredientResourceStore**: `Record`\<`string`, `Buffer`\>
 
 #### Defined in
 
-[bindings.ts:353](https://github.com/contentauth/c2pa-node/blob/83ab39f/js-src/bindings.ts#L353)
+[bindings.ts:353](https://github.com/contentauth/c2pa-node/blob/0f9f00a/js-src/bindings.ts#L353)
 
 ___
 
 ### SignOutput
 
-Ƭ **SignOutput**<`AssetType`\>: `AssetType` extends [`BufferAsset`](interfaces/BufferAsset.md) ? `SignOutputData`<[`BufferAsset`](interfaces/BufferAsset.md)\> : `AssetType` extends [`FileAsset`](interfaces/FileAsset.md) ? `SignOutputData`<[`FileAsset`](interfaces/FileAsset.md)\> : `never`
+Ƭ **SignOutput**\<`AssetType`\>: `AssetType` extends [`BufferAsset`](interfaces/BufferAsset.md) ? `SignOutputData`\<[`BufferAsset`](interfaces/BufferAsset.md)\> : `AssetType` extends [`FileAsset`](interfaces/FileAsset.md) ? `SignOutputData`\<[`FileAsset`](interfaces/FileAsset.md)\> : `never`
 
 #### Type parameters
 
@@ -135,13 +135,13 @@ ___
 
 #### Defined in
 
-[bindings.ts:225](https://github.com/contentauth/c2pa-node/blob/83ab39f/js-src/bindings.ts#L225)
+[bindings.ts:225](https://github.com/contentauth/c2pa-node/blob/0f9f00a/js-src/bindings.ts#L225)
 
 ___
 
 ### SignProps
 
-Ƭ **SignProps**<`AssetType`\>: `Object`
+Ƭ **SignProps**\<`AssetType`\>: `Object`
 
 #### Type parameters
 
@@ -161,7 +161,7 @@ ___
 
 #### Defined in
 
-[bindings.ts:201](https://github.com/contentauth/c2pa-node/blob/83ab39f/js-src/bindings.ts#L201)
+[bindings.ts:201](https://github.com/contentauth/c2pa-node/blob/0f9f00a/js-src/bindings.ts#L201)
 
 ___
 
@@ -171,7 +171,7 @@ ___
 
 #### Defined in
 
-[lib/signer.ts:50](https://github.com/contentauth/c2pa-node/blob/83ab39f/js-src/lib/signer.ts#L50)
+[lib/signer.ts:50](https://github.com/contentauth/c2pa-node/blob/0f9f00a/js-src/lib/signer.ts#L50)
 
 ## Functions
 
@@ -193,13 +193,13 @@ Creates an instance of the SDK that encompasses a set of global options
 
 #### Defined in
 
-[index.ts:38](https://github.com/contentauth/c2pa-node/blob/83ab39f/js-src/index.ts#L38)
+[index.ts:38](https://github.com/contentauth/c2pa-node/blob/0f9f00a/js-src/index.ts#L38)
 
 ___
 
 ### createTestSigner
 
-▸ **createTestSigner**(`«destructured»?`): `Promise`<[`LocalSigner`](interfaces/LocalSigner.md)\>
+▸ **createTestSigner**(`«destructured»?`): `Promise`\<[`LocalSigner`](interfaces/LocalSigner.md)\>
 
 #### Parameters
 
@@ -209,8 +209,8 @@ ___
 
 #### Returns
 
-`Promise`<[`LocalSigner`](interfaces/LocalSigner.md)\>
+`Promise`\<[`LocalSigner`](interfaces/LocalSigner.md)\>
 
 #### Defined in
 
-[lib/signer.ts:64](https://github.com/contentauth/c2pa-node/blob/83ab39f/js-src/lib/signer.ts#L64)
+[lib/signer.ts:64](https://github.com/contentauth/c2pa-node/blob/0f9f00a/js-src/lib/signer.ts#L64)

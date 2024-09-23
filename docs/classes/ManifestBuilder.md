@@ -42,7 +42,7 @@
 
 #### Defined in
 
-[lib/manifestBuilder.ts:41](https://github.com/contentauth/c2pa-node/blob/83ab39f/js-src/lib/manifestBuilder.ts#L41)
+[lib/manifestBuilder.ts:41](https://github.com/contentauth/c2pa-node/blob/0f9f00a/js-src/lib/manifestBuilder.ts#L41)
 
 ## Properties
 
@@ -52,27 +52,27 @@
 
 #### Defined in
 
-[lib/manifestBuilder.ts:35](https://github.com/contentauth/c2pa-node/blob/83ab39f/js-src/lib/manifestBuilder.ts#L35)
+[lib/manifestBuilder.ts:35](https://github.com/contentauth/c2pa-node/blob/0f9f00a/js-src/lib/manifestBuilder.ts#L35)
 
 ___
 
 ### #ingredients
 
-• `Private` **#ingredients**: `Record`<`string`, [`StorableIngredient`](../interfaces/StorableIngredient.md)\> = `{}`
+• `Private` **#ingredients**: `Record`\<`string`, [`StorableIngredient`](../interfaces/StorableIngredient.md)\> = `{}`
 
 #### Defined in
 
-[lib/manifestBuilder.ts:39](https://github.com/contentauth/c2pa-node/blob/83ab39f/js-src/lib/manifestBuilder.ts#L39)
+[lib/manifestBuilder.ts:39](https://github.com/contentauth/c2pa-node/blob/0f9f00a/js-src/lib/manifestBuilder.ts#L39)
 
 ___
 
 ### #resourceStore
 
-• `Private` **#resourceStore**: `Record`<`string`, `Buffer`\> = `{}`
+• `Private` **#resourceStore**: `Record`\<`string`, `Buffer`\> = `{}`
 
 #### Defined in
 
-[lib/manifestBuilder.ts:37](https://github.com/contentauth/c2pa-node/blob/83ab39f/js-src/lib/manifestBuilder.ts#L37)
+[lib/manifestBuilder.ts:37](https://github.com/contentauth/c2pa-node/blob/0f9f00a/js-src/lib/manifestBuilder.ts#L37)
 
 ___
 
@@ -82,7 +82,7 @@ ___
 
 #### Defined in
 
-[lib/manifestBuilder.ts:33](https://github.com/contentauth/c2pa-node/blob/83ab39f/js-src/lib/manifestBuilder.ts#L33)
+[lib/manifestBuilder.ts:33](https://github.com/contentauth/c2pa-node/blob/0f9f00a/js-src/lib/manifestBuilder.ts#L33)
 
 ## Accessors
 
@@ -96,21 +96,21 @@ ___
 
 #### Defined in
 
-[lib/manifestBuilder.ts:105](https://github.com/contentauth/c2pa-node/blob/83ab39f/js-src/lib/manifestBuilder.ts#L105)
+[lib/manifestBuilder.ts:105](https://github.com/contentauth/c2pa-node/blob/0f9f00a/js-src/lib/manifestBuilder.ts#L105)
 
 ___
 
 ### sendableIngredients
 
-• `get` **sendableIngredients**(): { `ingredient`: `string` ; `resources`: [`IngredientResourceStore`](../README.md#ingredientresourcestore)  }[]
+• `get` **sendableIngredients**(): \{ `ingredient`: `string` ; `resources`: [`IngredientResourceStore`](../README.md#ingredientresourcestore)  }[]
 
 #### Returns
 
-{ `ingredient`: `string` ; `resources`: [`IngredientResourceStore`](../README.md#ingredientresourcestore)  }[]
+\{ `ingredient`: `string` ; `resources`: [`IngredientResourceStore`](../README.md#ingredientresourcestore)  }[]
 
 #### Defined in
 
-[lib/manifestBuilder.ts:109](https://github.com/contentauth/c2pa-node/blob/83ab39f/js-src/lib/manifestBuilder.ts#L109)
+[lib/manifestBuilder.ts:109](https://github.com/contentauth/c2pa-node/blob/0f9f00a/js-src/lib/manifestBuilder.ts#L109)
 
 ## Methods
 
@@ -130,13 +130,13 @@ ___
 
 #### Defined in
 
-[lib/manifestBuilder.ts:72](https://github.com/contentauth/c2pa-node/blob/83ab39f/js-src/lib/manifestBuilder.ts#L72)
+[lib/manifestBuilder.ts:72](https://github.com/contentauth/c2pa-node/blob/0f9f00a/js-src/lib/manifestBuilder.ts#L72)
 
 ___
 
 ### addThumbnail
 
-▸ **addThumbnail**(`thumbnail`): `Promise`<`void`\>
+▸ **addThumbnail**(`thumbnail`): `Promise`\<`void`\>
 
 #### Parameters
 
@@ -146,11 +146,11 @@ ___
 
 #### Returns
 
-`Promise`<`void`\>
+`Promise`\<`void`\>
 
 #### Defined in
 
-[lib/manifestBuilder.ts:86](https://github.com/contentauth/c2pa-node/blob/83ab39f/js-src/lib/manifestBuilder.ts#L86)
+[lib/manifestBuilder.ts:86](https://github.com/contentauth/c2pa-node/blob/0f9f00a/js-src/lib/manifestBuilder.ts#L86)
 
 ___
 
@@ -164,13 +164,13 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `ingredients` | { `ingredient`: `string` ; `resources`: [`IngredientResourceStore`](../README.md#ingredientresourcestore)  }[] |
+| `ingredients` | \{ `ingredient`: `string` ; `resources`: [`IngredientResourceStore`](../README.md#ingredientresourcestore)  }[] |
 | `manifest` | `string` |
-| `resourceStore` | `Record`<`string`, `Buffer`\> |
+| `resourceStore` | `Record`\<`string`, `Buffer`\> |
 
 #### Defined in
 
-[lib/manifestBuilder.ts:118](https://github.com/contentauth/c2pa-node/blob/83ab39f/js-src/lib/manifestBuilder.ts#L118)
+[lib/manifestBuilder.ts:118](https://github.com/contentauth/c2pa-node/blob/0f9f00a/js-src/lib/manifestBuilder.ts#L118)
 
 ___
 
@@ -190,4 +190,4 @@ ___
 
 #### Defined in
 
-[lib/manifestBuilder.ts:95](https://github.com/contentauth/c2pa-node/blob/83ab39f/js-src/lib/manifestBuilder.ts#L95)
+[lib/manifestBuilder.ts:95](https://github.com/contentauth/c2pa-node/blob/0f9f00a/js-src/lib/manifestBuilder.ts#L95)

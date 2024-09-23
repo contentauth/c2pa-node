@@ -117,6 +117,12 @@ After installation, run the test suite by entering this command:
 $ pnpm test
 ```
 
+In case the tests don't run, you may need to run a build first:
+
+```sh
+$ pnpm build
+```
+
 ## Usage
 
 ### Creating a c2pa object

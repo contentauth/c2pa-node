@@ -211,4 +211,11 @@ describe('read()', () => {
         'asset hash error, name: jumbf manifest, error: hash verification( Hashes do not match )',
     });
   });
+
+  // CAI-6506
+  test('extract custom model data_type from manifest for a JPG image', async () => {
+    const fixture = await readFile('tests/fixtures/ingredient-with-data-types.jpg');
+    const result = await c2pa.read({ buffer: fixture, mimeType: 'image/jpeg' });
+    expect(result?.active_manifest?.ingredients[0].data_types).toEqual([{ type:'c2pa.types.model'}]);
+  });
 });
