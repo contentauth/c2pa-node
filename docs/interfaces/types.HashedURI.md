@@ -27,7 +27,7 @@ tagged cbor serialization
 
 #### Defined in
 
-[types.d.ts:247](https://github.com/contentauth/c2pa-node/blob/c6d104c/js-src/types.d.ts#L247)
+[types.d.ts:247](https://github.com/contentauth/c2pa-node/blob/0f9f00a/js-src/types.d.ts#L247)
 
 ___
 
@@ -37,7 +37,7 @@ ___
 
 #### Defined in
 
-[types.d.ts:248](https://github.com/contentauth/c2pa-node/blob/c6d104c/js-src/types.d.ts#L248)
+[types.d.ts:248](https://github.com/contentauth/c2pa-node/blob/0f9f00a/js-src/types.d.ts#L248)
 
 ___
 
@@ -47,4 +47,4 @@ ___
 
 #### Defined in
 
-[types.d.ts:249](https://github.com/contentauth/c2pa-node/blob/c6d104c/js-src/types.d.ts#L249)
+[types.d.ts:249](https://github.com/contentauth/c2pa-node/blob/0f9f00a/js-src/types.d.ts#L249)

@@ -14,10 +14,7 @@ crate-type = ["cdylib"]
 
 [dependencies]
 async-trait = "0.1.77"
-c2pa = { git = "https://github.com/contentauth/c2pa-rs", branch = "dyro/CAI-6506", features = [
-    "fetch_remote_manifests",
-    "file_io",
-] }
+c2pa = { version = "0.36.0", features = ["fetch_remote_manifests", "file_io"] }
 futures = "0.3"
 neon = { version = "1.0.0", default-features = false, features = [
     "futures",
