@@ -65,7 +65,7 @@
   "homepage": "https://github.com/contentauth/c2pa-node#readme",
   "dependencies": {
     "@changesets/cli": "^2.26.1",
-    "cargo-cp-artifact": "^0.1",
+    "cargo-cp-artifact": "^0.1.9",
     "chalk": "^4.1.2",
     "cli-progress": "^3.12.0",
     "mkdirp": "^3.0.1",
@@ -75,5 +75,6 @@
     "pretty-bytes": "^5.6.0",
     "sharp": "^0.33.2",
     "unzipper": "^0.10.14"
-  }
+  },
+  "packageManager": "pnpm@8.15.8+sha512.d1a029e1a447ad90bc96cd58b0fad486d2993d531856396f7babf2d83eb1823bb83c5a3d0fc18f675b2d10321d49eb161fece36fe8134aa5823ecd215feed392"
 }

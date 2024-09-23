@@ -9,8 +9,8 @@ dependencies:
     specifier: ^2.26.1
     version: 2.26.1
   cargo-cp-artifact:
-    specifier: ^0.1
-    version: 0.1.0
+    specifier: ^0.1.9
+    version: 0.1.9
   chalk:
     specifier: ^4.1.2
     version: 4.1.2
@@ -1659,8 +1659,8 @@ packages:
     resolution: {integrity: sha512-PCzRMei/vXjJyL5mJtzNiUCKP59dm8Apqc3PH8gJkMnMXZGox93RbE76jHsmLwmIo6/3nsYIpJtx0O7u5PqFuQ==}
     dev: true
 
-  /cargo-cp-artifact@0.1.0:
-    resolution: {integrity: sha512-29+tOXvPWghDESqMZMFGIEtmNCn1lbkLyUPIBLXs0qO4eYFcVnN73t4hqQ9Btye4aUQjabZQQPsUtxHE6AqzUg==}
+  /cargo-cp-artifact@0.1.9:
+    resolution: {integrity: sha512-6F+UYzTaGB+awsTXg0uSJA1/b/B3DDJzpKVRu0UmyI7DmNeaAl2RFHuTGIN6fEgpadRxoXGb7gbC1xo4C3IdyA==}
     hasBin: true
     dev: false
 
