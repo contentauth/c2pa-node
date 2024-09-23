@@ -1,5 +1,11 @@
 # c2pa-node
 
+## 0.5.21
+
+### Patch Changes
+
+- 03d2616: Update to latest c2pa-rs version
+
 ## 0.5.20
 
 ### Patch Changes
