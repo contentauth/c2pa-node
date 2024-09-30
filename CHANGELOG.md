@@ -1,5 +1,11 @@
 # c2pa-node
 
+## 0.5.22
+
+### Patch Changes
+
+- ae9d2ba: Set min engine version to Node 16.13.0
+
 ## 0.5.21
 
 ### Patch Changes
