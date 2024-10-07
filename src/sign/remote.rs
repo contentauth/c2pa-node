@@ -96,7 +96,6 @@ impl RemoteSigner {
                       // we catch the neon `Throw` error and map it to a cp2a_node::Error.
                       Err(err) => {
                           let err_message = err.as_value(&mut cx).to_string(&mut cx)?.value(&mut cx);
-
                           let final_err_message = format!("error in reserveSize fn: {err_message}");
                           Ok(Err(Error::RemoteReserveSize(
                             final_err_message
