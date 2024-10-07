@@ -8,7 +8,6 @@
 use async_trait::async_trait;
 use c2pa::Error::OtherError;
 use neon::prelude::*;
-use neon::result::Throw;
 use neon::types::buffer::TypedArray;
 use neon::types::JsBuffer;
 use std::sync::Arc;
@@ -16,7 +15,6 @@ use tokio::sync::oneshot;
 
 use crate::error::Error::RemoteSign;
 use crate::error::{Error, Result};
-use crate::error::as_js_error;
 
 pub(crate) struct RemoteSignerConfiguration {
     channel: Channel,
