@@ -8,6 +8,7 @@
 use async_trait::async_trait;
 use c2pa::Error::OtherError;
 use neon::prelude::*;
+use neon::result::Throw;
 use neon::types::buffer::TypedArray;
 use neon::types::JsBuffer;
 use std::sync::Arc;
@@ -15,6 +16,7 @@ use tokio::sync::oneshot;
 
 use crate::error::Error::RemoteSign;
 use crate::error::{Error, Result};
+use crate::error::as_js_error;
 
 pub(crate) struct RemoteSignerConfiguration {
     channel: Channel,
@@ -87,15 +89,30 @@ impl RemoteSigner {
                     .call_with(&cx)
                     .apply::<JsPromise, _>(&mut cx)?
                     .to_future(&mut cx, |mut cx, result| match result {
-                        Ok(value) => Ok(Ok(value
-                            .downcast_or_throw::<JsNumber, _>(&mut cx)?
-                            .value(&mut cx))),
-                        // call to JS provided `reserveSize` fn threw an error.
-                        // we catch the neon `Throw` error and map it to a cp2a_node::Error.
-                        Err(_) => Ok(Err(Error::RemoteReserveSize(
-                            "error thrown during reserveSize fn".to_string(),
-                        ))),
-                    })?;
+                      Ok(value) => {
+                          Ok(Ok(value
+                              .downcast_or_throw::<JsNumber, _>(&mut cx)?
+                              .value(&mut cx)))
+                      }
+                      // call to JS provided `reserveSize` fn threw an error.
+                      // we catch the neon `Throw` error and map it to a cp2a_node::Error.
+                      Err(err) => {
+                          /*
+                          // logs the error to the JS console (can be useful for debugging)
+                          let err = err.downcast_or_throw::<JsObject, _>(&mut cx)?;
+                          let console: Handle<JsObject> = cx.global("console")?;
+                          let log: Handle<JsFunction> = console.get(&mut cx, "log")?;
+                          log.call_with(&cx).arg(err).exec(&mut cx)?;
+                          // */
+
+                          let err_message = err.as_value(&mut cx).to_string(&mut cx)?.value(&mut cx);
+
+                          let final_err_message = format!("error in reserveSize fn: {err_message}");
+                          Ok(Err(Error::RemoteReserveSize(
+                            final_err_message
+                          )))
+                      }
+                  })?;
 
                 let _ = tx.send(reserve_size_fut);
 
