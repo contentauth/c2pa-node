@@ -95,14 +95,6 @@ impl RemoteSigner {
                       // call to JS provided `reserveSize` fn threw an error.
                       // we catch the neon `Throw` error and map it to a cp2a_node::Error.
                       Err(err) => {
-                          /*
-                          // logs the error to the JS console (can be useful for debugging)
-                          let err = err.downcast_or_throw::<JsObject, _>(&mut cx)?;
-                          let console: Handle<JsObject> = cx.global("console")?;
-                          let log: Handle<JsFunction> = console.get(&mut cx, "log")?;
-                          log.call_with(&cx).arg(err).exec(&mut cx)?;
-                          // */
-
                           let err_message = err.as_value(&mut cx).to_string(&mut cx)?.value(&mut cx);
 
                           let final_err_message = format!("error in reserveSize fn: {err_message}");
