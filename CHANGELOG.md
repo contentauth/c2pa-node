@@ -1,5 +1,11 @@
 # c2pa-node
 
+## 0.5.23
+
+### Patch Changes
+
+- ac902ff: Bubble up errors from Rust
+
 ## 0.5.22
 
 ### Patch Changes
