@@ -87,15 +87,21 @@ impl RemoteSigner {
                     .call_with(&cx)
                     .apply::<JsPromise, _>(&mut cx)?
                     .to_future(&mut cx, |mut cx, result| match result {
-                        Ok(value) => Ok(Ok(value
-                            .downcast_or_throw::<JsNumber, _>(&mut cx)?
-                            .value(&mut cx))),
-                        // call to JS provided `reserveSize` fn threw an error.
-                        // we catch the neon `Throw` error and map it to a cp2a_node::Error.
-                        Err(_) => Ok(Err(Error::RemoteReserveSize(
-                            "error thrown during reserveSize fn".to_string(),
-                        ))),
-                    })?;
+                      Ok(value) => {
+                          Ok(Ok(value
+                              .downcast_or_throw::<JsNumber, _>(&mut cx)?
+                              .value(&mut cx)))
+                      }
+                      // call to JS provided `reserveSize` fn threw an error.
+                      // we catch the neon `Throw` error and map it to a cp2a_node::Error.
+                      Err(err) => {
+                          let err_message = err.as_value(&mut cx).to_string(&mut cx)?.value(&mut cx);
+                          let final_err_message = format!("error in reserveSize fn: {err_message}");
+                          Ok(Err(Error::RemoteReserveSize(
+                            final_err_message
+                          )))
+                      }
+                  })?;
 
                 let _ = tx.send(reserve_size_fut);
 

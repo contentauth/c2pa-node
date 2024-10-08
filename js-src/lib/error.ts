@@ -27,6 +27,7 @@ export class SigningError extends Error {
   constructor(options?: ErrorOptions) {
     super(`Signing error`, options);
     this.name = this.constructor.name;
+    this.message = options?.cause?.toString() || "";
   }
 }
 

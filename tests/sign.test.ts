@@ -627,7 +627,7 @@ describe('sign()', () => {
           asset,
           manifest,
         });
-      }).rejects.toThrow(/Signing error/);
+      }).rejects.toThrow("RemoteReserveSize(\"error in reserveSize fn: Error: reserveSize\"): Fetching reserve size failed: error in reserveSize fn: Error: reserveSize");
     });
   });
 
@@ -657,6 +657,6 @@ describe('sign()', () => {
         asset,
         manifest,
       });
-    }).rejects.toThrow(/Signing error/);
+    }).rejects.toThrow("C2pa(OtherError(RemoteSign)): An error was thrown by RemoteSigner#sign");
   });
 });
