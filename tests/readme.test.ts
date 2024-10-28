@@ -17,7 +17,62 @@ import {
 } from '../dist/js-src/index';
 
 describe('readme examples', () => {
-  test('sign an asset', async () => {
+  test('instantiate', async () => {
+    const c2pa = createC2pa();
+    expect(c2pa).not.toBeNull();
+  });
+
+  test('read a manifest', async () => {
+    const c2pa = createC2pa();
+
+    async function read(path: string, mimeType: string) {
+      const buffer = await readFile(path);
+      const result = await c2pa.read({ buffer, mimeType });
+
+      if (result) {
+        const { active_manifest, manifests, validation_status } = result;
+        // console.log(active_manifest);
+        return active_manifest;
+      } else {
+        // console.log('No claim found');
+        return null;
+      }
+    }
+
+    const activeManifest = await read('tests/fixtures/CAICAI.jpg', 'image/jpeg');
+    expect(activeManifest).not.toBeNull();
+  });
+
+  test('build a manifest', async () => {
+    const manifest = new ManifestBuilder({
+      claim_generator: 'my-app/1.0.0',
+      format: 'image/jpeg',
+      title: 'node_test_manifest_builder.jpg',
+      assertions: [
+        {
+          label: 'c2pa.actions',
+          data: {
+            actions: [
+              {
+                action: 'c2pa.created',
+              },
+            ],
+          },
+        },
+        {
+          label: 'com.custom.my-assertion',
+          data: {
+            description: 'My custom test assertion',
+            version: '1.0.0',
+          },
+        },
+      ],
+    });
+
+    expect(manifest).not.toBeNull();
+  });
+
+  test('local signing of an asset file', async () => {
     // define the local signer
     async function createLocalSigner() : Promise<LocalSigner> {
       // reading the files here makes this signer async
