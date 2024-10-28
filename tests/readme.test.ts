@@ -18,12 +18,15 @@ import {
 
 describe('readme examples', () => {
   test('sign an asset', async () => {
+    // define the local signer
     async function createLocalSigner() : Promise<LocalSigner> {
+      // reading the files here makes this signer async
       const [certificate, privateKey] = await Promise.all([
         readFile('tests/fixtures/certs/es256.pub'),
         readFile('tests/fixtures/certs/es256.pem'),
       ]);
 
+      // signer config
       return {
         type: 'local',
         certificate,
@@ -33,9 +36,12 @@ describe('readme examples', () => {
       };
     }
 
+    // read the asset
     const buffer = await readFile('tests/fixtures/A.jpg');
+    // asset mimetype must match the asset type ebing read
     const asset: Asset = { buffer, mimeType: 'image/jpeg' };
 
+    // build a test manifest to add to the asset
     const manifest = new ManifestBuilder(
       {
         claim_generator: 'my-app/1.0.0',
@@ -64,20 +70,25 @@ describe('readme examples', () => {
       { vendor: 'cai' },
     );
 
+    // create the local async signer to use for signing
     const signer = await createLocalSigner();
+    // define c2pa here, so we'll reuse it for the reading of the signed asset
     const c2pa = createC2pa({
       signer,
     });
 
     async function sign(asset: Asset, manifest: ManifestBuilder) {
+      // use the defined local signer
       return await c2pa.sign({
         asset,
         manifest,
       });
     }
 
+    // sign the asset
     const { signedAsset } = await sign(asset, manifest);
 
+    // read the signet asset
     const result = await c2pa.read(signedAsset);
     const { active_manifest, manifests } = result!;
 
