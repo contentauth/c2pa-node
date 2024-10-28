@@ -39,8 +39,8 @@
   "author": "Dave Kozma <dkozma@adobe.com>",
   "license": "MIT",
   "devDependencies": {
-    "@types/jest": "^29.5.13",
-    "@types/node": "^20.16.5",
+    "@types/jest": "^29.5.14",
+    "@types/node": "^20.17.1",
     "@types/node-fetch": "^2.6.11",
     "@types/pixelmatch": "^5.2.6",
     "chokidar": "^3.6.0",
