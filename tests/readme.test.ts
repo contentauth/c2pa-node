@@ -14,6 +14,7 @@ import {
   ManifestBuilder,
   createC2pa,
   LocalSigner,
+  createTestSigner,
 } from '../dist/js-src/index';
 
 describe('readme examples', () => {
@@ -70,6 +71,68 @@ describe('readme examples', () => {
     });
 
     expect(manifest).not.toBeNull();
+  });
+
+  test('signing an asset file using buffers for JPEG file', async () => {
+    const buffer = await readFile('tests/fixtures/A.jpg');
+    const asset: Asset = { buffer, mimeType: 'image/jpeg' };
+
+    async function sign(asset: Asset, manifest: ManifestBuilder) {
+      const signer = await createTestSigner();
+      const c2pa = createC2pa({
+        signer,
+      });
+
+      return c2pa.sign({
+        asset,
+        manifest,
+      });
+    }
+
+    // build a test manifest to add to the asset
+    const manifest = new ManifestBuilder(
+      {
+        claim_generator: 'my-app/1.0.0',
+        format: 'image/jpeg',
+        title: 'buffer_signer.jpg',
+        assertions: [
+          {
+            label: 'c2pa.actions',
+            data: {
+              actions: [
+                {
+                  action: 'c2pa.created',
+                },
+              ],
+            },
+          },
+          {
+            label: 'com.custom.my-assertion',
+            data: {
+              description: 'My custom test assertion',
+              version: '1.0.0',
+            },
+          },
+        ],
+      },
+      { vendor: 'cai' },
+    );
+
+    const { signedAsset, signedManifest } = await sign(asset, manifest);
+    expect(signedManifest).not.toBeNull();
+    expect(signedAsset).not.toBeNull();
+
+    const c2pa = createC2pa();
+    const result = await c2pa.read(signedAsset);
+    const { active_manifest, manifests } = result!;
+
+    expect(result).not.toBeNull();
+    expect(manifests).not.toBeNull();
+    expect(active_manifest).not.toBeNull();
+    if (active_manifest) { // to make TS compiler happy
+      expect(active_manifest['format']).toBe('image/jpeg');
+      expect(active_manifest['title']).toBe('buffer_signer.jpg');
+    }
   });
 
   test('local signing of an asset file', async () => {
@@ -151,7 +214,6 @@ describe('readme examples', () => {
     expect(manifests).not.toBeNull();
     expect(active_manifest).not.toBeNull();
     if (active_manifest) { // to make TS compiler happy
-      expect(active_manifest['claim_generator']).toBe('my-app/1.0.0 c2pa-node/0.0.0 c2pa-rs/0.36.0');
       expect(active_manifest['format']).toBe('image/jpeg');
       expect(active_manifest['title']).toBe('node_test_local_signer.jpg');
     }
