@@ -17,7 +17,7 @@ import {
 } from '../dist/js-src/index';
 
 describe('readme examples', () => {
-  test('should sign an asset', async () => {
+  test('sign an asset', async () => {
     async function createLocalSigner() : Promise<LocalSigner> {
       const [certificate, privateKey] = await Promise.all([
         readFile('tests/fixtures/certs/es256.pub'),
