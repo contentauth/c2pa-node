@@ -17,7 +17,7 @@
 
 #### Defined in
 
-[bindings.ts:356](https://github.com/contentauth/c2pa-node/blob/87f454b/js-src/bindings.ts#L356)
+[bindings.ts:356](https://github.com/contentauth/c2pa-node/blob/540117b/js-src/bindings.ts#L356)
 
 ___
 
@@ -27,4 +27,4 @@ ___
 
 #### Defined in
 
-[bindings.ts:357](https://github.com/contentauth/c2pa-node/blob/87f454b/js-src/bindings.ts#L357)
+[bindings.ts:357](https://github.com/contentauth/c2pa-node/blob/540117b/js-src/bindings.ts#L357)
