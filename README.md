@@ -455,8 +455,6 @@ function createRemoteSigner() {
 }
 
 async function sign(asset, manifest) {
-  const buffer = await readFile('to-be-signed.jpg');
-  const asset: Asset = { buffer, mimeType: 'image/jpeg' };
   const signer = createRemoteSigner();
   const c2pa = createC2pa({
     signer,
@@ -468,12 +466,42 @@ async function sign(asset, manifest) {
   });
 }
 
-sign(asset, manifest);
+const buffer = await readFile('to-be-signed.jpg');
+const asset: Asset = { buffer, mimeType: 'image/jpeg' };
+
+const manifest = new ManifestBuilder(
+  {
+    claim_generator: 'my-app/1.0.0',
+    format: 'image/jpeg',
+    title: 'buffer_signer.jpg',
+    assertions: [
+      {
+        label: 'c2pa.actions',
+        data: {
+          actions: [
+            {
+              action: 'c2pa.created',
+            },
+          ],
+        },
+      },
+      {
+        label: 'com.custom.my-assertion',
+        data: {
+          description: 'My custom test assertion',
+          version: '1.0.0',
+        },
+      },
+    ],
+    },
+  { vendor: 'cai' },
+);
+
+await sign(asset, manifest);
 ```
 
 ## API documentation
 
 For the API documentation, see the [`/docs/` directory](https://github.com/contentauth/c2pa-node/blob/main/docs/README.md).
 
-**WARNING**: The API is subject to change in this early prerelease library.  
-
+**WARNING**: The API is subject to change in this early prerelease library.
