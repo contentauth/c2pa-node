@@ -36,8 +36,8 @@ Contents:
 ### Prerequisites
 
 You must install:
-- A [supported version of Node](https://github.com/neon-bindings/neon#platform-support).
-- [Rust](https://www.rust-lang.org/tools/install) 
+- A [supported version of Node](https://github.com/neon-bindings/neon#platform-support);
+- [Rust](https://www.rust-lang.org/tools/install).
 
 If you need to manage multiple versions of Node on your machine, use a tool such as [nvm](https://github.com/nvm-sh/nvm).
 
@@ -62,9 +62,10 @@ $ pnpm add c2pa-node
 ```
 
 This command will download precompiled binaries for the following systems:
+
 - Linux x86_64
-- Linux aarch64 (ARM)
-- macOS aarch64 (Apple Silicon)
+- Linux arch64 (ARM)
+- macOS arch64 (Apple Silicon)
 - macOS x86_64 (Intel Mac)
 - Windows x86
 - Windows ARM
@@ -131,7 +132,6 @@ Instantiate a `c2pa` object by using [`createC2pa()`](https://github.com/content
 
 ```ts
 import { createC2pa } from 'c2pa-node';
-
 const c2pa = createC2pa();
 ```
 
@@ -231,9 +231,41 @@ If you have an asset file's data loaded into memory, you can sign the the asset 
 import { readFile } from 'node:fs/promises';
 import { createC2pa, createTestSigner } from 'c2pa-node';
 
+// read an asset into a buffer
+const buffer = await readFile('to-be-signed.jpg');
+const asset: Asset = { buffer, mimeType: 'image/jpeg' };
+
+// build a manifest to use for signing
+const manifest = new ManifestBuilder(
+  {
+    claim_generator: 'my-app/1.0.0',
+    format: 'image/jpeg',
+    title: 'buffer_signer.jpg',
+    assertions: [
+      {
+        label: 'c2pa.actions',
+        data: {
+          actions: [
+            {
+              action: 'c2pa.created',
+            },
+          ],
+        },
+      },
+      {
+        label: 'com.custom.my-assertion',
+        data: {
+          description: 'My custom test assertion',
+          version: '1.0.0',
+        },
+      },
+    ],
+    },
+  { vendor: 'cai' },
+);
+
+// create a signing function
 async function sign(asset, manifest) {
-  const buffer = await readFile('to-be-signed.jpg');
-  const asset: Asset = { buffer, mimeType: 'image/jpeg' };
   const signer = await createTestSigner();
   const c2pa = createC2pa({
     signer,
@@ -245,7 +277,8 @@ async function sign(asset, manifest) {
   });
 }
 
-sign(asset, manifest);
+// sign
+await sign(asset, manifest);
 ```
 
 #### Signing files
@@ -256,11 +289,15 @@ To avoid loading the entire asset into memory (or for file types other than JPEG
 import { resolve } from 'node:path';
 import { createC2pa, createTestSigner } from 'c2pa-node';
 
+// get the asset full path
+const asset = {
+  path: resolve('to-be-signed.jpg'),
+};
+// define a location where to place the signed asset
+const outputPath = resolve('signed.jpg');
+
+// create a signing function
 async function sign(asset, manifest) {
-  const asset = {
-    path: resolve('to-be-signed.jpg'),
-  };
-  const outputPath = resolve('signed.jpg');
   const signer = await createTestSigner();
   const c2pa = createC2pa({
     signer,
@@ -275,7 +312,37 @@ async function sign(asset, manifest) {
   });
 }
 
-sign(asset, manifest);
+// build a manifest to use for signing
+const manifest = new ManifestBuilder(
+  {
+    claim_generator: 'my-app/1.0.0',
+    format: 'image/jpeg',
+    title: 'buffer_signer.jpg',
+    assertions: [
+      {
+        label: 'c2pa.actions',
+        data: {
+          actions: [
+            {
+              action: 'c2pa.created',
+            },
+          ],
+        },
+      },
+      {
+        label: 'com.custom.my-assertion',
+        data: {
+          description: 'My custom test assertion',
+          version: '1.0.0',
+        },
+      },
+    ],
+    },
+  { vendor: 'cai' },
+);
+
+// sign
+await sign(asset, manifest);
 ```
 
 #### Local signing
@@ -288,6 +355,7 @@ For example:
 import { readFile } from 'node:fs/promises';
 import { SigningAlgorithm } from 'c2pa-node';
 
+// create a local signer
 async function createLocalSigner() {
   const [certificate, privateKey] = await Promise.all([
     readFile('tests/fixtures/certs/es256.pem'),
@@ -303,9 +371,13 @@ async function createLocalSigner() {
   };
 }
 
+// read the asset
+const buffer = await readFile('to-be-signed.jpg');
+// asset mimetype must match the asset type ebing read
+const asset: Asset = { buffer, mimeType: 'image/jpeg' };
+
+// create a signing function
 async function sign(asset, manifest) {
-  const buffer = await readFile('to-be-signed.jpg');
-  const asset: Asset = { buffer, mimeType: 'image/jpeg' };
   const signer = await createLocalSigner();
   const c2pa = createC2pa({
     signer,
@@ -317,7 +389,37 @@ async function sign(asset, manifest) {
   });
 }
 
-sign(asset, manifest);
+// build a manifest to use for signing
+const manifest = new ManifestBuilder(
+  {
+    claim_generator: 'my-app/1.0.0',
+    format: 'image/jpeg',
+    title: 'buffer_signer.jpg',
+    assertions: [
+      {
+        label: 'c2pa.actions',
+        data: {
+          actions: [
+            {
+              action: 'c2pa.created',
+            },
+          ],
+        },
+      },
+      {
+        label: 'com.custom.my-assertion',
+        data: {
+          description: 'My custom test assertion',
+          version: '1.0.0',
+        },
+      },
+    ],
+    },
+  { vendor: 'cai' },
+);
+
+// sign
+await sign(asset, manifest);
 ```
 
 #### Remote signing
