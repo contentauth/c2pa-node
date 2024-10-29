@@ -64,8 +64,8 @@ $ pnpm add c2pa-node
 This command will download precompiled binaries for the following systems:
 
 - Linux x86_64
-- Linux arch64 (ARM)
-- macOS arch64 (Apple Silicon)
+- Linux aarch64 (ARM)
+- macOS aarch64 (Apple Silicon)
 - macOS x86_64 (Intel Mac)
 - Windows x86
 - Windows ARM
