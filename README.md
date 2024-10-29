@@ -36,7 +36,7 @@ Contents:
 ### Prerequisites
 
 You must install:
-- A [supported version of Node](https://github.com/neon-bindings/neon#platform-support);
+- A [supported version of Node](https://github.com/neon-bindings/neon#platform-support).
 - [Rust](https://www.rust-lang.org/tools/install).
 
 If you need to manage multiple versions of Node on your machine, use a tool such as [nvm](https://github.com/nvm-sh/nvm).
