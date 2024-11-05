@@ -357,6 +357,7 @@ import { SigningAlgorithm } from 'c2pa-node';
 
 // create a local signer
 async function createLocalSigner() {
+  // make sure to update file paths to read from to match locations where you keep them
   const [certificate, privateKey] = await Promise.all([
     readFile('<ES256 certificate_file_location>.pem'),
     readFile('<ES256 certificate_file_location>.pub'),
