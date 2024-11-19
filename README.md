@@ -1,35 +1,10 @@
 # C2PA Node.js
 
 The [c2pa-node](https://github.com/contentauth/c2pa-node) repository implements a Node.js API that can:
-- Read and validate C2PA data from media files in [supported formats](https://opensource.contentauthenticity.org/docs/rust-sdk/#supported-file-formats).
-- Add signed manifests to media files in [supported formats](https://opensource.contentauthenticity.org/docs/rust-sdk/#supported-file-formats).
+- Read and validate C2PA data from media files in [supported formats](https://github.com/contentauth/c2pa-rs/blob/main/docs/supported-formats.md).
+- Add signed manifests to media files in [supported formats](https://github.com/contentauth/c2pa-rs/blob/main/docs/supported-formats.md).
 
 **WARNING**: This is an early prerelease version of this library.  There may be bugs and unimplemented features, and the API is subject to change.
-
-<div style={{display: 'none'}}>
-
-Contents:
-
-- [C2PA Node.js](#c2pa-nodejs)
-  - [Installation](#installation)
-    - [Prerequisites](#prerequisites)
-    - [Installing for use in a client app](#installing-for-use-in-a-client-app)
-    - [Building custom binaries](#building-custom-binaries)
-    - [Installing for project contributions](#installing-for-project-contributions)
-    - [Testing](#testing)
-  - [Usage](#usage)
-    - [Creating a c2pa object](#creating-a-c2pa-object)
-    - [Reading a manifest](#reading-a-manifest)
-    - [Creating a manifest](#creating-a-manifest)
-    - [Adding an ingredient](#adding-an-ingredient)
-    - [Signing a manifest](#signing-a-manifest)
-      - [Signing buffers](#signing-buffers)
-      - [Signing files](#signing-files)
-      - [Local signing](#local-signing)
-      - [Remote signing](#remote-signing)
-  - [API documentation](#api-documentation)
-
-</div>
 
 ## Installation
 
@@ -70,30 +45,33 @@ This command will download precompiled binaries for the following systems:
 - Windows x86
 - Windows ARM
 
-For all other platforms, you will need Rust installed on your system, as the `postinstall` step will attempt to build our Rust SDK into a native Node.js module on your machine.
+All other platforms require building a custom binary as described below, since the `postinstall` step builds the Rust library into a native Node.js module on your machine.
 
 ### Building custom binaries
 
-For platforms or architectures that do not have a precompiled binaries or Rust tooling installed, you may need to build custom binaries. To pre-build a binary, [install the Rust toolchain](https://www.rust-lang.org/tools/install) and then run the following commands on the target system or VM:
+For platforms or architectures that do not have a precompiled binaries, you must pre-build a custom binary by following these steps:
 
-```sh
-$ cd c2pa-node
-$ pnpm install
-$ pnpm build:rust
-```
+1. [Install the Rust toolchain](https://www.rust-lang.org/tools/install).
+1. Run the following commands on the target system or VM:
+  ```sh
+  cd c2pa-node
+  pnpm install
+  pnpm build:rust
+  ```
+1. Copy the binary to a place that is accessible by your application (in this example, it is `/path/to/my/application/resources`):
+  ```sh
+  cd /path/to/my/application
+  mkdir resources
+  cp /path/to/c2pa-node/generated/c2pa.node resources/c2pa.node
+  ```
+1. Set the the `C2PA_LIBRARY_PATH` environment variable to the path to the `c2pa.node` module by entering these commands:
+  ```sh
+  export C2PA_LIBRARY_PATH=resources/c2pa.node
+  npm install c2pa-node
+  npm start
+  ```
 
-Then, you can copy the binary to a place that is accessible by your application (in this example, it is `/path/to/my/application/resources`) and set the path to the `c2pa.node` module via the `C2PA_LIBRARY_PATH` environment variable. Enter these commands:
-
-```sh
-$ cd /path/to/my/application
-$ mkdir resources
-$ cp /path/to/c2pa-node/generated/c2pa.node resources/c2pa.node
-$ export C2PA_LIBRARY_PATH=resources/c2pa.node
-$ npm install c2pa-node
-$ npm start
-```
-
-**Important:** `C2PA_LIBRARY_PATH` _must_ be set while both **installing** or **adding** c2pa-node to your app to avoid building the Rust code. It must _also_ be set while **running** your app so that it loads the bindings from the correct location.
+**Important:** `C2PA_LIBRARY_PATH` _must_ be set while both **installing** or **adding** `c2pa-node` to your app to avoid building the Rust code. It must _also_ be set while **running** your app so that it loads the bindings from the correct location.
 
 ### Installing for project contributions
 
