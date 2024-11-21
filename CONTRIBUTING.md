@@ -38,8 +38,6 @@ This will give us an opportunity to discuss API design and avoid duplicate effor
 
 ### Pull request titles
 
-The build process automatically adds a pull request (PR) to the [CHANGELOG](CHANGELOG.md) unless the title of the PR begins with `(IGNORE)`. 
-
 Titles of pull requests that target a long-lived branch such as _main_ or a release-specific branch should follow [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/#specification). This means that the first word of the pull request title should be one of the following:
 
   * `build`
