@@ -83,4 +83,3 @@ For a platform or architecture that does not have a precompiled binary, you must
   ```
 
 **Important:** `C2PA_LIBRARY_PATH` _must_ be set while both **installing** or **adding** `c2pa-node` to your app to avoid building the Rust code. It must _also_ be set while **running** your app so that it loads the bindings from the correct location.
-
