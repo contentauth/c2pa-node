@@ -1,14 +1,16 @@
 # C2PA Node.js
 
 The [c2pa-node](https://github.com/contentauth/c2pa-node) repository implements a Node.js API that can:
-- Read and validate C2PA data from media files in [supported formats](docs/supported-formats.md).
-- Add signed manifests to media files in [supported formats](./docs/supported-formats.md).
+- Read and validate C2PA data from media files in supported formats.
+- Add signed manifests to media files in supported formats.
 
 For more information on using the library in an application, see [Using the CAI Node library](docs/usage.md).
 
 **WARNING**: This is an early prerelease version of this library.  There may be bugs and unimplemented features, and the API is subject to change.
 
 <div style={{display: 'none'}}>
+
+For the best experience, read the docs on the [CAI Open Source SDK documentation website](https://opensource.contentauthenticity.org/docs/c2pa-node/).  Otherwise, additional documentation is available on GitHub:
 
 Additional documentation:
 - [Using the Node library](docs/usage.md)
