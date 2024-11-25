@@ -4,7 +4,7 @@ The [c2pa-node](https://github.com/contentauth/c2pa-node) repository implements 
 - Read and validate C2PA data from media files in [supported formats](https://github.com/contentauth/c2pa-rs/blob/main/docs/supported-formats.md).
 - Add signed manifests to media files in [supported formats](https://github.com/contentauth/c2pa-rs/blob/main/docs/supported-formats.md).
 
-For more information on using the library in an applicaiton, see [Using the CAI Node library](docs/usage.md).
+For more information on using the library in an application, see [Using the CAI Node library](docs/usage.md).
 
 **WARNING**: This is an early prerelease version of this library.  There may be bugs and unimplemented features, and the API is subject to change.
 
@@ -17,15 +17,15 @@ Additional documentation:
 
 </div>
 
-## Installation
+## Prerequisites
 
-### Prerequisites
-
-You must install:
+To use the C2PA Node library, you must install:
 - A [supported version of Node](https://github.com/neon-bindings/neon#platform-support).
 - [Rust](https://www.rust-lang.org/tools/install).
 
 If you need to manage multiple versions of Node on your machine, use a tool such as [nvm](https://github.com/nvm-sh/nvm).
+
+## Installation
 
 ### Installing for use in a client app
 
