@@ -14,6 +14,7 @@ For the best experience, read the docs on the [CAI Open Source SDK documentation
 
 Additional documentation:
 - [Using the Node library](docs/usage.md)
+- [Supported media file formats](https://opensource.contentauthenticity.org/docs/c2pa-node/supported-formats)
 - [Release notes](docs/release-notes.md)
 - [Contributing to the project](docs/project-contributions.md)
 
