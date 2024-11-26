@@ -10,9 +10,8 @@ For more information on using the library in an application, see [Using the CAI 
 
 <div style={{display: 'none'}}>
 
-For the best experience, read the docs on the [CAI Open Source SDK documentation website](https://opensource.contentauthenticity.org/docs/c2pa-node/).  Otherwise, additional documentation is available on GitHub:
+For the best experience, read the docs on the [CAI Open Source SDK documentation website](https://opensource.contentauthenticity.org/docs/c2pa-node/).  Some additional documentation for this repository is also available on GitHub:
 
-Additional documentation:
 - [Using the Node library](docs/usage.md)
 - [Supported media file formats](https://opensource.contentauthenticity.org/docs/c2pa-node/supported-formats)
 - [Release notes](docs/release-notes.md)
