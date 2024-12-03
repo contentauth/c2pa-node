@@ -2,7 +2,7 @@
 
 ## API documentation
 
-For the API documentation, see the [`/docs/` directory](https://github.com/contentauth/c2pa-node/blob/main/api-docs/README.md).
+For the API documentation, see the [`/api-docs/` directory](https://github.com/contentauth/c2pa-node/blob/main/api-docs/README.md).
 
 **WARNING**: The API is subject to change in this early prerelease library.
 
@@ -103,7 +103,7 @@ Use the `c2pa.sign()` method to sign an ingredient, either locally if you have a
 
 ### Signing buffers
 
-If you have an asset file's data loaded into memory, you can sign the the asset using a buffer.
+If you have an asset file's data loaded into memory, you can sign the the asset using the loaded buffer.
 
 **NOTE**: Signing using a buffer is currently supported only for `image/jpeg` and `image/png` data. For all other file types, use the [file-based approach](#signing-files) .
 
