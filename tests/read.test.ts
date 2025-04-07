@@ -10,7 +10,6 @@
 import { readFile } from 'node:fs/promises';
 import { C2pa, createC2pa } from '../dist/js-src/index';
 import type { ManifestAssertion } from '../dist/js-src/types';
-import { RemoteSigner, SignInput } from '../js-src';
 
 describe('read()', () => {
   let c2pa: C2pa;
@@ -109,7 +108,6 @@ describe('read()', () => {
         actions: [
           {
             action: 'c2pa.opened',
-            instanceId: 'xmp.iid:813ee422-9736-4cdc-9be6-4e35ed8e41cb',
             parameters: {
               ingredient: {
                 url: 'self#jumbf=c2pa.assertions/c2pa.ingredient',
@@ -124,7 +122,6 @@ describe('read()', () => {
           },
           {
             action: 'c2pa.placed',
-            instanceId: 'xmp:iid:90407d89-4680-4905-becd-01d929e2603d',
             parameters: {
               ingredient: {
                 url: 'self#jumbf=c2pa.assertions/c2pa.ingredient__1',
@@ -216,6 +213,14 @@ describe('read()', () => {
   test('extract custom model data_type from manifest for a JPG image', async () => {
     const fixture = await readFile('tests/fixtures/ingredient-with-data-types.jpg');
     const result = await c2pa.read({ buffer: fixture, mimeType: 'image/jpeg' });
-    expect(result?.active_manifest?.ingredients[0].data_types).toEqual([{ type:'c2pa.types.model'}]);
+    expect(result?.active_manifest?.ingredients[0].data_types).toEqual([{ type: 'c2pa.types.model' }]);
   });
+
+  test('should read an image with a v2 claim', async () => {
+    const fixture = await readFile('tests/fixtures/testv2.jpg');
+    const result = await c2pa.read({ buffer: fixture, mimeType: 'image/jpeg' });
+
+    expect(result?.active_manifest?.label).toEqual('urn:c2pa::69b9422c-0e44-485c-9f2c-9a79c13eaefb');
+    expect(result?.validation_status.length).toEqual(0);
+  })
 });

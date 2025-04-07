@@ -93,13 +93,13 @@ export class ManifestBuilder {
   }
 
   public static createLabel(vendor?: string) {
-    const urn = randomUUID();
+    const label = `urn:uuid:${randomUUID()}`
 
     if (vendor) {
-      return `${vendor.toLowerCase()}:${urn}`;
+      return `${vendor.toLowerCase()}:${label}`;
     }
 
-    return urn;
+    return label;
   }
 
   public get definition() {

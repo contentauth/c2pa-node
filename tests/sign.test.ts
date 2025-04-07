@@ -70,6 +70,7 @@ describe('sign()', () => {
         },
         { vendor: 'cai' },
       );
+
       const { signedAsset } = await c2pa.sign({
         asset,
         manifest,
@@ -150,6 +151,7 @@ describe('sign()', () => {
         },
         { vendor: 'cai' },
       );
+
       const { signedAsset } = await c2pa.sign({
         asset: asset,
         manifest,
@@ -233,6 +235,8 @@ describe('sign()', () => {
         },
         { vendor: 'cai' },
       );
+
+
       const { signedAsset } = await c2pa.sign({
         asset,
         manifest,

@@ -13,11 +13,11 @@
 
 ### buffer
 
-• **buffer**: `Buffer`
+• **buffer**: `Buffer`\<`ArrayBufferLike`\>
 
 #### Defined in
 
-[bindings.ts:138](https://github.com/contentauth/c2pa-node/blob/4496166/js-src/bindings.ts#L138)
+[bindings.ts:138](https://github.com/contentauth/c2pa-node/blob/ee640e4/js-src/bindings.ts#L138)
 
 ___
 
@@ -27,4 +27,4 @@ ___
 
 #### Defined in
 
-[bindings.ts:140](https://github.com/contentauth/c2pa-node/blob/4496166/js-src/bindings.ts#L140)
+[bindings.ts:140](https://github.com/contentauth/c2pa-node/blob/ee640e4/js-src/bindings.ts#L140)

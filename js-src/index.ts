@@ -64,12 +64,12 @@ export type {
   StorableIngredient,
 } from './bindings';
 export type { Algorithm as HashAlgorithm } from './lib/hash';
-export { ManifestBuilder, BaseManifestDefinition } from './lib/manifestBuilder';
+export { ManifestBuilder, type BaseManifestDefinition } from './lib/manifestBuilder';
 export {
-  LocalSigner,
-  RemoteSigner,
-  SignInput,
-  Signer,
+  type LocalSigner,
+  type RemoteSigner,
+  type SignInput,
+  type Signer,
   SigningAlgorithm,
   createTestSigner,
 } from './lib/signer';
