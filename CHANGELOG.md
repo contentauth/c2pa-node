@@ -1,5 +1,11 @@
 # c2pa-node
 
+## 0.5.24
+
+### Patch Changes
+
+- e26e035: Support reading v2 claims
+
 ## 0.5.23
 
 ### Patch Changes
