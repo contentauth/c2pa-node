@@ -26,17 +26,17 @@
 
 #### Defined in
 
-[lib/signer.ts:46](https://github.com/contentauth/c2pa-node/blob/4496166/js-src/lib/signer.ts#L46)
+[lib/signer.ts:46](https://github.com/contentauth/c2pa-node/blob/ee640e4/js-src/lib/signer.ts#L46)
 
 ___
 
 ### sign
 
-• **sign**: (`input`: [`SignInput`](SignInput.md)) => `Promise`\<`Buffer`\>
+• **sign**: (`input`: [`SignInput`](SignInput.md)) => `Promise`\<`Buffer`\<`ArrayBufferLike`\>\>
 
 #### Type declaration
 
-▸ (`input`): `Promise`\<`Buffer`\>
+▸ (`input`): `Promise`\<`Buffer`\<`ArrayBufferLike`\>\>
 
 ##### Parameters
 
@@ -46,11 +46,11 @@ ___
 
 ##### Returns
 
-`Promise`\<`Buffer`\>
+`Promise`\<`Buffer`\<`ArrayBufferLike`\>\>
 
 #### Defined in
 
-[lib/signer.ts:47](https://github.com/contentauth/c2pa-node/blob/4496166/js-src/lib/signer.ts#L47)
+[lib/signer.ts:47](https://github.com/contentauth/c2pa-node/blob/ee640e4/js-src/lib/signer.ts#L47)
 
 ___
 
@@ -60,4 +60,4 @@ ___
 
 #### Defined in
 
-[lib/signer.ts:45](https://github.com/contentauth/c2pa-node/blob/4496166/js-src/lib/signer.ts#L45)
+[lib/signer.ts:45](https://github.com/contentauth/c2pa-node/blob/ee640e4/js-src/lib/signer.ts#L45)

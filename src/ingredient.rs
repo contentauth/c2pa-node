@@ -33,10 +33,12 @@ pub fn load_ingredient(source: &Asset) -> Result<Ingredient> {
         Asset::Buffer(buffer, format) => Ingredient::from_memory(format, buffer),
         Asset::File(path, format) => {
             let mut file = File::open(path)?;
-            let format = format
-                .as_ref()
-                .map(|f| f.to_owned())
-                .unwrap_or_else(|| Ingredient::from_file_info(path).format().to_owned());
+            let format = format.as_ref().map(|f| f.to_owned()).unwrap_or_else(|| {
+                Ingredient::from_file_info(path)
+                    .format()
+                    .unwrap_or("Unknown")
+                    .to_owned()
+            });
             Ingredient::from_stream(&format, &mut file)
         }
     }
@@ -65,10 +67,12 @@ pub async fn create_ingredient(source: &Asset) -> Result<Ingredient> {
                     .map_err(Error::from)
             }
             Asset::File(path, format) => {
-                let format = format
-                    .as_ref()
-                    .map(|f| f.to_owned())
-                    .unwrap_or_else(|| Ingredient::from_file_info(path).format().to_owned());
+                let format = format.as_ref().map(|f| f.to_owned()).unwrap_or_else(|| {
+                    Ingredient::from_file_info(path)
+                        .format()
+                        .unwrap_or("Unknown")
+                        .to_owned()
+                });
                 let mut file = File::open(path).map_err(Error::from)?;
                 Ingredient::from_manifest_and_asset_stream_async(manifest_bytes, &format, &mut file)
                     .await
