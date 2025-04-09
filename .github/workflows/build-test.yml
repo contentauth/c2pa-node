@@ -10,7 +10,7 @@ on:
 jobs:
   build-test:
     name: Build and test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     env:
       COREPACK_ENABLE_STRICT: 0
     steps:
