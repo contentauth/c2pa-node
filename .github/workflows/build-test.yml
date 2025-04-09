@@ -10,7 +10,7 @@ on:
 jobs:
   build-test:
     name: Build and test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     env:
       COREPACK_ENABLE_STRICT: 0
     steps:
@@ -19,7 +19,7 @@ jobs:
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
         with:
-          toolchain: 1.85.0
+          toolchain: 1.82.0
 
       - name: Install pnpm
         run: |
