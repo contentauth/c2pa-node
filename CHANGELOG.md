@@ -1,5 +1,11 @@
 # c2pa-node
 
+## 0.5.25
+
+### Patch Changes
+
+- c0c7938: Downgrade glibc requirement to 2.35
+
 ## 0.5.24
 
 ### Patch Changes
