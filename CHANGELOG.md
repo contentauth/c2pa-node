@@ -1,5 +1,11 @@
 # c2pa-node
 
+## 0.5.25
+
+### Patch Changes
+
+- 8d680dd: Lower glibc requirement
+
 ## 0.5.24
 
 ### Patch Changes
