@@ -34,7 +34,7 @@
     "test": "cargo test && jest --useStderr",
     "test:watch": "cargo test && jest --watch --runInBand --detectOpenHandles --forceExit",
     "clean": "rimraf dist generated target",
-    "prepare": "npm run build"
+    "prepare": "npm run build && npm postinstall"
   },
   "author": "Dave Kozma <dkozma@adobe.com>",
   "license": "MIT",
