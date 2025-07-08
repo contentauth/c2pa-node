@@ -34,7 +34,8 @@
     "release": "run-s build changeset:publish",
     "test": "cargo test && jest --useStderr",
     "test:watch": "cargo test && jest --watch --runInBand --detectOpenHandles --forceExit",
-    "clean": "rimraf dist generated target"
+    "clean": "rimraf dist generated target",
+    "prepare": "npm run build"
   },
   "author": "Dave Kozma <dkozma@adobe.com>",
   "license": "MIT",
