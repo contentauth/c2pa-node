@@ -1,5 +1,11 @@
 # c2pa-node
 
+## 0.5.26
+
+### Patch Changes
+
+- 831bfa1: Update sharp version
+
 ## 0.5.25
 
 ### Patch Changes
