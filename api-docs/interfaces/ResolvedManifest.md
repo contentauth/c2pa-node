@@ -24,7 +24,7 @@
 
 #### Defined in
 
-[bindings.ts:52](https://github.com/contentauth/c2pa-node/blob/796fe3f/js-src/bindings.ts#L52)
+[bindings.ts:52](https://github.com/contentauth/c2pa-node/blob/2485c13/js-src/bindings.ts#L52)
 
 ___
 
@@ -34,7 +34,7 @@ ___
 
 #### Defined in
 
-[bindings.ts:54](https://github.com/contentauth/c2pa-node/blob/796fe3f/js-src/bindings.ts#L54)
+[bindings.ts:54](https://github.com/contentauth/c2pa-node/blob/2485c13/js-src/bindings.ts#L54)
 
 ___
 
@@ -44,4 +44,4 @@ ___
 
 #### Defined in
 
-[bindings.ts:53](https://github.com/contentauth/c2pa-node/blob/796fe3f/js-src/bindings.ts#L53)
+[bindings.ts:53](https://github.com/contentauth/c2pa-node/blob/2485c13/js-src/bindings.ts#L53)
