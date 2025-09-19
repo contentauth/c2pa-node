@@ -1,5 +1,8 @@
 # Contributing to the project
 
+> [!WARNING]
+> This repository and the `c2pa-node` package are deprecated. Use [c2pa-node-v2](https://github.com/contentauth/c2pa-node-v2) instead.
+
 The information in this page is primarily for those who wish to contribute to the c2pa-python library project itself, rather than those who simply wish to use it in an application.  For general contribution guidelines, see [CONTRIBUTING.md](../CONTRIBUTING.md).
 
 ## Building
