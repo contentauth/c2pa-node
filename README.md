@@ -1,4 +1,7 @@
-# C2PA Node.js library
+# C2PA Node.js library (deprecated)
+
+> [!WARNING]
+> This repository and the `c2pa-node` package are deprecated. Use [c2pa-node-v2](https://github.com/contentauth/c2pa-node-v2) instead.
 
 The [c2pa-node](https://github.com/contentauth/c2pa-node) repository implements a Node.js API that can:
 - Read and validate C2PA data from media files in supported formats.
@@ -6,18 +9,11 @@ The [c2pa-node](https://github.com/contentauth/c2pa-node) repository implements 
 
 For more information on using the library in an application, see [Using the CAI Node library](docs/usage.md).
 
-**WARNING**: This is an early prerelease version of this library.  There may be bugs and unimplemented features, and the API is subject to change.
+Additional documentation:
 
-<div style={{display: 'none'}}>
-
-For the best experience, read the docs on the [CAI Open Source SDK documentation website](https://opensource.contentauthenticity.org/docs/c2pa-node/).  Some additional documentation for this repository is also available on GitHub:
-
-- [Using the Node library](docs/usage.md)
-- [Supported media file formats](https://opensource.contentauthenticity.org/docs/c2pa-node/supported-formats)
-- [Release notes](docs/release-notes.md)
-- [Contributing to the project](docs/project-contributions.md)
-
-</div>
+- [Using the Node library](https://github.com/contentauth/c2pa-node/blob/main/docs/usage.md)
+- [Release notes](https://github.com/contentauth/c2pa-node/blob/main/docs/release-notes.md)
+- [Contributing to the project](https://github.com/contentauth/c2pa-node/blob/main/docs/project-contributions.md)
 
 ## Prerequisites
 
