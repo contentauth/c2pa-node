@@ -1,5 +1,8 @@
 # Using the CAI Node library
 
+> [!WARNING]
+> This repository and the `c2pa-node` package are deprecated. Use [c2pa-node-v2](https://github.com/contentauth/c2pa-node-v2) instead.
+
 ## API documentation
 
 For the API documentation, see the [`/api-docs/` directory](https://github.com/contentauth/c2pa-node/blob/main/api-docs/README.md).
